@@ -1,0 +1,25 @@
+{
+    "name": "wyrihaximus/phpstan-rules-wrapper",
+    "description": "\uD83C\uDF2F PHPStan rules wrapper",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Cees-Jan Kiewiet",
+            "email": "ceesjank@gmail.com"
+        }
+    ],
+    "require": {
+        "ergebnis/phpstan-rules": "^1.0",
+        "jangregor/phpstan-prophecy": "^1.0",
+        "pepakriz/phpstan-exception-rules": "^0.12.0",
+        "phpstan/phpstan-deprecation-rules": "^1.0",
+        "phpstan/phpstan-php-parser": "^1.1",
+        "phpstan/phpstan-phpunit": "^1.0",
+        "phpstan/phpstan-strict-rules": "^1.1",
+        "thecodingmachine/phpstan-safe-rule": "^1.2",
+        "thecodingmachine/phpstan-strict-rules": "^1.0"
+    },
+    "config": {
+        "sort-packages": true
+    }
+}

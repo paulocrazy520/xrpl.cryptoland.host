@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<ruleset name="WyriHaximus-OSS">
+    <description>The WyriHaximus PHP coding standard for OSS.</description>
+    <rule ref="WyriHaximus-Base">
+        <exclude name="SlevomatCodingStandard.Classes.SuperfluousAbstractClassNaming" />
+        <exclude name="SlevomatCodingStandard.Classes.SuperfluousInterfaceNaming" />
+        <exclude name="SlevomatCodingStandard.Classes.SuperfluousExceptionNaming" />
+        <exclude name="SlevomatCodingStandard.Classes.SuperfluousTraitNaming" />
+    </rule>
+</ruleset>

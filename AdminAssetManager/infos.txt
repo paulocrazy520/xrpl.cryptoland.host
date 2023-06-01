@@ -1,0 +1,40 @@
+Issuer Wallet:
+Address: rDUSz5wt8ZVENp7ZJq4qrv2f9A2h56Cf3b
+Secret: sEdVstweZLEnZCgNRtM2Gy1eFvr35u5
+Balance: 1,000 XRP
+Sequence Number: 37149227
+
+Test Wallet #J1
+UserId: 3 (NRG_Users)
+Address: r97nyzoijsUYp5CQUQNf8dMzh4XyqZpFCU
+Secret: sEd7ZrX4zVvg7qatRkxmxQSeuWDc8TG
+Balance: 1,000 XRP
+Sequence Number: 37149243
+
+Test Wallet #J2
+UserId: 4 (NRG_Users)
+Address: r3FoWNS5sHMv9nhx9H9YEsGEqJWqvFsXRn
+Secret: sEd7P9GquZ4AEQjEWUbSyQJVUTWEus2
+Balance: 1,000 XRP
+Sequence Number: 37149255
+
+Test Wallet #J3
+UserId: 5 (NRG_Users)
+Address: r9FELhVcmqCyz3QdCWPYQLR3GBz5MzdvRx
+Secret: sEdTYgqKd6nbS13okrwBHuCb3rMyoj9
+Balance: 1,000 XRP
+Sequence Number: 37149260
+
+Test Wallet #J4
+UserId: 6 (NRG_Users)
+Address: rJAHd21L5Lwcj1PENcE2rGmUMHZSRzqwJi
+Secret: sEdT2qeQBskMxcnyzq4g6z1Y1XUNUvb
+Balance: 1,000 XRP
+Sequence Number: 37149265
+
+Test Wallet #J5
+UserId: 7 (NRG_Users)
+Address: rMUzoNUXBZVh43groaeaU2dd7fBFc8N1gz
+Secret: sEdVksobJUkkHU8n2KZaA8j53y5yAq7
+Balance: 1,000 XRP
+Sequence Number: 37149270

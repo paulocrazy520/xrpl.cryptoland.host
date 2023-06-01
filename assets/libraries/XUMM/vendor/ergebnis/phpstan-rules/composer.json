@@ -1,0 +1,68 @@
+{
+  "name": "ergebnis/phpstan-rules",
+  "type": "phpstan-extension",
+  "description": "Provides additional rules for phpstan/phpstan.",
+  "keywords": [
+    "phpstan",
+    "phpstan-rules",
+    "phpstan-extreme-rules"
+  ],
+  "homepage": "https://github.com/ergebnis/phpstan-rules",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Andreas Möller",
+      "email": "am@localheinz.com"
+    }
+  ],
+  "require": {
+    "php": "^7.2 || ^8.0",
+    "ext-mbstring": "*",
+    "nikic/php-parser": "^4.2.3",
+    "phpstan/phpstan": "^1.0.0"
+  },
+  "require-dev": {
+    "doctrine/orm": "^2.10.2",
+    "ergebnis/composer-normalize": "^2.15.0",
+    "ergebnis/license": "^1.1.0",
+    "ergebnis/php-cs-fixer-config": "^2.14.0",
+    "ergebnis/test-util": "^1.5.0",
+    "infection/infection": "~0.15.3",
+    "nette/di": "^3.0.11",
+    "phpstan/phpstan-deprecation-rules": "^1.0.0",
+    "phpstan/phpstan-strict-rules": "^1.0.0",
+    "phpunit/phpunit": "^8.5.21",
+    "psalm/plugin-phpunit": "~0.16.1",
+    "psr/container": "^1.0.0",
+    "vimeo/psalm": "^4.12.0",
+    "zendframework/zend-servicemanager": "^2.0.0"
+  },
+  "config": {
+    "platform": {
+      "php": "7.2.33"
+    },
+    "preferred-install": "dist",
+    "sort-packages": true
+  },
+  "extra": {
+    "phpstan": {
+      "includes": [
+        "rules.neon"
+      ]
+    }
+  },
+  "autoload": {
+    "psr-4": {
+      "Ergebnis\\PHPStan\\Rules\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Ergebnis\\PHPStan\\Rules\\Test\\": "test/"
+    }
+  },
+  "support": {
+    "issues": "https://github.com/ergebnis/phpstan-rules/issues",
+    "source": "https://github.com/ergebnis/phpstan-rules"
+  }
+}

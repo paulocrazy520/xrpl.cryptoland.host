@@ -1,0 +1,248 @@
+[
+    {
+        "Image": "Cryptopian342.png",
+        "Sex": "Male",
+        "Class": "Miner",
+        "Subclass": "Supervisor",
+        "ID": "342",
+        "Name": "Cryptopian #342",
+        "Attributes": [
+            {
+                "trait_type": "Background",
+                "value": "Red Background"
+            },
+            {
+                "trait_type": "Border",
+                "value": "Green Border"
+            },
+            {
+                "trait_type": "Skin Color",
+                "value": "Green Skin"
+            },
+            {
+                "trait_type": "Eye Base",
+                "value": "Red Eyes"
+            },
+            {
+                "trait_type": "Iris Color",
+                "value": "Emerald Irises"
+            },
+            {
+                "trait_type": "Mouth Expression",
+                "value": "Skeptical"
+            },
+            {
+                "trait_type": "Brow Expression",
+                "value": "The People's Brow"
+            },
+            {
+                "trait_type": "Tattoo",
+                "value": "Fractal Equality Tattoo"
+            },
+            {
+                "trait_type": "Burn Scar",
+                "value": "Not Burned"
+            },
+            {
+                "trait_type": "Warpaint",
+                "value": "Wrathful Sight Warpaint"
+            },
+            {
+                "trait_type": "Scars",
+                "value": "No Scars"
+            },
+            {
+                "trait_type": "Hair Style",
+                "value": "Short Dreads"
+            },
+            {
+                "trait_type": "Hair Color",
+                "value": "Brown Hair"
+            },
+            {
+                "trait_type": "Beard Style",
+                "value": "Mustache"
+            },
+            {
+                "trait_type": "Beard Color",
+                "value": "Brown Facial Hair"
+            },
+            {
+                "trait_type": "Flame Brows",
+                "value": "No Special Brows"
+            },
+            {
+                "trait_type": "Hat",
+                "value": "No Hat"
+            },
+            {
+                "trait_type": "Accessory",
+                "value": "New Apprentice Pickaxe"
+            }
+        ]
+    },
+    {
+        "Image": "Cryptopian2234.png",
+        "Sex": "Male",
+        "Class": "Miner",
+        "Subclass": "Supervisor",
+        "ID": "2234",
+        "Name": "Cryptopian #2234",
+        "Attributes": [
+            {
+                "trait_type": "Background",
+                "value": "Purple Background"
+            },
+            {
+                "trait_type": "Border",
+                "value": "Green Border"
+            },
+            {
+                "trait_type": "Skin Color",
+                "value": "Blue Skin"
+            },
+            {
+                "trait_type": "Eye Base",
+                "value": "Green Eyes"
+            },
+            {
+                "trait_type": "Iris Color",
+                "value": "Blue Irises"
+            },
+            {
+                "trait_type": "Mouth Expression",
+                "value": "Grin"
+            },
+            {
+                "trait_type": "Brow Expression",
+                "value": "Sad"
+            },
+            {
+                "trait_type": "Tattoo",
+                "value": "No Tattoo"
+            },
+            {
+                "trait_type": "Burn Scar",
+                "value": "Not Burned"
+            },
+            {
+                "trait_type": "Warpaint",
+                "value": "No Warpaint"
+            },
+            {
+                "trait_type": "Scars",
+                "value": "No Scars"
+            },
+            {
+                "trait_type": "Hair Style",
+                "value": "Bald"
+            },
+            {
+                "trait_type": "Hair Color",
+                "value": "None"
+            },
+            {
+                "trait_type": "Beard Style",
+                "value": "Braided Beard"
+            },
+            {
+                "trait_type": "Beard Color",
+                "value": "Black Facial Hair"
+            },
+            {
+                "trait_type": "Flame Brows",
+                "value": "No Special Brows"
+            },
+            {
+                "trait_type": "Hat",
+                "value": "No Hat"
+            },
+            {
+                "trait_type": "Accessory",
+                "value": "No Accessory"
+            }
+        ]
+    },
+    {
+        "Image": "Cryptopian9946.png",
+        "Sex": "Male",
+        "Class": "Miner",
+        "Subclass": "Miner",
+        "ID": "9946",
+        "Name": "Cryptopian #9946",
+        "Attributes": [
+            {
+                "trait_type": "Background",
+                "value": "Gray Background"
+            },
+            {
+                "trait_type": "Border",
+                "value": "Red Border"
+            },
+            {
+                "trait_type": "Skin Color",
+                "value": "Purple Skin"
+            },
+            {
+                "trait_type": "Eye Base",
+                "value": "Green Eyes"
+            },
+            {
+                "trait_type": "Iris Color",
+                "value": "Blue Irises"
+            },
+            {
+                "trait_type": "Mouth Expression",
+                "value": "Grin"
+            },
+            {
+                "trait_type": "Brow Expression",
+                "value": "Serious"
+            },
+            {
+                "trait_type": "Tattoo",
+                "value": "No Tattoo"
+            },
+            {
+                "trait_type": "Burn Scar",
+                "value": "Not Burned"
+            },
+            {
+                "trait_type": "Warpaint",
+                "value": "Silent Whisper Warpaint"
+            },
+            {
+                "trait_type": "Scars",
+                "value": "No Scars"
+            },
+            {
+                "trait_type": "Hair Style",
+                "value": "Viking braid"
+            },
+            {
+                "trait_type": "Hair Color",
+                "value": "Blonde Hair"
+            },
+            {
+                "trait_type": "Beard Style",
+                "value": "Braided Beard"
+            },
+            {
+                "trait_type": "Beard Color",
+                "value": "Blonde Facial Hair"
+            },
+            {
+                "trait_type": "Flame Brows",
+                "value": "No Special Brows"
+            },
+            {
+                "trait_type": "Hat",
+                "value": "No Hat"
+            },
+            {
+                "trait_type": "Accessory",
+                "value": "No Accessory"
+            }
+        ]
+    }
+]

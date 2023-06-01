@@ -1,0 +1,98 @@
+[Fri May 19 10:11:45.018549 2023] [proxy_fcgi:error] [pid 2815451:tid 140528017925888] [client 185.209.196.172:37844] AH01071: Got error 'Primary script unknown'
+[Fri May 19 10:11:45.052556 2023] [proxy_fcgi:error] [pid 2815799:tid 140528001140480] [client 185.209.196.172:37914] AH01071: Got error 'Primary script unknown'
+[Fri May 19 10:11:45.122459 2023] [proxy_fcgi:error] [pid 2815799:tid 140527630542592] [client 185.209.196.172:38032] AH01071: Got error 'Primary script unknown'
+[Fri May 19 10:11:45.124382 2023] [proxy_fcgi:error] [pid 2815799:tid 140527622149888] [client 185.209.196.172:38054] AH01071: Got error 'Primary script unknown'
+[Fri May 19 10:11:45.155745 2023] [proxy_fcgi:error] [pid 2815450:tid 140528001140480] [client 185.209.196.172:38044] AH01071: Got error 'Primary script unknown'
+[Fri May 19 10:11:45.159998 2023] [proxy_fcgi:error] [pid 2815450:tid 140527992747776] [client 185.209.196.172:38060] AH01071: Got error 'Primary script unknown'
+[Fri May 19 10:11:45.832934 2023] [proxy_fcgi:error] [pid 2815451:tid 140527984355072] [client 185.209.196.172:38316] AH01071: Got error 'Primary script unknown'
+[Fri May 19 10:11:47.593267 2023] [autoindex:error] [pid 2815799:tid 140528001140480] [client 185.209.196.172:48797] AH01276: Cannot serve directory /var/www/htdocs/sb236.cryptoland.host/.git/: No matching DirectoryIndex (index.php,index.html) found, and server-generated directory index forbidden by Options directive
+[Fri May 19 11:23:59.516975 2023] [access_compat:error] [pid 2815449:tid 140526875559680] [client 5.255.231.53:50346] AH01797: client denied by server configuration: /var/www/htdocs/sb236.cryptoland.host/robots.txt
+[Fri May 19 11:24:00.047191 2023] [access_compat:error] [pid 2815451:tid 140527613757184] [client 5.255.231.96:34748] AH01797: client denied by server configuration: /var/www/htdocs/sb236.cryptoland.host/
+[Fri May 19 16:02:52.332581 2023] [proxy_fcgi:error] [pid 2815451:tid 140527504717568] [client 68.183.32.181:35854] AH01071: Got error 'Primary script unknown'
+[Fri May 19 16:02:53.624844 2023] [proxy_fcgi:error] [pid 2815799:tid 140527596971776] [client 68.183.32.181:35894] AH01071: Got error 'Primary script unknown'
+[Fri May 19 20:17:19.875662 2023] [proxy_fcgi:error] [pid 2815799:tid 140527160780544] [client 95.214.27.131:52833] AH01071: Got error 'Primary script unknown'
+[Fri May 19 20:17:20.536891 2023] [proxy_fcgi:error] [pid 2815451:tid 140527984355072] [client 95.214.27.131:53495] AH01071: Got error 'Primary script unknown'
+[Sat May 20 08:35:16.653018 2023] [proxy_fcgi:error] [pid 2961664:tid 140526548408064] [client 178.62.17.189:54468] AH01071: Got error 'Primary script unknown'
+[Sat May 20 08:35:17.939401 2023] [proxy_fcgi:error] [pid 2957302:tid 140527018170112] [client 178.62.17.189:56658] AH01071: Got error 'Primary script unknown'
+[Sat May 20 15:38:55.214902 2023] [proxy_fcgi:error] [pid 2961664:tid 140526531622656] [client 140.238.69.139:58652] AH01071: Got error 'Primary script unknown'
+[Sat May 20 15:38:56.284051 2023] [proxy_fcgi:error] [pid 2961664:tid 140527169173248] [client 140.238.69.139:58954] AH01071: Got error 'Primary script unknown'
+[Sat May 20 15:38:57.538310 2023] [proxy_fcgi:error] [pid 2957304:tid 140527992747776] [client 140.238.69.139:59279] AH01071: Got error 'Primary script unknown'
+[Sat May 20 15:38:58.618610 2023] [proxy_fcgi:error] [pid 2957304:tid 140527638935296] [client 140.238.69.139:59573] AH01071: Got error 'Primary script unknown'
+[Sun May 21 03:46:44.753708 2023] [proxy_fcgi:error] [pid 3155021:tid 140527471146752] [client 152.32.174.92:45352] AH01071: Got error 'Primary script unknown'
+[Sun May 21 04:45:43.528632 2023] [proxy_fcgi:error] [pid 3159432:tid 140526397404928] [client 46.101.91.35:39842] AH01071: Got error 'Primary script unknown'
+[Sun May 21 04:45:44.810687 2023] [proxy_fcgi:error] [pid 3155020:tid 140527395645184] [client 46.101.91.35:39878] AH01071: Got error 'Primary script unknown'
+[Mon May 22 02:17:58.236774 2023] [core:error] [pid 3155022:tid 140528001140480] [client 152.89.196.144:48388] AH00126: Invalid URI in request POST /cgi-bin/.%2e/.%2e/.%2e/.%2e/bin/sh HTTP/1.1
+[Mon May 22 04:26:16.783312 2023] [proxy_fcgi:error] [pid 3155020:tid 140526892345088] [client 172.104.4.17:33232] AH01071: Got error 'Primary script unknown'
+[Mon May 22 04:26:17.833068 2023] [proxy_fcgi:error] [pid 3159432:tid 140527328536320] [client 172.104.4.17:33300] AH01071: Got error 'Primary script unknown'
+[Mon May 22 04:26:18.007914 2023] [proxy_fcgi:error] [pid 3159432:tid 140526422583040] [client 172.104.4.17:45216] AH01071: Got error 'Primary script unknown'
+[Mon May 22 04:26:20.407609 2023] [proxy_fcgi:error] [pid 3159432:tid 140527504717568] [client 172.104.4.17:45274] AH01071: Got error 'Primary script unknown'
+[Mon May 22 04:26:20.981566 2023] [proxy_fcgi:error] [pid 3155021:tid 140528009533184] [client 172.104.4.17:33472] AH01071: Got error 'Primary script unknown'
+[Mon May 22 04:26:24.610380 2023] [proxy_fcgi:error] [pid 3159432:tid 140526414190336] [client 172.104.4.17:34274] AH01071: Got error 'Primary script unknown'
+[Mon May 22 04:26:24.749013 2023] [proxy_fcgi:error] [pid 3159432:tid 140526405797632] [client 172.104.4.17:47394] AH01071: Got error 'Primary script unknown'
+[Mon May 22 04:26:25.500559 2023] [proxy_fcgi:error] [pid 3155020:tid 140526850381568] [client 172.104.4.17:47444] AH01071: Got error 'Primary script unknown'
+[Mon May 22 04:26:27.298029 2023] [proxy_fcgi:error] [pid 3155021:tid 140528009533184] [client 172.104.4.17:47546] AH01071: Got error 'Primary script unknown'
+[Mon May 22 04:26:27.443152 2023] [proxy_fcgi:error] [pid 3159432:tid 140527320143616] [client 172.104.4.17:47550] AH01071: Got error 'Primary script unknown'
+[Mon May 22 04:26:30.770790 2023] [proxy_fcgi:error] [pid 3159432:tid 140528017925888] [client 172.104.4.17:47792] AH01071: Got error 'Primary script unknown'
+[Mon May 22 04:26:30.937649 2023] [proxy_fcgi:error] [pid 3155022:tid 140528001140480] [client 172.104.4.17:47816] AH01071: Got error 'Primary script unknown'
+[Mon May 22 12:18:09.937306 2023] [cgid:error] [pid 3155021:tid 140527454361344] [client 66.94.112.104:47900] AH01264: script not found or unable to stat: /var/www/cgi-bin/luci
+[Mon May 22 20:00:13.978079 2023] [proxy_fcgi:error] [pid 3159432:tid 140527362107136] [client 147.78.103.181:53277] AH01071: Got error 'Primary script unknown'
+[Tue May 23 05:28:59.817201 2023] [proxy_fcgi:error] [pid 3159432:tid 140528009533184] [client 172.104.4.17:46278] AH01071: Got error 'Primary script unknown'
+[Tue May 23 05:29:00.135954 2023] [proxy_fcgi:error] [pid 3155022:tid 140527638935296] [client 172.104.4.17:37814] AH01071: Got error 'Primary script unknown'
+[Tue May 23 05:29:02.357729 2023] [proxy_fcgi:error] [pid 3159432:tid 140527370499840] [client 172.104.4.17:46472] AH01071: Got error 'Primary script unknown'
+[Tue May 23 05:29:03.480672 2023] [proxy_fcgi:error] [pid 3159432:tid 140527479539456] [client 172.104.4.17:37974] AH01071: Got error 'Primary script unknown'
+[Tue May 23 05:29:04.910112 2023] [proxy_fcgi:error] [pid 3155021:tid 140527984355072] [client 172.104.4.17:46610] AH01071: Got error 'Primary script unknown'
+[Tue May 23 05:29:06.571316 2023] [proxy_fcgi:error] [pid 3155022:tid 140526867166976] [client 172.104.4.17:46736] AH01071: Got error 'Primary script unknown'
+[Tue May 23 05:29:06.896058 2023] [proxy_fcgi:error] [pid 3155021:tid 140527471146752] [client 172.104.4.17:38130] AH01071: Got error 'Primary script unknown'
+[Tue May 23 05:29:11.668395 2023] [proxy_fcgi:error] [pid 3159432:tid 140527984355072] [client 172.104.4.17:36422] AH01071: Got error 'Primary script unknown'
+[Tue May 23 05:29:13.015092 2023] [proxy_fcgi:error] [pid 3159432:tid 140527496324864] [client 172.104.4.17:36496] AH01071: Got error 'Primary script unknown'
+[Tue May 23 05:29:13.759669 2023] [proxy_fcgi:error] [pid 3159432:tid 140528009533184] [client 172.104.4.17:36540] AH01071: Got error 'Primary script unknown'
+[Tue May 23 05:29:14.505636 2023] [proxy_fcgi:error] [pid 3159432:tid 140527487932160] [client 172.104.4.17:36580] AH01071: Got error 'Primary script unknown'
+[Tue May 23 05:29:14.652134 2023] [proxy_fcgi:error] [pid 3159432:tid 140528026318592] [client 172.104.4.17:36588] AH01071: Got error 'Primary script unknown'
+[Tue May 23 05:29:15.699425 2023] [proxy_fcgi:error] [pid 3159432:tid 140526430975744] [client 172.104.4.17:36664] AH01071: Got error 'Primary script unknown'
+[Tue May 23 16:03:56.467254 2023] [proxy_fcgi:error] [pid 3155021:tid 140527496324864] [client 167.172.77.198:47632] AH01071: Got error 'Primary script unknown'
+[Tue May 23 16:03:59.249921 2023] [proxy_fcgi:error] [pid 3159432:tid 140526397404928] [client 167.172.77.198:48704] AH01071: Got error 'Primary script unknown'
+[Tue May 23 16:51:41.807522 2023] [core:error] [pid 3155021:tid 140527479539456] [client 83.97.73.89:58844] AH00126: Invalid URI in request POST /cgi-bin/.%2e/.%2e/.%2e/.%2e/bin/sh HTTP/1.1
+[Tue May 23 21:26:56.668099 2023] [core:error] [pid 3155021:tid 140527496324864] [client 193.32.162.190:54716] AH00126: Invalid URI in request GET /../../mnt/mtd/Config/Account1 HTTP/1.1
+[Tue May 23 22:39:24.452784 2023] [core:error] [pid 3159432:tid 140527992747776] [client 193.32.162.190:36618] AH00126: Invalid URI in request GET /../../mnt/mtd/Config/Account2 HTTP/1.1
+[Wed May 24 14:41:32.516657 2023] [proxy_fcgi:error] [pid 3159432:tid 140527454361344] [client 159.223.57.114:43110] AH01071: Got error 'Primary script unknown'
+[Wed May 24 14:41:35.306405 2023] [proxy_fcgi:error] [pid 3155022:tid 140528009533184] [client 159.223.57.114:43144] AH01071: Got error 'Primary script unknown'
+[Wed May 24 15:47:24.136316 2023] [proxy_fcgi:error] [pid 3155020:tid 140526875559680] [client 147.78.103.181:64024] AH01071: Got error 'Primary script unknown'
+[Wed May 24 16:18:10.103879 2023] [proxy_fcgi:error] [pid 3159432:tid 140527336929024] [client 5.188.210.227:33588] AH01071: Got error 'Primary script unknown', referer: https://www.google.com/
+[Wed May 24 16:59:30.779088 2023] [proxy_fcgi:error] [pid 3155020:tid 140526632302336] [client 35.216.229.26:41252] AH01071: Got error 'Primary script unknown'
+[Thu May 25 04:32:52.116608 2023] [core:error] [pid 3155022:tid 140527630542592] [client 83.97.73.89:42772] AH00126: Invalid URI in request POST /cgi-bin/.%2e/.%2e/.%2e/.%2e/bin/sh HTTP/1.1
+[Fri May 26 00:01:10.110233 2023] [core:error] [pid 3155022:tid 140527026562816] [client 83.97.73.89:41220] AH00126: Invalid URI in request POST /cgi-bin/.%2e/.%2e/.%2e/.%2e/bin/sh HTTP/1.1
+[Fri May 26 05:13:09.975955 2023] [proxy_fcgi:error] [pid 3155022:tid 140527992747776] [client 159.89.29.110:46224] AH01071: Got error 'Primary script unknown'
+[Fri May 26 05:13:11.427940 2023] [proxy_fcgi:error] [pid 3159432:tid 140527992747776] [client 159.89.29.110:46282] AH01071: Got error 'Primary script unknown'
+[Fri May 26 05:49:18.006129 2023] [proxy_fcgi:error] [pid 3155022:tid 140527018170112] [client 50.17.81.64:32916] AH01071: Got error 'Primary script unknown'
+[Fri May 26 05:49:18.221576 2023] [proxy_fcgi:error] [pid 3155021:tid 140527353714432] [client 50.17.81.64:32958] AH01071: Got error 'Primary script unknown'
+[Fri May 26 05:49:19.003862 2023] [proxy_fcgi:error] [pid 3155021:tid 140526489691904] [client 50.17.81.64:33076] AH01071: Got error 'Primary script unknown'
+[Fri May 26 05:49:19.200131 2023] [proxy_fcgi:error] [pid 3155021:tid 140526472906496] [client 50.17.81.64:33084] AH01071: Got error 'Primary script unknown'
+[Fri May 26 05:49:19.409640 2023] [proxy_fcgi:error] [pid 3155022:tid 140526984599296] [client 50.17.81.64:33118] AH01071: Got error 'Primary script unknown'
+[Fri May 26 05:49:19.463350 2023] [proxy_fcgi:error] [pid 3155021:tid 140527992747776] [client 50.17.81.64:33122] AH01071: Got error 'Primary script unknown'
+[Fri May 26 05:49:19.570184 2023] [proxy_fcgi:error] [pid 3155020:tid 140527412430592] [client 50.17.81.64:33146] AH01071: Got error 'Primary script unknown'
+[Fri May 26 05:49:19.782818 2023] [proxy_fcgi:error] [pid 3159432:tid 140527984355072] [client 50.17.81.64:33180] AH01071: Got error 'Primary script unknown'
+[Fri May 26 05:49:19.889239 2023] [proxy_fcgi:error] [pid 3159432:tid 140527345321728] [client 50.17.81.64:33204] AH01071: Got error 'Primary script unknown'
+[Fri May 26 05:49:19.944230 2023] [proxy_fcgi:error] [pid 3155020:tid 140527387252480] [client 50.17.81.64:33218] AH01071: Got error 'Primary script unknown'
+[Fri May 26 05:49:19.998301 2023] [proxy_fcgi:error] [pid 3155022:tid 140527638935296] [client 50.17.81.64:33224] AH01071: Got error 'Primary script unknown'
+[Fri May 26 21:24:10.783613 2023] [core:error] [pid 3155022:tid 140526875559680] (36)File name too long: [client 159.203.8.168:41622] AH00036: access to /3000D00E0000FFFF3F0031313744373731343634304537353046007A7A7A7A7A7A7A7A7A7A7A7A7A7A7A0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001000008047A7A7A7A7A7A7A7A7A0000000000000000000000000000000000000000000000000000000000000000 failed (filesystem path '/var/www/htdocs/sb236.cryptoland.host/3000D00E0000FFFF3F0031313744373731343634304537353046007A7A7A7A7A7A7A7A7A7A7A7A7A7A7A0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001000008047A7A7A7A7A7A7A7A7A0000000000000000000000000000000000000000000000000000000000000000')
+[Sat May 27 00:54:27.433013 2023] [proxy_fcgi:error] [pid 3159432:tid 140527479539456] [client 3.93.162.228:44724] AH01071: Got error 'Primary script unknown'
+[Sat May 27 01:22:29.695622 2023] [proxy_fcgi:error] [pid 3159432:tid 140527370499840] [client 20.90.220.157:8320] AH01071: Got error 'Primary script unknown'
+[Sat May 27 02:58:44.465471 2023] [proxy_fcgi:error] [pid 3155022:tid 140528001140480] [client 13.50.109.121:60254] AH01071: Got error 'Primary script unknown'
+[Sat May 27 04:37:33.747642 2023] [cgid:error] [pid 3155020:tid 140526615516928] [client 37.114.60.156:55376] AH01264: script not found or unable to stat: /var/www/cgi-bin/login
+[Sat May 27 20:17:34.406085 2023] [cgid:error] [pid 3155022:tid 140527630542592] [client 128.1.248.26:51300] AH01264: script not found or unable to stat: /var/www/cgi-bin/config.exp
+[Sun May 28 10:13:19.167824 2023] [proxy_fcgi:error] [pid 372251:tid 140527034955520] [client 95.214.27.131:65032] AH01071: Got error 'Primary script unknown'
+[Sun May 28 10:13:20.425352 2023] [proxy_fcgi:error] [pid 367317:tid 140527789709056] [client 95.214.27.131:65150] AH01071: Got error 'Primary script unknown'
+[Sun May 28 14:28:19.642202 2023] [core:error] [pid 367321:tid 140526472906496] [client 83.97.73.89:59982] AH00126: Invalid URI in request POST /cgi-bin/.%2e/.%2e/.%2e/.%2e/bin/sh HTTP/1.1
+[Mon May 29 02:18:16.149344 2023] [proxy_fcgi:error] [pid 367317:tid 140527294998272] [client 77.69.225.210:64697] AH01071: Got error 'Primary script unknown'
+[Mon May 29 09:29:20.113756 2023] [proxy_fcgi:error] [pid 367318:tid 140526288365312] [client 20.90.220.157:4928] AH01071: Got error 'Primary script unknown'
+[Mon May 29 14:50:23.700815 2023] [core:error] [pid 372251:tid 140526481299200] [client 83.97.73.89:43056] AH00126: Invalid URI in request POST /cgi-bin/.%2e/.%2e/.%2e/.%2e/bin/sh HTTP/1.1
+[Mon May 29 22:41:55.721765 2023] [core:error] [pid 372251:tid 140526472906496] [client 185.180.143.141:46436] AH00126: Invalid URI in request HEAD /icons/.%2e/%2e%2e/apache2/icons/sphere1.png HTTP/1.1
+[Mon May 29 23:33:48.460573 2023] [core:error] [pid 372251:tid 140527596971776] [client 185.180.143.11:51614] AH00126: Invalid URI in request HEAD /icons/.%2e/%2e%2e/apache2/icons/sphere1.png HTTP/1.1
+[Tue May 30 01:19:28.968727 2023] [cgid:error] [pid 367318:tid 140527336929024] [client 45.156.129.12:40002] AH01264: script not found or unable to stat: /var/www/cgi-bin/config.exp
+[Tue May 30 02:57:16.892448 2023] [proxy_fcgi:error] [pid 367317:tid 140527303390976] [client 34.238.190.101:44930] AH01071: Got error 'Primary script unknown'
+[Wed May 31 03:14:06.627529 2023] [core:error] [pid 372251:tid 140527001384704] [client 83.97.73.89:51360] AH00126: Invalid URI in request POST /cgi-bin/.%2e/.%2e/.%2e/.%2e/bin/sh HTTP/1.1
+[Wed May 31 08:44:20.436490 2023] [core:error] [pid 367317:tid 140527253034752] [client 185.180.143.141:33976] AH00126: Invalid URI in request HEAD /icons/.%2e/%2e%2e/apache2/icons/sphere1.png HTTP/1.1
+[Wed May 31 08:44:43.199884 2023] [cgid:error] [pid 372251:tid 140526498084608] [client 185.180.143.141:46466] AH01264: script not found or unable to stat: /var/www/cgi-bin/config.exp
+[Wed May 31 16:05:24.850722 2023] [proxy_fcgi:error] [pid 372251:tid 140526489691904] [client 159.65.48.50:35072] AH01071: Got error 'Primary script unknown'
+[Wed May 31 16:05:26.234125 2023] [proxy_fcgi:error] [pid 367321:tid 140528026318592] [client 159.65.48.50:35130] AH01071: Got error 'Primary script unknown'
+[Wed May 31 18:12:21.589195 2023] [proxy_fcgi:error] [pid 367318:tid 140528026318592] [client 5.188.210.227:50158] AH01071: Got error 'Primary script unknown', referer: https://www.google.com/

@@ -1,0 +1,49 @@
+{
+    "name": "azjezz/psl",
+    "description": "PHP Standard Library",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "azjezz",
+            "email": "azjezz@protonmail.com"
+        }
+    ],
+    "require": {
+        "php": "~8.0.0 || ~8.1.0",
+        "ext-bcmath": "*",
+        "ext-json": "*",
+        "ext-mbstring": "*",
+        "ext-sodium": "*",
+        "ext-intl": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Psl\\Integration\\": "integration",
+            "Psl\\": "src/Psl"
+        },
+        "files": [
+            "src/bootstrap.php"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Psl\\Tests\\Benchmark\\": "tests/benchmark",
+            "Psl\\Tests\\StaticAnalysis\\": "tests/static-analysis",
+            "Psl\\Tests\\Unit\\": "tests/unit",
+            "Psl\\Tests\\Fixture\\": "tests/fixture"
+        }
+    },
+    "extra": {
+        "psalm": {
+            "pluginClass": "Psl\\Integration\\Psalm\\Plugin"
+        },
+        "thanks": {
+            "name": "hhvm/hsl",
+            "url": "https://github.com/hhvm/hsl"
+        }
+    },
+    "suggest": {
+        "php-standard-library/psalm-plugin": "Psalm integration"
+    }
+}

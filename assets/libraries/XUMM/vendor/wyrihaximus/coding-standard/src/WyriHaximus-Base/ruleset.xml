@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<ruleset name="WyriHaximus-Projects">
+    <description>The WyriHaximus PHP coding standard for Projects.</description>
+    <rule ref="Doctrine" />
+    <rule ref="SlevomatCodingStandard.TypeHints.ReturnTypeHintSpacing">
+        <properties>
+            <property name="spacesCountBeforeColon" value="0"/>
+        </properties>
+    </rule>
+    <rule ref="SlevomatCodingStandard.Namespaces.AlphabeticallySortedUses">
+        <properties>
+            <property name="psr12Compatible" type="bool" value="true"/>
+        </properties>
+    </rule>
+    <rule ref="SlevomatCodingStandard.Namespaces.AlphabeticallySortedUses">
+        <properties>
+            <property name="psr12Compatible" type="bool" value="true"/>
+        </properties>
+    </rule>
+</ruleset>
