@@ -15,8 +15,8 @@
 <!-- End Page Head -->
 <div class="cs-height_30 cs-height_lg_70"></div>
 <div class="container" >
-    <?php require_once "top-tab.php"?>
-    <?php require_once "main-section-test.php"?>
+    <?php require_once "tab.php"?>
+    <?php require_once "list.php"?>
 </div>
 
 <div class="cs-height_30 cs-height_lg_30"></div>

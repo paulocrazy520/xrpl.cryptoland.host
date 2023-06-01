@@ -56,7 +56,7 @@ if($isMenu)
   else
   {
     $pageType = isset($_GET['PAGE_TYPE']) ? $_GET['PAGE_TYPE'] : (isset($_ENV['PAGE_TYPE']) ? $_ENV['PAGE_TYPE'] : 'claim');
-    require_once "pages/$pageType/explorer.php";
+    require_once "pages/$pageType/index.php";
   }
   
   if(!$isMenu){
@@ -79,7 +79,7 @@ if($isMenu)
     <script src="./global/config.js"></script>
     <script src="./global/functions.js"></script>
     <script src="./global/sign.js"></script>
-    <script src="./global/dialog.js"></script>
+    <script src="./global/action.js"></script>
     <script src="./global/filter.js"></script>
     <!-------------->
   </body>

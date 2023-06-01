@@ -88,7 +88,7 @@ $filterArray = [];
 				continue;
 
 			if( ($page-1) * $num_results_on_page <= $index &&  $index < $page * $num_results_on_page)
-			require "normal-card-test.php";
+			require "card.php";
 			
 			$index = $index + 1;
 			array_push($filterArray, $nft);

@@ -1,22 +1,6 @@
 (function ($) {
     'use strict';
 
-    //Login and Logout Button
-    $('#btn_login').on('click', function () {
-        handleLogin();
-    });
-
-
-    $('.btn_logout').on('click', function () {
-        handleLogout();
-    });
-
-    //When click confirm button on modal dialog on List Item modal
-    $('.btn_login_modal').on('click', function () {
-        
-        $("#loginModal").toggleClass('active');
-    });
-
     //When click confirm button on modal dialog on List Item modal
     $('#btn-list-item').on('click', function () {
         handleListItemClick();
@@ -98,16 +82,6 @@
     // ***********Handle Buy Item(Accetp Sell Offer)*************
     // ***********************************************************
     async function handleBuyItemClick(nftId, offerId) {
-        // {
-        //     "Amount": "23000000",
-        //     "Flags": 1,
-        //     "NFTokenID": "0009271085CBC8D60891F35B19C107477B0A7BA29CAAB8E60000099B00000000",
-        //     "OfferID": "10BF1C473EEE6618AF681DB2DC331D73685A8880176A74F5AA98F324BD06547E",
-        //     "Owner": "r97nyzoijsUYp5CQUQNf8dMzh4XyqZpFCU",
-        //     "Destination": null,
-        //     "Expiration": null
-        //   }
-
         //get offer string from nftId
 
         if(offerId){
@@ -177,28 +151,4 @@
         }
     }
 
-
-    // *********************ToMarcus******************************
-    // *************************Handle LoginIn********************
-    // ***********************************************************
-    async function handleLogin() {
-        if (confirm("Are you sure want to login?")) {
-            var user_id = $('#user_name').val();
-            var user_password = $('#user_password').val();
-
-            console.log("*************handleLogin ", user_id, user_password);
-            if(!user_id || !user_password){
-                alert("Please input user or password!");
-            }
-
-            LoginUser(user_id, user_password);
-        }
-    }
-
-    async function handleLogout() {
-        if (confirm("Are you sure want to logout?")) {
-            console.log("*************handleLogout ");
-            LogoutUser();
-        }
-    }
 }) (jQuery); // End of use strict

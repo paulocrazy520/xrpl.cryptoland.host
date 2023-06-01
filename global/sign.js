@@ -2,27 +2,45 @@
     'use strict';
 
     $(function () {
-    // *********************ToMarcus**************************
-    // ************* Check wallet connection (In this test produc, should test user_id:3)********
-    // *******************************************************
-    axios.post('custom.php', { type: 'GetUserInfo' })
-        .then(response => {
-            let json = response.data;
-            if (json && json.xumm_address) {
-                console.log('*************When page loading, GetUnserInfo Response=', json);
-                $(".auth").text('json.xumm_address');
-                accountAddress = json.xumm_address;
-            }
-            else {
-                console.log('*************When page loading, since no user connectd, change button label with ...');
-                $(".auth").text('Connect Wallet');
-                // xumm.logout();
-            }
-        })
-        .catch(error => {
-            console.log(error);
-        });
+        // *********************ToMarcus**************************
+        // ************* Check wallet connection (In this test produc, should test user_id:3)********
+        // *******************************************************
+        axios.post('custom.php', { type: 'GetUserInfo' })
+            .then(response => {
+                let json = response.data;
+                if (json && json.xumm_address) {
+                    console.log('*************When page loading, GetUnserInfo Response=', json);
+                    $(".auth").text(json.xumm_address);
+                    accountAddress = json.xumm_address;
+                }
+                else {
+                    console.log('*************When page loading, since no user connectd, change button label with ...');
+                    $(".auth").text('Connect Wallet');
+                    // xumm.logout();
+                }
+            })
+            .catch(error => {
+                console.log(error);
+            });
     })
+
+
+    //Login and Logout Button
+    $('#btn_login').on('click', function () {
+        handleLogin();
+    });
+
+
+    $('.btn_logout').on('click', function () {
+        handleLogout();
+    });
+
+    //When click confirm button on modal dialog on List Item modal
+    $('.btn_login_modal').on('click', function () {
+
+        $("#loginModal").toggleClass('active');
+    });
+
 
     // *********************ToMarcus**************************
     // ************* Connect Wallet on desktop****************
@@ -115,7 +133,6 @@
 
         console.log("Connected account address from mobile phone:", state?.me?.sub);
 
-
         state?.sdk?.ping().then(async (pong) => {
             const payload = await state.sdk.payload.get(pong.jwtData.payload_uuidv4);
             console.log("*************Wallet connect payload:", payload);
@@ -144,4 +161,28 @@
                 });
         });
     });
-}) (jQuery); // End of use strict
+
+    // *********************ToMarcus******************************
+    // *************************Handle LoginIn********************
+    // ***********************************************************
+    async function handleLogin() {
+        if (confirm("Are you sure want to login?")) {
+            var user_id = $('#user_name').val();
+            var user_password = $('#user_password').val();
+
+            console.log("*************handleLogin ", user_id, user_password);
+            if(!user_id || !user_password){
+                alert("Please input user or password!");
+            }
+
+            LoginUser(user_id, user_password);
+        }
+    }
+
+    async function handleLogout() {
+        if (confirm("Are you sure want to logout?")) {
+            console.log("*************handleLogout ");
+            LogoutUser();
+        }
+    }
+})(jQuery); // End of use strict

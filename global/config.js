@@ -4,7 +4,7 @@ const issuerAddress = "rDUSz5wt8ZVENp7ZJq4qrv2f9A2h56Cf3b"; //for test
 
 const xumm = new XummPkce(apiKey, {
     implicit: true, // Implicit: allows to e.g. move from social browser to stock browser
-    redirectUrl: "https://dev2.cryptoland.io/xumm-return-payload.php",
+    redirectUrl: "https://sb236.cryptoland.host/xumm-return-payload.php",
 });
 
 
