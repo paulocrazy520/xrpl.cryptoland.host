@@ -16,8 +16,6 @@
             $(".btnNext").prop("disabled", true);
     });
 
-
-
     //When scrolling reach up to bottom, load more nft infos
     $(window).scroll(function () {
 

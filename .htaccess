@@ -1,0 +1,8 @@
+#order deny,allow
+#deny from all
+#allow from 64.108.58.72
+SetEnvIfNoCase User-agent (yandex|baidu|foobar|mj12bot|spider) not-allowed=1
+Order Allow,Deny
+Allow from ALL
+Deny from env=not-allowed
+Deny from 149.202.87.176

@@ -14,6 +14,10 @@
                       <ul class="cs-nav_list">
                         <li class="menu-item-has-children">
                           <a href="index.php">Home</a>
+                          <ul>
+                            <li><a href="?PAGE_TYPE=main">Market Place</a></li>
+                            <li><a href="?PAGE_TYPE=claim">Claim-Reveal</a></li>
+                          </ul>
                         </li>
                         
                         <li><a href="how-it-works.html">How It Works</a></li>
@@ -253,7 +257,7 @@
                       </div>
                     </div>
                   </div>
-                  <div class="cs-toggle_box cs-profile_box">
+                  <div class="cs-toggle_box cs-profile_box  cs-mobile_search_toggle">
                     <div class="cs-toggle_btn cs-header_icon_btn cs-center">
                       <svg
                         width="19"
@@ -278,8 +282,8 @@
                     </div>
                     <div class="cs-toggle_body">
                       <div class="cs-user_info">
-                        <h3 class="cs-user_name">Thomas G. Smith</h3>
-                        <h4 class="cs-user_balance">13.45 ETH</h4>
+                        <!-- <h3 class="cs-user_name">Thomas G. Smith</h3>
+                        <h4 class="cs-user_balance">13.45 ETH</h4> -->
                         <div class="cs-user_profile_link">
                           <div class="cs-user_profile_link_in">
                             <span id="wallet-address">xxxxxxx</span>
@@ -301,7 +305,7 @@
                         </div>
                       </div>
                       <ul>
-                        <li><a href="user-profile.html">My Profile</a></li>
+                        <!-- <li><a href="user-profile.html">My Profile</a></li>
                         <li><a href="user-items.html">My Item</a></li>
                         <li><a id="auth_profile">My Wallet</a></li>
                         <li>
@@ -320,28 +324,41 @@
                             >
                           </div>
                         </li>
-                        <li><a href="login.html">Logout</a></li>
-                      </ul>
+                        <li><a  class="btn_logout">Logout</a></li>
+                      </ul> -->
                       <div class="text-center">
-                        <a href="create-items.html" class="cs-btn cs-style1"
-                          ><span>Create</span></a
-                        >
+                        <?php if(isset($_SESSION["user_id"]) && !empty($_SESSION["user_id"])) { ?>
+                        <button class="cs-btn cs-style1 w-100 auth" id="auth" >
+                          <span>Connect Wallet</span>
+                        </button>
+                        <div class="cs-height_30 cs-height_lg_30"></div>
+                          <?php } ?>
+
+                          <?php if(isset($_SESSION["user_id"]) && !empty($_SESSION["user_id"])) { ?>
+                              <button class="cs-btn cs-style1 w-100 btn_logout" id="btn_logout" >
+                                <span>Logout #<?php echo $_SESSION['user_id']; ?></span>
+                              </button>
+                          <?php }else{ ?>
+                          <button class="cs-btn cs-style1 btn_login_modal w-100" id="btn_login_modal" >
+                            <span>Login</span>
+                          </button>
+                          <?php } ?>
                       </div>
                     </div>
                   </div>
 
                   <?php if(isset($_SESSION["user_id"]) && !empty($_SESSION["user_id"])) { ?>
-                  <button class="cs-btn cs-style1" id="auth" class="auth">
+                  <button class="cs-btn cs-style1 auth" id="auth"  >
                     <span>Connect Wallet</span>
                   </button>
                     <?php } ?>
 
                     <?php if(isset($_SESSION["user_id"]) && !empty($_SESSION["user_id"])) { ?>
-                        <button class="cs-btn cs-style1 cs-btn_lg w-100" id="btn_logout">
-                          <span>Logout</span>
+                        <button class="cs-btn cs-style1 btn_logout" id="btn_logout">
+                        <span>Logout #<?php echo $_SESSION['user_id']; ?></span>
                         </button>
                     <?php }else{ ?>
-                    <button class="cs-btn cs-style1" id="login" class="login">
+                    <button class="cs-btn cs-style1 btn_login_modal" id="btn_login_modal">
                       <span>Login</span>
                     </button>
                     <?php } ?>

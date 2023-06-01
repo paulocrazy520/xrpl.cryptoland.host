@@ -1113,7 +1113,7 @@ kbd {
 }
 
 .cs-page_head {
-  padding: 70px 0 75px;
+  padding: 30px 0 35px;
   position: relative;
 }
 
@@ -3014,7 +3014,7 @@ kbd {
     font-size: 16px;
   }
   .cs-page_head {
-    padding: 60px 0 65px;
+    padding: 30px 0 35px;
   }
   .cs-col_reverse_lg {
     -webkit-box-orient: vertical;

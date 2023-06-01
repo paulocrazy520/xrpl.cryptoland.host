@@ -6,6 +6,14 @@ if ($forceDebug == true) {
     ini_set('display_startup_errors', 1);
     error_reporting(E_ALL);
 }
+
+require_once __DIR__ . '/vendor/autoload.php';
+
+use Dotenv\Dotenv;
+
+$dotenv = Dotenv::createImmutable(__DIR__);
+$dotenv->load();
+
 require_once 'assets/init.php';
 $isMenu = isset($_POST['menuCollection']) ? true : false;
 if($isMenu)
@@ -46,7 +54,10 @@ if($isMenu)
   if($isDetail)
     require_once "pages/main/detail.php";
   else
-    require_once "pages/main/explorer.php";
+  {
+    $pageType = isset($_GET['PAGE_TYPE']) ? $_GET['PAGE_TYPE'] : (isset($_ENV['PAGE_TYPE']) ? $_ENV['PAGE_TYPE'] : 'claim');
+    require_once "pages/$pageType/explorer.php";
+  }
   
   if(!$isMenu){
     require_once "pages/footer.php";

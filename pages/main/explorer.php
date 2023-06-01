@@ -7,7 +7,7 @@
       <h1 class="cs-page_title">Xrpl MarketPlace</h1>
       <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-        <li class="breadcrumb-item active">Explore</li>
+        <li class="breadcrumb-item active">MarketPlace</li>
       </ol>
     </div>
   </div>
