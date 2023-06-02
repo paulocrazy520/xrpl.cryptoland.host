@@ -1,4 +1,4 @@
-<?php     if(!$isMenu){ ?>
+<?php     if(!$isPost){ ?>
 <div class="cs-height_90 cs-height_lg_80"></div>
 <!-- Start Page Head -->
 <section class="cs-page_head cs-bg" data-src="assets/img/page_head_bg.svg">
@@ -15,10 +15,10 @@
 <!-- End Page Head -->
 <div class="cs-height_100 cs-height_lg_70"></div>
 <div class="" style="padding-left:2%; padding-right:2%">
-    <?php require_once "left-menu.php"?>
-    <?php require_once "main-section-test.php"?>
+    <?php require_once "filter.php"?>
+    <?php require_once "list.php"?>
 </div>
 
 <?php } else { ?>
-	<?php require_once "main-section-test.php"?>
+	<?php require_once "list.php"?>
 <?php } ?>

@@ -275,7 +275,6 @@ async function claimOffer(standbyBuyerField,
 
     console.log(result.data);
 
-    const image = result.data.image;
     const offerId = result.data.offerId;
 
     var transactionBlob = {

@@ -1,6 +1,6 @@
 
  <!-- .col -->
- <div class="col-xl-3 col-lg-4 col-sm-6 nftCard"  style="min-width:350px; text-align:center">
+ <div class="col-xl-3 col-lg-4 col-sm-6 nft-card"  style="min-width:350px; text-align:center">
               <div class="cs-card cs-style4 cs-box_shadow cs-white_bg">
 
                 <!-- <a href="#" class="cs-card_thumb cs-zoom_effect"  onClick="window.open('<?php echo $videoPath ?>', 'newwindow', 'width=600,height=600,left='+((screen.width-600)/2)+',top='+((screen.height-600)/2));  return false;"> -->

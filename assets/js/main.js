@@ -1,3 +1,33 @@
+
+  /*--------------------------------------------------------------
+    9. Isotop Initialize
+  --------------------------------------------------------------*/
+  function isotopInit() {
+    if ($.exists('.cs-isotop')) {
+      $('.cs-isotop').isotope({
+        itemSelector: '.cs-isotop_item',
+        transitionDuration: '0.60s',
+        percentPosition: true,
+        masonry: {
+          columnWidth: '.cs-grid_sizer',
+        },
+      });
+      /* Active Class of Portfolio*/
+      $('.cs-isotop_filter ul li').on('click', function (event) {
+        $(this).siblings('.active').removeClass('active');
+        $(this).addClass('active');
+        event.preventDefault();
+      });
+      /*=== Portfolio filtering ===*/
+      $('.cs-isotop_filter ul').on('click', 'a', function () {
+        var filterElement = $(this).attr('data-filter');
+        $(this).parents('.cs-isotop_filter').siblings('.cs-isotop').isotope({
+          filter: filterElement,
+        });
+      });
+    }
+  }
+  
 (function ($) {
   'use strict';
 
@@ -375,34 +405,6 @@
 
   }
 
-  /*--------------------------------------------------------------
-    9. Isotop Initialize
-  --------------------------------------------------------------*/
-  function isotopInit() {
-    if ($.exists('.cs-isotop')) {
-      $('.cs-isotop').isotope({
-        itemSelector: '.cs-isotop_item',
-        transitionDuration: '0.60s',
-        percentPosition: true,
-        masonry: {
-          columnWidth: '.cs-grid_sizer',
-        },
-      });
-      /* Active Class of Portfolio*/
-      $('.cs-isotop_filter ul li').on('click', function (event) {
-        $(this).siblings('.active').removeClass('active');
-        $(this).addClass('active');
-        event.preventDefault();
-      });
-      /*=== Portfolio filtering ===*/
-      $('.cs-isotop_filter ul').on('click', 'a', function () {
-        var filterElement = $(this).attr('data-filter');
-        $(this).parents('.cs-isotop_filter').siblings('.cs-isotop').isotope({
-          filter: filterElement,
-        });
-      });
-    }
-  }
 
   /*--------------------------------------------------------------
     10. Modal Video

@@ -17,7 +17,7 @@
     });
 
     //When scrolling reach up to bottom, load more nft infos
-    $(window).scroll(function () {
+    $(window).scroll(async function () {
         if ($('.cs-preloader').css('display') != 'none')
             return;
 
@@ -26,7 +26,7 @@
             var page = parseInt($('#page').val());
             if (page < totalPages) {
                 $('#page').val(page + 1);
-                loadMorePage();
+                await loadMorePage();
             }
         }
     });
@@ -34,16 +34,24 @@
     /*=============================================================================*/
     /*---------------------Reload page rendering for main page --------------------*/
     /*=============================================================================*/
-    async function loadMorePage(isMenu = false) {
-        if (isMenu)
+    async function loadMorePage(isPost = false) {
+        if (isPost)
             $('#page').val(1);
 
         const formData = new FormData();
-        formData.append('menuCollection', $('#menuCollection').val());
-        formData.append('menuRarity', $('#menuRarity').val())
-        formData.append('menuColor', $('#menuColor').val())
-        formData.append('menuSale', $('#menuSale').val())
-        formData.append('menuBid', $('#menuBid').val());
+
+        formData.append('pageType', $('#pageType').val());
+        if ($('#pageType').val() == "main") {
+            formData.append('menuCollection', $('#menuCollection').val());
+            formData.append('menuRarity', $('#menuRarity').val())
+            formData.append('menuColor', $('#menuColor').val())
+            formData.append('menuSale', $('#menuSale').val())
+            formData.append('menuBid', $('#menuBid').val());
+        }
+        else if ($('#pageType').val() == "claim") {
+
+        }
+
         formData.append('page', $('#page').val())
 
         console.log([...formData]);
@@ -56,16 +64,25 @@
                 body: formData
             });
             const html = await response.text();
-            if (isMenu)
-                $('#main-section').html(html);
-            else
-                $('#main-section').append(html);
+            if (isPost)
+                $('#nft-list').html(html);
+            else {
+                $('.cs-isotop').append(html);
+                $('.cs-isotop').isotope('reloadItems').isotope('layout');
+
+                setTimeout(function () {
+                    isotopInit();
+                    console.log("*********isotopInit to grid dealy 1000");
+                }, 1000);
+
+
+            }
         } catch (error) {
             console.error(error);
         }
 
         var totalCards = $('#totalCards').val();
-        var cards = $('#main-section').find('.nftCard').toArray();
+        var cards = $('#nft-list').find('.nft-card').toArray();
         var cardsIndex = Math.min(cards.length, $('#onPageCards').val() * $('#page').val());
         $(".cs-search_result").html(totalCards + "/" + cardsIndex);
 

@@ -1,20 +1,18 @@
 <?php
+use GuzzleHttp\Client;
+use GuzzleHttp\Promise;
 
 /********************Following statements can be updated********************* */
+$num_results_on_page = 20; 
 $apiKey = "04b42479-cc50-4410-a783-1686eeebe65f";  //dev2
 $apiSecret = "f53c6edc-1fb1-4c7f-8b79-f1ffef28037d"; // dev2
+
 $xummSdk = new \Xrpl\XummSdkPhp\XummSdk($apiKey, $apiSecret);
 $endpoint_url = "https://s.altnet.rippletest.net:51234";
+$server_url = "https://sb237.cryptoland.host:28850/";
+
 $issuerAddress = "rDUSz5wt8ZVENp7ZJq4qrv2f9A2h56Cf3b"; //for test
-
-/*********Followings are only used for test********** */
 $userIdsByAddress = ["r97nyzoijsUYp5CQUQNf8dMzh4XyqZpFCU" => 3, "r3FoWNS5sHMv9nhx9H9YEsGEqJWqvFsXRn" => 4, "r9FELhVcmqCyz3QdCWPYQLR3GBz5MzdvRx" => 5, "rJAHd21L5Lwcj1PENcE2rGmUMHZSRzqwJi" => 6, "rMUzoNUXBZVh43groaeaU2dd7fBFc8N1gz" => 7];
-//$issued_user_token = "da36f1ee-b173-4a8b-a266-3721a1e86849"; //for test
-
-// if(!isset($_SESSION["user_id"]) || empty($_SESSION["user_id"]))
-//     $_SESSION['user_id'] = 3; // for test
-
-//     $_SESSION['user_id'] = 4; // for test
 /**************************************************************************** */
 
 if(isset($_SESSION["user_id"]) && !empty($_SESSION["user_id"]))
@@ -24,86 +22,97 @@ if(isset($_SESSION["user_id"]) && !empty($_SESSION["user_id"]))
 }
 
 
-/*********Write log file with mode*********** */
-function NRG_writeFileByMode($fn, $q, $mode = 'a')
+/*****************Get Nft Infos from Database*****************/
+function GetNftInfoByNftIdFromDatabase($nft_id)
 {
+    global $sqlConnect;
 
-    $year = date("Y");
-    $month = date("m");
-    $day = date("d");
-    $rootFolder = '/var/www/htdocs/logs/';
-    $calFolder = "$year/$month/$day/";
+    $sql =  "SELECT 
+    user_nft.nft_id, 
+    user_nft.assetType, 
+    CASE
+        WHEN user_nft.assetType = 1 THEN lbk_nft.base_uri
+        WHEN user_nft.assetType = 2 THEN vials_nft.base_uri
+        ELSE NULL
+    END AS base_uri,
+    CASE
+        WHEN user_nft.assetType = 1 THEN lbk_nft.claimed
+        WHEN user_nft.assetType = 2 THEN vials_nft.claimed
+        ELSE NULL
+    END AS claimed,
+		CASE
+        WHEN user_nft.assetType = 1 THEN lbk_nft.revealed
+        WHEN user_nft.assetType = 2 THEN vials_nft.revealed
+        ELSE NULL
+    END AS revealed
+    FROM user_nft
+    LEFT JOIN lbk_nft ON user_nft.nft_id = lbk_nft.nft_id AND user_nft.assetType = 1
+    LEFT JOIN vials_nft ON user_nft.nft_id = vials_nft.nft_id AND user_nft.assetType = 2
+    WHERE user_nft.nft_id = '$nft_id'";
 
-    if (!file_exists($rootFolder . $calFolder)) {
-        $oldmask = umask(0);
-        @mkdir($rootFolder . $calFolder, 0777, true);
-        @umask($oldmask);
+    $result = mysqli_query($sqlConnect, $sql) or die("Error in Selecting " . mysqli_error($sqlConnect));
+
+    $jsonArray = array();
+    while ($row = mysqli_fetch_assoc($result)) {
+        $jsonArray[] = $row;
     }
 
-    if (!is_file($rootFolder . $calFolder . $fn)) {
-        $contents = "New File! \n\n";
-        file_put_contents($rootFolder . $calFolder . $fn, $contents);
-    }
-
-    $fileName = $rootFolder . $calFolder . $fn;
-    $handle   = fopen($fileName, $mode);
-    fwrite($handle, $q . "\n");
-    fclose($handle);
-}
-
-/*********Get User Info from database including xumm session from user id*********** */
-function getUserInfo($user_id)
-{
-    global $sqlConnect, $xummSdk;
-    $sql2 = "SELECT * FROM NRG_Users WHERE user_id = '$user_id' LIMIT 1";
-    $result = mysqli_query($sqlConnect, $sql2);
-    if($row = mysqli_fetch_assoc($result))
-        return $row;
-}
-
-/*********This is only for test color*********** */
-function getHexColor($color = "")
-{
-    if ($color == 'Red') {
-        $r = "#80000035";
-    } else if ($color == 'Green') {
-        $r = "#00800035";
-    } else if ($color == 'Purple') {
-        $r = "#80008035";
-    } else {
-        $r = "#00008035";
-    }
-    return $r;
-}
-
-/*============================================================*/
-/*------------ Metadata String from UUID string---------------*/
-/*============================================================*/
-function GetAsciiStringFromHex($hexString) {
-    // convert hex string to binary string
-    $binaryString = hex2bin($hexString);
+    if($jsonArray && count($jsonArray) >= 1)
+    return $jsonArray[0];
     
-    // convert binary string to ASCII string
-    $asciiString = pack('H*', bin2hex($binaryString));
+}
+/*****************Get Nft Offers by owned account from Server******************* */
+function GetUnClaimedOffersFromServer($account = null){
     
-    return $asciiString;
-  }
+    global $issuerAddress, $current_user, $server_url;
+    if(!$current_user || !$issuerAddress)
+        return;
 
-/********************************************** */
-function GetLogFilePath($fileName)
-{
-    $year = date("Y");
-    $month = date("m");
-    $day = date("d");
-    $rootFolder = '/var/www/htdocs/logs/';
-    $calFolder = "$year/$month/$day/";
-    $historyFilePath = $rootFolder . $calFolder . $fileName;
+    if(!$account)
+        $account = $current_user;
+        
+    $client = new \GuzzleHttp\Client();
     
-    return $historyFilePath;
+    $client = new Client([
+        'base_uri' => $server_url 
+    ]);
+
+
+    $filter = "issuer=$issuerAddress&account=$account";
+    $request = $client->getAsync("unclaimed_offers?$filter");
+    $response = $request->wait();
+
+    // Convert the JSON response to an array for easier processing
+    $transfer_history = json_decode($response->getBody());
+    return $transfer_history;    
 }
 
-use GuzzleHttp\Client;
-use GuzzleHttp\Promise;
+
+/*****************Get owned Nft Infos by account from Server******************* */
+function GetAccountNftsFromServer($account = null){
+    
+    global $issuerAddress, $current_user, $server_url;
+    if(!$current_user)
+        return;
+        
+    if(!$account)
+        $account = $current_user;
+        
+    $client = new \GuzzleHttp\Client();
+    
+    $client = new Client([
+        'base_uri' =>$server_url 
+    ]);
+
+
+    $filter = "account=$account";
+    $request = $client->getAsync("account_nfts?$filter");
+    $response = $request->wait();
+
+    // Convert the JSON response to an array for easier processing
+    $transfer_history = json_decode($response->getBody());
+    return $transfer_history;    
+}
 
 
 /*****************Newly added******************* */
@@ -273,4 +282,81 @@ function LoadNftInfosFromCurrentUser()
     } catch (Exception $e) {
         echo $e->getMessage() . "\n";
     }
+}
+
+
+/*********Write log file with mode*********** */
+function NRG_writeFileByMode($fn, $q, $mode = 'a')
+{
+
+    $year = date("Y");
+    $month = date("m");
+    $day = date("d");
+    $rootFolder = '/var/www/htdocs/logs/';
+    $calFolder = "$year/$month/$day/";
+
+    if (!file_exists($rootFolder . $calFolder)) {
+        $oldmask = umask(0);
+        @mkdir($rootFolder . $calFolder, 0777, true);
+        @umask($oldmask);
+    }
+
+    if (!is_file($rootFolder . $calFolder . $fn)) {
+        $contents = "New File! \n\n";
+        file_put_contents($rootFolder . $calFolder . $fn, $contents);
+    }
+
+    $fileName = $rootFolder . $calFolder . $fn;
+    $handle   = fopen($fileName, $mode);
+    fwrite($handle, $q . "\n");
+    fclose($handle);
+}
+
+/*********Get User Info from database including xumm session from user id*********** */
+function getUserInfo($user_id)
+{
+    global $sqlConnect, $xummSdk;
+    $sql2 = "SELECT * FROM NRG_Users WHERE user_id = '$user_id' LIMIT 1";
+    $result = mysqli_query($sqlConnect, $sql2);
+    if($row = mysqli_fetch_assoc($result))
+        return $row;
+}
+
+/*********This is only for test color*********** */
+function getHexColor($color = "")
+{
+    if ($color == 'Red') {
+        $r = "#80000035";
+    } else if ($color == 'Green') {
+        $r = "#00800035";
+    } else if ($color == 'Purple') {
+        $r = "#80008035";
+    } else {
+        $r = "#00008035";
+    }
+    return $r;
+}
+
+/*------------ Metadata String from UUID string---------------*/
+function GetAsciiStringFromHex($hexString) {
+    // convert hex string to binary string
+    $binaryString = hex2bin($hexString);
+    
+    // convert binary string to ASCII string
+    $asciiString = pack('H*', bin2hex($binaryString));
+    
+    return $asciiString;
+  }
+
+/********************************************** */
+function GetLogFilePath($fileName)
+{
+    $year = date("Y");
+    $month = date("m");
+    $day = date("d");
+    $rootFolder = '/var/www/htdocs/logs/';
+    $calFolder = "$year/$month/$day/";
+    $historyFilePath = $rootFolder . $calFolder . $fileName;
+    
+    return $historyFilePath;
 }

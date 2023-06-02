@@ -1,4 +1,4 @@
-<?php if(!$isMenu){  ?>
+<?php if(!$isPost){  ?>
 <div class="cs-sidebar_frame_right">
 
 	<div class="cs-filter_head">
@@ -13,11 +13,11 @@
 
     <div class="cs-height_30 cs-height_lg_30"></div>
 
-    <div class="row" id="main-section">
+    <div class="row" id="nft-list">
 <?php
 }
 
-$num_results_on_page = 20; 
+
 //Load nft infos from issuer and account
 $totalArray = LoadNftInfosFromCurrentUser();
 
@@ -90,7 +90,7 @@ $filterArray = [];
 				continue;
 
 			if( ($page-1) * $num_results_on_page <= $index &&  $index < $page * $num_results_on_page)
-			require "normal-card-test.php";
+			require "card.php";
 			
 			$index = $index + 1;
 			array_push($filterArray, $nft);
@@ -99,11 +99,10 @@ $filterArray = [];
 	$total_cards = count($filterArray);
 	$total_pages = ceil($total_cards / $num_results_on_page) ;
 
-	echo '<input type=hidden id="totalPages" value="'.$total_pages.'"/>';
-	echo '<input type=hidden id="onPageCards" value="'.$num_results_on_page.'"/>';
-	echo '<input type=hidden id="totalCards" value="'.$total_cards.'"/>';
-
-	if(!$isMenu){
+	if(!$isPost){
+		echo '<input type=hidden id="totalPages" value="'.$total_pages.'"/>';
+		echo '<input type=hidden id="onPageCards" value="'.$num_results_on_page.'"/>';
+		echo '<input type=hidden id="totalCards" value="'.$total_cards.'"/>';
 		echo "</div></div>";
 	}
 ?>
