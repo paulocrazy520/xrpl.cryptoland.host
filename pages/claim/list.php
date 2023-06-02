@@ -1,23 +1,19 @@
+<?php if(!$isPost){  ?>
 <div class="cs-filter_head">
 	<div class="cs-filter_head_left">
 	<span class="cs-search_result cs-medium cs-ternary_color"> </span><span>Results</span>
-	<!-- <div class="cs-form_field_wrap">
-		<input type="text" class="cs-form_field cs-field_sm" placeholder="In Auction">
-	</div> -->
 	<a href="#" class="cs-clear_btn">Clear All</a>
 	</div>
 </div>
 
 <div class="cs-height_30 cs-height_lg_30"></div>
 
-<div class="cs-isotop cs-style1 cs-isotop_col_5 cs-has_gutter_30">
+<div class="cs-isotop cs-style1 cs-isotop_col_5 cs-has_gutter_30" id="main-section">
 	<div class="cs-grid_sizer"></div>
 <?php
+}
 
-
-$num_results_on_page = 20; 
-//Load nft infos from issuer and account
-$totalArray = LoadNftInfosFromCurrentUser();
+$totalArray = GetAccountNftsFromServer($issuerAddress);
 
 if(!$totalArray)
 	return;
@@ -25,18 +21,13 @@ if(!$totalArray)
 $filterArray = [];
 
 //******************Filter Menu Begin*****************
-	$menuCollection = isset($_POST['menuCollection']) ? $_POST['menuCollection'] : "";
-	$menuRarity = isset($_POST['menuRarity']) ? $_POST['menuRarity'] : "";
-	$menuColor = isset($_POST['menuColor']) ? $_POST['menuColor'] : "";
-	$menuSale = isset($_POST['menuSale']) ? $_POST['menuSale'] : "";
-	$menuBid = isset($_POST['menuBid']) ? $_POST['menuBid'] : "";
 	$page = isset($_POST['page']) && is_numeric($_POST['page']) ? $_POST['page'] : 1;
 
 	$index = 0 ;
 	foreach($totalArray as $nft){
 
 		$nft = json_decode(json_encode($nft));
-        $url = $nft->URI;
+        $url = GetAsciiStringFromHex($nft->URI);
 
 		if (!isset($url) || !isset($nft)){
 			return;
@@ -73,19 +64,7 @@ $filterArray = [];
 					break;
 			}
 		}
-
-		if(($menuCollection && ($menuCollection != $collectionFamily))  || ($menuRarity && strstr($rarity, $menuRarity) == false) ||  ($menuColor && ($menuColor != $colorName)))
-			continue;
-			
-			$asset_owner = $nft->Owner;
-			$asset_has_sell_offer = filter_var($nft->hasSellOffer, FILTER_VALIDATE_BOOLEAN);
-			$current_user_has_sell = filter_var($nft->hasSellOfferByUser, FILTER_VALIDATE_BOOLEAN);
-			$asset_has_bid = filter_var($nft->hasBuyOffer, FILTER_VALIDATE_BOOLEAN);
-			$current_user_has_bid = filter_var($nft->hasBuyOfferByUser, FILTER_VALIDATE_BOOLEAN);
-			
-
-			if(($menuSale == "checked" && !$asset_has_sell_offer) || ($menuBid == "checked" && !$asset_has_bid))
-				continue;
+			//print_r( $nft);
 
 			if( ($page-1) * $num_results_on_page <= $index &&  $index < $page * $num_results_on_page)
 			require "card.php";
@@ -101,9 +80,12 @@ $filterArray = [];
 	$total_cards = count($filterArray);
 	$total_pages = ceil($total_cards / $num_results_on_page) ;
 
-	echo '<input type=hidden id="totalPages" value="'.$total_pages.'"/>';
-	echo '<input type=hidden id="onPageCards" value="'.$num_results_on_page.'"/>';
-	echo '<input type=hidden id="totalCards" value="'.$total_cards.'"/>';
+	if(!$isPost){
+		echo "</div>";
+		echo '<input type=hidden id="totalPages" value="'.$total_pages.'"/>';
+		echo '<input type=hidden id="onPageCards" value="'.$num_results_on_page.'"/>';
+		echo '<input type=hidden id="totalCards" value="'.$total_cards.'"/>';
+	}
 ?>
-</div>
+
 	
