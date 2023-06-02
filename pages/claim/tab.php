@@ -1,5 +1,14 @@
 <input type="hidden" id="page" name="page" value='1' />
+
+<input type="hidden" id="allPage" name="allPage" value='1' />
+<input type="hidden" id="unclaimedPage" name="unclaimedPage" value='1' />
+<input type="hidden" id="unRevealedPage" name="unRevealedPage" value='1' />
+<input type="hidden" id="revealedPage" name="revealedPage" value='1' />
+
 <input type="hidden" id="pageType" name="pageType" value='claim' />
+<input type="hidden" id="tabType" name="tabType" value='*' />
+
+<input type="hidden" id="numCardsPerPage" value="<?php echo $num_results_on_page; ?>"/>
 
 <div class="cs-isotop_filter cs-style1 cs-center">
       <ul class="cs-mp0 cs-center">

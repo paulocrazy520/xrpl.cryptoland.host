@@ -4,6 +4,7 @@ use GuzzleHttp\Promise;
 
 /********************Following statements can be updated********************* */
 $num_results_on_page = 20; 
+
 $apiKey = "04b42479-cc50-4410-a783-1686eeebe65f";  //dev2
 $apiSecret = "f53c6edc-1fb1-4c7f-8b79-f1ffef28037d"; // dev2
 

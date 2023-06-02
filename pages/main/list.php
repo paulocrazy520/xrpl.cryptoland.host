@@ -32,6 +32,7 @@ $filterArray = [];
 	$menuColor = isset($_POST['menuColor']) ? $_POST['menuColor'] : "";
 	$menuSale = isset($_POST['menuSale']) ? $_POST['menuSale'] : "";
 	$menuBid = isset($_POST['menuBid']) ? $_POST['menuBid'] : "";
+
 	$page = isset($_POST['page']) && is_numeric($_POST['page']) ? $_POST['page'] : 1;
 
 	$index = 0 ;
@@ -97,12 +98,10 @@ $filterArray = [];
 	}
 //***************Fiter Menu end*************
 	$total_cards = count($filterArray);
-	$total_pages = ceil($total_cards / $num_results_on_page) ;
 
 	if(!$isPost){
-		echo '<input type=hidden id="totalPages" value="'.$total_pages.'"/>';
-		echo '<input type=hidden id="onPageCards" value="'.$num_results_on_page.'"/>';
-		echo '<input type=hidden id="totalCards" value="'.$total_cards.'"/>';
+		echo '<input type=hidden id="numCardsPerPage" value="'.$num_results_on_page.'"/>';
+		echo '<input type=hidden id="numTotalCards" value="'.$total_cards.'"/>';
 		echo "</div></div>";
 	}
 ?>

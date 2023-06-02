@@ -14,6 +14,11 @@
             $(".btnNext").prop("disabled", false);
         else
             $(".btnNext").prop("disabled", true);
+
+        var numTotalCards = $('#numTotalCards').val();
+        var cards = $('#nft-list').find('.nft-card').toArray();
+        var cardsIndex = Math.min(cards.length, $('#numCardsPerPage').val() * $('#page').val());
+        $(".cs-search_result").html(numTotalCards + "/" + cardsIndex);
     });
 
     //When scrolling reach up to bottom, load more nft infos
@@ -41,6 +46,8 @@
         const formData = new FormData();
 
         formData.append('pageType', $('#pageType').val());
+        formData.append('page', $('#page').val())
+
         if ($('#pageType').val() == "main") {
             formData.append('menuCollection', $('#menuCollection').val());
             formData.append('menuRarity', $('#menuRarity').val())
@@ -51,11 +58,7 @@
         else if ($('#pageType').val() == "claim") {
 
         }
-
-        formData.append('page', $('#page').val())
-
-        console.log([...formData]);
-
+        
         try {
             $('.cs-preloader').delay(10).fadeIn('slow'); //Show loading screen
 
@@ -72,19 +75,16 @@
 
                 setTimeout(function () {
                     isotopInit();
-                    console.log("*********isotopInit to grid dealy 1000");
                 }, 1000);
-
-
             }
         } catch (error) {
             console.error(error);
         }
 
-        var totalCards = $('#totalCards').val();
+        var numTotalCards = $('#numTotalCards').val();
         var cards = $('#nft-list').find('.nft-card').toArray();
-        var cardsIndex = Math.min(cards.length, $('#onPageCards').val() * $('#page').val());
-        $(".cs-search_result").html(totalCards + "/" + cardsIndex);
+        var cardsIndex = Math.min(cards.length, $('#numCardsPerPage').val() * $('#page').val());
+        $(".cs-search_result").html(numTotalCards + "/" + cardsIndex);
 
         $('.cs-preloader').delay(10).fadeOut('slow'); //Show loading screen
     }

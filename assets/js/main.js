@@ -1,6 +1,7 @@
 
   /*--------------------------------------------------------------
-    9. Isotop Initialize
+    ***************9. Isotop Initialize ***********
+    ***************    updated by Jeff  ***********
   --------------------------------------------------------------*/
   function isotopInit() {
     if ($.exists('.cs-isotop')) {
@@ -21,6 +22,8 @@
       /*=== Portfolio filtering ===*/
       $('.cs-isotop_filter ul').on('click', 'a', function () {
         var filterElement = $(this).attr('data-filter');
+
+        $('#tabType').val(filterElement);
         $(this).parents('.cs-isotop_filter').siblings('.cs-isotop').isotope({
           filter: filterElement,
         });
