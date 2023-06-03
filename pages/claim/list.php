@@ -19,8 +19,8 @@
 	$claimedArray = GetAccountNftsFromServer();
 	$unclaimedArray = GetUnClaimedOffersFromServer();
 
-	if(!$claimedArray || !$unclaimedArray)
-		return;
+	 if(!$claimedArray && !$unclaimedArray)
+	 	return;
 
 	switch($typeType){
 		case "*":

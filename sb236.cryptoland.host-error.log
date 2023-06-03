@@ -116,3 +116,7 @@
 [Fri Jun 02 17:34:42.606112 2023] [proxy_fcgi:error] [pid 1305571:tid 139855186405120] (70007)The timeout specified has expired: [client 188.43.136.46:59388] AH01075: Error dispatching request to : (polling), referer: https://sb236.cryptoland.host/?PAGE_TYPE=claim
 [Fri Jun 02 17:36:20.130407 2023] [proxy_fcgi:error] [pid 1305571:tid 139855186405120] (70007)The timeout specified has expired: [client 188.43.136.46:4918] AH01075: Error dispatching request to : (polling), referer: https://sb236.cryptoland.host/?PAGE_TYPE=claim
 [Fri Jun 02 17:49:10.604298 2023] [proxy_fcgi:error] [pid 1291605:tid 139855169619712] (70007)The timeout specified has expired: [client 188.43.136.46:16435] AH01075: Error dispatching request to : (polling), referer: https://sb236.cryptoland.host/
+[Fri Jun 02 18:44:56.687636 2023] [cgid:error] [pid 1291607:tid 139854687999744] [client 51.77.247.119:55006] AH01264: script not found or unable to stat: /var/www/cgi-bin/.env
+[Fri Jun 02 18:44:56.942900 2023] [cgid:error] [pid 1305571:tid 139854134376192] [client 51.77.247.119:55090] AH01264: script not found or unable to stat: /var/www/cgi-bin/.env
+[Fri Jun 02 23:40:25.315760 2023] [core:error] [pid 1305571:tid 139853865940736] [client 83.97.73.89:51688] AH00126: Invalid URI in request POST /cgi-bin/.%2e/.%2e/.%2e/.%2e/bin/sh HTTP/1.1
+[Sat Jun 03 05:49:59.400879 2023] [proxy_fcgi:error] [pid 1305571:tid 139855094085376] [client 218.50.149.114:54826] AH01071: Got error 'Primary script unknown'

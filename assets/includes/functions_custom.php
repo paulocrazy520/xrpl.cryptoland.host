@@ -65,8 +65,8 @@ function GetNftInfoByNftIdFromDatabase($nft_id)
 /*****************Get Nft Offers by owned account from Server******************* */
 function GetUnClaimedOffersFromServer($account = null){
     
-    global $issuerAddress, $current_user, $server_url;
-    if(!$current_user || !$issuerAddress)
+    global  $current_user, $server_url;
+    if(!$current_user)
         return;
 
     if(!$account)
@@ -79,7 +79,7 @@ function GetUnClaimedOffersFromServer($account = null){
     ]);
 
 
-    $filter = "issuer=$issuerAddress&account=$account";
+    $filter = "account=$account";
     $request = $client->getAsync("unclaimed_offers?$filter");
     $response = $request->wait();
 
@@ -92,7 +92,7 @@ function GetUnClaimedOffersFromServer($account = null){
 /*****************Get owned Nft Infos by account from Server******************* */
 function GetAccountNftsFromServer($account = null){
     
-    global $issuerAddress, $current_user, $server_url;
+    global $current_user, $server_url;
     if(!$current_user)
         return;
         
