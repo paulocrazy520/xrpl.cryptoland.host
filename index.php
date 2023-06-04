@@ -60,7 +60,7 @@ if($isPost)
   }
   
   if(!$isPost){
-    require_once "pages/footer.php";
+    // require_once "pages/footer.php";
     require_once "pages/dialog.php";
   }
 

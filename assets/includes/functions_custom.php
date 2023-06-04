@@ -22,7 +22,78 @@ if(isset($_SESSION["user_id"]) && !empty($_SESSION["user_id"]))
     $current_user = $userInfo['xumm_address'];
 }
 
+function GetNftRevealInfosFromDatabase($claimedArray)
+{
+    global $sqlConnect, $current_user;
 
+    if(!$current_user)
+        return;
+    $sql =  "SELECT user_nft.nft_id as nft_id, 
+    CASE
+        WHEN user_nft.assetType = 1 THEN lbk_nft.revealed
+        WHEN user_nft.assetType = 2 THEN vials_nft.revealed
+        ELSE NULL
+    END AS revealed
+
+    FROM user_nft
+    LEFT JOIN lbk_nft ON user_nft.nft_id = lbk_nft.nft_id
+    LEFT JOIN vials_nft ON user_nft.nft_id = vials_nft.nft_id 
+    WHERE user_nft.owner_wallet= '$current_user'";
+
+    $result = mysqli_query($sqlConnect, $sql) or die("Error in Selecting " . mysqli_error($sqlConnect));
+
+    $jsonArray = array();
+    while ($row = mysqli_fetch_assoc($result)) {
+        $jsonArray[] = $row;
+    }
+
+    if($jsonArray && count($jsonArray) >= 1)
+    {
+        $revealedArray = array();
+        $unrevealedArray = array();
+        
+        foreach($jsonArray as $nft){
+            if (in_array( $nft["nft_id"], $claimedArray)) {
+                if($nft['revealed'] == 1)
+                    array_push($revealedArray, $nft["nft_id"]);
+                else
+                    array_push($unrevealedArray, $nft["nft_id"]);
+            }
+        }
+
+        return ["revealedArray"=>$revealedArray, "unrevealedArray" =>$unrevealedArray];
+    }
+}
+
+/*****************Get Count Of field from Database*********** */
+function GetRevealCountFromDatabase($isRevealed)
+{
+    global $sqlConnect, $current_user;
+
+    if(!$current_user)
+        return;
+
+    $sql =  "SELECT COUNT(*) AS total_count
+    FROM user_nft
+    LEFT JOIN lbk_nft ON user_nft.nft_id = lbk_nft.nft_id AND user_nft.assetType = 1 AND lbk_nft.revealed = '$isRevealed'
+    LEFT JOIN vials_nft ON user_nft.nft_id = vials_nft.nft_id AND user_nft.assetType = 2 AND vials_nft.revealed = '$isRevealed'
+    WHERE user_nft.owner_wallet= '$current_user'
+    AND (lbk_nft.revealed = '$isRevealed' OR vials_nft.revealed = '$isRevealed')";
+    
+
+    $result = mysqli_query($sqlConnect, $sql) or die("Error in Selecting " . mysqli_error($sqlConnect));
+
+    $jsonArray = array();
+    while ($row = mysqli_fetch_assoc($result)) {
+        $jsonArray[] = $row;
+    }
+
+    if($jsonArray && count($jsonArray) >= 1)
+    {
+        return $jsonArray[0]["total_count"];
+    }
+    
+}
 /*****************Get Nft Infos from Database*****************/
 function GetNftInfoByNftIdFromDatabase($nft_id)
 {
@@ -62,8 +133,8 @@ function GetNftInfoByNftIdFromDatabase($nft_id)
     return $jsonArray[0];
     
 }
-/*****************Get Nft Offers by owned account from Server******************* */
-function GetUnClaimedOffersFromServer($account = null){
+/*****************Get UnClaimed Nfts by owned account from Server******************* */
+function GetUnClaimedNftsFromServer($account = null){
     
     global  $current_user, $server_url;
     if(!$current_user)
@@ -116,7 +187,7 @@ function GetAccountNftsFromServer($account = null){
 }
 
 
-/*****************Newly added******************* */
+/**************************************************** */
 function GetFullNftInfoFromParam($filter, $nftTokenId){
     
     global $apiKey, $apiSecret;

@@ -100,8 +100,7 @@ $filterArray = [];
 	$total_cards = count($filterArray);
 
 	if(!$isPost){
-		echo '<input type=hidden id="numCardsPerPage" value="'.$num_results_on_page.'"/>';
-		echo '<input type=hidden id="numTotalCards" value="'.$total_cards.'"/>';
+		echo '<input type=hidden id="totalCount" value="'.$total_cards.'"/>';
 		echo "</div></div>";
 	}
 ?>

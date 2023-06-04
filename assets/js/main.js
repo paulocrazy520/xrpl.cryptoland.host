@@ -24,6 +24,7 @@
         var filterElement = $(this).attr('data-filter');
 
         $('#tabType').val(filterElement);
+        
         $(this).parents('.cs-isotop_filter').siblings('.cs-isotop').isotope({
           filter: filterElement,
         });
