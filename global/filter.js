@@ -9,13 +9,19 @@
 
     function updateShowingResult(key = "*") {
         var totalCount = $("#" + tabTypeIdArray[key] + "Count").val();
+        if (!totalCount)
+            return;
+
         var cardsCount = $('#nft-list').find(key == "*" ? ".nft-card" : key).toArray().length;
         $(".cs-search_result").html(totalCount + "/" + cardsCount);
     }
 
     async function loadMorePage(key = "*") {
         if (key == "*")
+        {
+            updateShowingResult(key);
             return;
+        }
 
         const formData = new FormData();
 
@@ -67,11 +73,10 @@
             return;
 
         var filterElement = $('#tabType').val();
-        console.log(filterElement);
 
         if (filterElement == "*")
             return;
- 
+
         console.log(filterElement);
         if ($(window).scrollTop() + $(window).height() >= $(document).height() - 1) {
             var cardsCount = $('#nft-list').find(filterElement == "*" ? ".nft-card" : filterElement).toArray().length;
@@ -89,7 +94,7 @@
 
     $('.cs-isotop_filter ul').on('click', 'a', function () {
         var filterElement = $(this).attr('data-filter');
-        
+
         $('#tabType').val(filterElement);
 
         var cardsCount = $('#nft-list').find(filterElement == "*" ? ".nft-card" : filterElement).toArray().length;

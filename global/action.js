@@ -32,12 +32,77 @@
                 console.log("***********BuyItem selected by nft token:***********", modalId, nftId);
                 handleBuyItemClick(nftId, offerId);
                 break;
-
+            case "#revealItem": //When click Buy Item button
+                var nftId = $(this).attr('nft-id');
+                console.log("***********RevealItem selected by nft token:***********", modalId, nftId);
+                handleRevealItemClick(nftId);
+                break;
+            case "#claimItem": //When click Buy Item button
+                var nftId = $(this).attr('nft-id');
+                var offerId = $(this).attr('offer-id');
+                console.log("***********ClaimItem selected by nft token:***********", modalId, nftId, offerId);
+                handleClaimItemClick(nftId, offerId);
+                break;
             default:
                 break;
         }
 
     })
+
+    // *********************ToMarcus**************************
+    // ***********Handle List Item(Create Sell Offer)********
+    // *******************************************************
+    async function handleRevealItemClick(nftId) {
+
+        if (confirm("Are you sure want to reveal this nft?")) {
+            console.log("*************hhandleRevealItemClick ", nftId);
+
+            $('.cs-preloader').delay(10).fadeIn('slow'); //Show loading screen
+
+            axios.post('custom.php', {
+                type: "RevealItem",
+                nftId: nftId
+            })
+                .then(response => {
+                    console.log('*********************handleRevealItemClick Response=', response);
+                    $('.cs-preloader').delay(10).fadeOut('slow'); //Show loading screen
+
+                    if(response.data == true){
+                        $('.cs-isotop_item[nft-id="' + nftId + '"]').removeClass('unrevealed').addClass('revealed');
+
+                        if($('#unrevealedCount').val() > 0)
+                        {
+                            $('#unrevealedCount').val($('#unrevealedCount').val()-1);
+                            $('#revealedCount').val($('#revealedCount').val()+1);
+                        }
+
+                        $('.cs-isotop').isotope('reloadItems').isotope('layout');
+
+                        setTimeout(function () {
+                            isotopInit();
+                        }, 1000);
+                    }
+                })
+                .catch(error => {
+                    console.error(error);
+                    $('.cs-preloader').delay(10).fadeOut('slow'); //Show loading screen
+                });
+
+        }
+    }
+
+    // *********************ToMarcus**************************
+    // ***********Handle List Item(Create Sell Offer)********
+    // *******************************************************
+    async function handleClaimItemClick(nftId, offerId) {
+
+        if (confirm("Are you sure want to claim this nft?")) {
+            console.log("*************handleClaimItemClick ", nftId, offerId);
+            await acceptSellOffer(accountAddress, nftId, offerId, "claim_offers");
+            //await createSellOffer(accountAddress, nftId, amount);
+        }
+    }
+
 
     // *********************ToMarcus**************************
     // ***********Handle List Item(Create Sell Offer)********
@@ -84,19 +149,19 @@
     async function handleBuyItemClick(nftId, offerId) {
         //get offer string from nftId
 
-        if(offerId){
+        if (offerId) {
             let response = await axios.get(
                 `https://test-api.xrpldata.com/api/v1/xls20-nfts/offer/id/${offerId}`);
             let offer = response.data.data.offer;
 
             console.log("***********handleBuyItemClick: OfferId", offer);
-            
-            if(!offer){
+
+            if (!offer) {
                 alert("No buy offer:" + offerId);
                 return;
             }
 
-            
+
             let amount = parseInt(offer.Amount) / (10 ** 6);
 
             let alertString = "Are you sure want to accept this item from " + offer.Owner + " with " + amount + "Xrp?";
@@ -105,21 +170,20 @@
                 await acceptSellOffer(accountAddress, nftId, offerId, "buy_offers");
             }
         }
-        else
-        {
+        else {
             let response = await axios.get(
                 `https://test-api.xrpldata.com/api/v1/xls20-nfts/offers/nft/${nftId}`);
             let sellArray = response.data.data.offers.sell;
 
             console.log("***********handleBuyItemClick", sellArray);
-            
-            if(!sellArray || !sellArray.length){
+
+            if (!sellArray || !sellArray.length) {
                 alert("No sell offer");
                 return;
             }
 
             let offerJson = sellArray[0];
-            
+
             let amount = parseInt(offerJson.Amount) / (10 ** 6);
 
             let alertString = "Are you sure want to buy this item from " + offerJson.Owner + " with " + amount + "Xrp?";
@@ -151,4 +215,4 @@
         }
     }
 
-}) (jQuery); // End of use strict
+})(jQuery); // End of use strict

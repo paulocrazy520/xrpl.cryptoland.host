@@ -46,14 +46,21 @@
 		$tab_index = 0;
 		foreach($arrayList as $totalArray)
 		{
-			$tab_index = 0;
 			$tabType = $tabTypeList[$tab_index];
 			$tab_index ++;
 
 			for($index = $cardsCount ;  $index < min(count($totalArray), ($cardsCount + $num_results_on_page - ($cardsCount % $num_results_on_page))) ; $index++)
 			{
-				$nfTokenID = $totalArray[$index];
-				$info = GetNftInfoByNftIdFromDatabase($nfTokenID);
+				if($tabType == ".unclaimed")
+				{
+					$nfTokenID = $totalArray[$index]->NFTokenID;
+					$offerID = $totalArray[$index]->OfferID;
+					$info = GetNftInfoByNftIdFromDatabase($nfTokenID);
+				}else
+				{
+					$info = $totalArray[$index];
+					$nfTokenID = $info["nft_id"];
+				}
 				$url = $info["base_uri"];
 			
 				$viewType =  str_replace(".", "", $tabType);
@@ -101,8 +108,16 @@
 	else{
 		for($index = $cardsCount ;  $index < min(count($totalArray), ($cardsCount + $num_results_on_page - ($cardsCount % $num_results_on_page))) ; $index++)
 		{
-			$nfTokenID = $totalArray[$index];
-			$info = GetNftInfoByNftIdFromDatabase($nfTokenID);
+			if($tabType == ".unclaimed")
+			{
+				$nfTokenID = $totalArray[$index]->NFTokenID;
+				$offerID = $totalArray[$index]->OfferID;
+				$info = GetNftInfoByNftIdFromDatabase($nfTokenID);
+			}else
+			{
+				$info = $totalArray[$index];
+				$nfTokenID = $info["nft_id"];
+			}
 			$url = $info["base_uri"];
 		
 			$viewType =  str_replace(".", "", $tabType);

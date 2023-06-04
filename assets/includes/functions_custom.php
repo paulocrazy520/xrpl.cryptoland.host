@@ -20,6 +20,8 @@ if(isset($_SESSION["user_id"]) && !empty($_SESSION["user_id"]))
 {    
     $userInfo = getUserInfo($_SESSION["user_id"]);
     $current_user = $userInfo['xumm_address'];
+    
+    $nrg["user"] = $userInfo;
 }
 
 function GetNftRevealInfosFromDatabase($claimedArray)
@@ -29,6 +31,11 @@ function GetNftRevealInfosFromDatabase($claimedArray)
     if(!$current_user)
         return;
     $sql =  "SELECT user_nft.nft_id as nft_id, 
+    CASE
+        WHEN user_nft.assetType = 1 THEN lbk_nft.base_uri
+        WHEN user_nft.assetType = 2 THEN vials_nft.base_uri
+        ELSE NULL
+    END AS base_uri,
     CASE
         WHEN user_nft.assetType = 1 THEN lbk_nft.revealed
         WHEN user_nft.assetType = 2 THEN vials_nft.revealed
@@ -51,13 +58,13 @@ function GetNftRevealInfosFromDatabase($claimedArray)
     {
         $revealedArray = array();
         $unrevealedArray = array();
-        
+
         foreach($jsonArray as $nft){
             if (in_array( $nft["nft_id"], $claimedArray)) {
                 if($nft['revealed'] == 1)
-                    array_push($revealedArray, $nft["nft_id"]);
+                    array_push($revealedArray, $nft);
                 else
-                    array_push($unrevealedArray, $nft["nft_id"]);
+                    array_push($unrevealedArray, $nft);
             }
         }
 

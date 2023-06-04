@@ -218,13 +218,23 @@ async function acceptSellOffer(account,
       }
     }
   }
-  else
+  else if(tableName == "buy_offers")
   {
     transactionBlob = {
       txjson: {
         "TransactionType": "NFTokenAcceptOffer",
         "Account": account,
         "NFTokenBuyOffer": nftOfferID
+      }
+    }
+  }
+  else if(tableName == "claim_offers")
+  {
+    transactionBlob = {
+      txjson: {
+        "TransactionType": "NFTokenAcceptOffer",
+        "Account": account,
+        "NFTokenSellOffer": nftOfferID
       }
     }
   }
@@ -249,7 +259,6 @@ async function cancelOffer(account,
 
   postPayload(transactionBlob, nftTokenId, tableName);
 }// End of cancelOffer()
-
 
 
 // *******************************************************
@@ -304,15 +313,13 @@ async function postPayload(transactionBlob, cancelNftTokenId = undefined, tableN
     tableName: tableName
   })
     .then(response => {
-      console.log(response.data);
+      // console.log(response.data);
+      //location.reload();
 
-      //Refresh page after signing offer
-      // loadNftInfos().then(() => {
-      //   location.reload();
-      // });
+      if(tableName=="claim_offers"){
 
-      location.reload();
-
+      }
+      
       console.log('*********************postPayload Response=', response.data);
       $('.cs-preloader').delay(10).fadeOut('slow'); //Show loading screen
     })

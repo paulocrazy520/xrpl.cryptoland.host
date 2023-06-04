@@ -38,6 +38,9 @@ switch ($request_data->type) {
     case "SubscribePayload":
         JEFF_SubscribePayload($_SESSION["user_id"]);
         break;
+    case "RevealItem":
+        JEFF_RevealItem($_SESSION["user_id"]);
+        break;
     default:
         break;
 }
@@ -365,19 +368,26 @@ function JEFF_SubscribePayload($user_id){
                 if(!isset($table_name) || empty($table_name))
                     $table_name = "sell_offers";
 
-                try{
-                    $query = "SELECT * FROM $table_name WHERE nft_token_id = '$nft_token_id' and offer_status = 'active' LIMIT 1";
-                    $result = mysqli_query($sqlConnect, $query);
-
-                    if (mysqli_num_rows($result)) 
-                    {
-                        $subQuery = "UPDATE $table_name SET accepted_by_userid = '$user_id', accepted_by_user_wallet = '$user_wallet', accepted_by_uuid = '$uuid', accepted_date = '$offer_date', accepted_tx = '$tx', offer_status = '$offer_status' WHERE  nft_token_id = '$nft_token_id' and offer_status = 'active'";
-                        NRG_writeFile("Payload_UpdateTransactionStausAndQty.log", $subQuery);
-                        $subResult = mysqli_query($sqlConnect, $subQuery);
-                    }
+                if($table_name == "claim_offers")
+                {
+                    NRG_updateNFTAsClaimed($nft_token_id);
                 }
-                catch(Exception $e){
-                    print_r($e);
+                else
+                {
+                    try{
+                        $query = "SELECT * FROM $table_name WHERE nft_token_id = '$nft_token_id' and offer_status = 'active' LIMIT 1";
+                        $result = mysqli_query($sqlConnect, $query);
+
+                        if (mysqli_num_rows($result)) 
+                        {
+                            $subQuery = "UPDATE $table_name SET accepted_by_userid = '$user_id', accepted_by_user_wallet = '$user_wallet', accepted_by_uuid = '$uuid', accepted_date = '$offer_date', accepted_tx = '$tx', offer_status = '$offer_status' WHERE  nft_token_id = '$nft_token_id' and offer_status = 'active'";
+                            NRG_writeFile("Payload_UpdateTransactionStausAndQty.log", $subQuery);
+                            $subResult = mysqli_query($sqlConnect, $subQuery);
+                        }
+                    }
+                    catch(Exception $e){
+                        print_r($e);
+                    }
                 }
             }
             //
@@ -387,6 +397,7 @@ function JEFF_SubscribePayload($user_id){
             }
         
             echo "Payment request rejected :(\n";
+            //NRG_updateNFTAsClaimed($$request_data->cancelNftTokenId);
             return [];
         };
         
@@ -404,7 +415,21 @@ function JEFF_SubscribePayload($user_id){
         //NRG_writeFile("Payload_UpdateTransactionStausAndQty.log", json_encode($createdPayload));
         NRG_writeFile("Payload_UpdateTransactionStausAndQty.log", json_encode($result));
 
-        print_r(json_encode($result));
+        // print_r(json_encode($result));
         return;
     }
+}
+
+// *********************ToMarcus**************************
+// ************Remove user info from NRG_Users table*****
+// *******************************************************
+function Jeff_RevealItem($user_id)
+{
+    global $request_data, $nrg;
+
+    if(!isset($user_id) || empty($user_id) || !isset($nrg["user"])){
+        return;
+    }
+
+    NRG_updateNFTAsRevealed($request_data->nftId); 
 }

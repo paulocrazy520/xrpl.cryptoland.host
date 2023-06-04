@@ -997,7 +997,7 @@ function NRG_UpdateTransactionStausAndQty($transaction_id, $status)
                     if (isset($uNewLand) && $oldResult['totalLand'] != $uNewLand) {
                         $admin_user_id = $user_id; //'00100';//$nrg["user"]["user_id"];
                         //echo $admin_user_id." | ".$user_id, $actionType_1 = "Land Adjustment"." | ".$actionType_2 = "CB_CRON.log"." | ".$oldResult['totalLand']." | ".$uNewLand." | ".$status." | ".$transaction_id;
-                        NRG_insertUpdateLog($admin_user_id, $user_id, $actionType_1 = "Land Adjustment", $actionType_2 = "XUMM_AUTO", $oldResult['totalLand'], $oldResult['totalLand'] + $uNewLand, $status, $transaction_id);
+                        //NRG_insertUpdateLog($admin_user_id, $user_id, $actionType_1 = "Land Adjustment", $actionType_2 = "XUMM_AUTO", $oldResult['totalLand'], $oldResult['totalLand'] + $uNewLand, $status, $transaction_id);
 
 
                         NRG_writeFile("XUMM_AUTO.log", "--------------------------------------------------------------------------------[START Vial]-");
@@ -1006,7 +1006,7 @@ function NRG_UpdateTransactionStausAndQty($transaction_id, $status)
                     }
                     if (isset($uNewAvatar) && $oldResult['totalAvatar'] != $uNewAvatar) {
                         $admin_user_id = $user_id; //'00100';//$nrg["user"]["user_id"];$nrg["user"]["user_id"];
-                        NRG_insertUpdateLog($admin_user_id, $user_id, $actionType_1 = "Avatar Adjustment", $actionType_2 = "XUMM_AUTO", $oldResult['totalAvatar'], $oldResult['totalAvatar'] + $uNewAvatar, $status, $transaction_id);
+                        //NRG_insertUpdateLog($admin_user_id, $user_id, $actionType_1 = "Avatar Adjustment", $actionType_2 = "XUMM_AUTO", $oldResult['totalAvatar'], $oldResult['totalAvatar'] + $uNewAvatar, $status, $transaction_id);
 
                         NRG_writeFile("XUMM_AUTO.log", "--------------------------------------------------------------------------------[START LBK]-");
                         //NRG_Assign_XUMM_LBK($uNewAvatar, $user_id);
@@ -1871,51 +1871,48 @@ function NRG_UpdateUserCLData($user_id, $update_data, $loggedin = true)
     */
 }
 
-function NRG_insertUpdateLog($by_user_id, $to_user_id = 0, $actionType_1 = "", $actionType_2 = "", $oldValue = "", $newValue = "", $status, $fullPayload)
-{
-    global $nrg, $sqlConnect, $cache;
+// function NRG_insertUpdateLog($by_user_id, $to_user_id = 0, $actionType_1 = "", $actionType_2 = "", $oldValue = "", $newValue = "", $status, $fullPayload)
+// {
+//     global $nrg, $sqlConnect, $cache;
 
 
 
+//     if ($nrg['loggedin'] == false) {
+//         //return false;
+//     }
+
+//     $date_now = date("d/m/Y");
+//     $time_now = time();
+//     $uip = get_ip_address();
+//     $i_payload = json_encode($fullPayload);
+//     $from_user_id = $nrg["user"]["user_id"];
+
+//     $query_one = "INSERT INTO transactionUpdateLog (by_user_id, to_user_id, `date`, `time`, actionType_1, actionType_2, oldValue, newValue, `status`, user_ip, payload) VALUES ('$by_user_id','$to_user_id', '$date_now', '$time_now', '$actionType_1', '$actionType_2', '$oldValue', '$newValue', '$status', '$uip',  '$i_payload');";
+
+//     // $myfile = fopen("/var/www/htdocs/transLogs.txt", "w") or die("Unable to open file!");
+//     // $txt = $query_one;//"John Doe\n";
+//     // fwrite($myfile, $txt);
+//     // // $txt = $query_one;//"Jane Doe\n";
+//     // // fwrite($myfile, $txt);
+//     // fclose($myfile);
+
+//     NRG_writeFile("NRG_insertUpdateLog.log", "L" . __LINE__ . " | " . $query_one);
+
+//     // $fp = fopen('/var/www/htdocs/transLogs.txt', 'a');//opens file in append mode  
+
+//     // fwrite($fp, "\ninsertUpdateLog (".date('m/d/Y H:i:s', time())."):\n");
+//     // fwrite($fp, $query_one);
+//     // //fwrite($fp, "<br>"."\r\n");
+//     // //fwrite($fp, '/n');  
+//     // fclose($fp);  
+
+//     //echo "File appended successfully";  
 
 
+//     $query = mysqli_query($sqlConnect, $query_one);
 
-    if ($nrg['loggedin'] == false) {
-        //return false;
-    }
-
-    $date_now = date("d/m/Y");
-    $time_now = time();
-    $uip = get_ip_address();
-    $i_payload = json_encode($fullPayload);
-    $from_user_id = $nrg["user"]["user_id"];
-
-    $query_one = "INSERT INTO transactionUpdateLog (by_user_id, to_user_id, `date`, `time`, actionType_1, actionType_2, oldValue, newValue, `status`, user_ip, payload) VALUES ('$by_user_id','$to_user_id', '$date_now', '$time_now', '$actionType_1', '$actionType_2', '$oldValue', '$newValue', '$status', '$uip',  '$i_payload');";
-
-    // $myfile = fopen("/var/www/htdocs/transLogs.txt", "w") or die("Unable to open file!");
-    // $txt = $query_one;//"John Doe\n";
-    // fwrite($myfile, $txt);
-    // // $txt = $query_one;//"Jane Doe\n";
-    // // fwrite($myfile, $txt);
-    // fclose($myfile);
-
-    NRG_writeFile("NRG_insertUpdateLog.log", "L" . __LINE__ . " | " . $query_one);
-
-    // $fp = fopen('/var/www/htdocs/transLogs.txt', 'a');//opens file in append mode  
-
-    // fwrite($fp, "\ninsertUpdateLog (".date('m/d/Y H:i:s', time())."):\n");
-    // fwrite($fp, $query_one);
-    // //fwrite($fp, "<br>"."\r\n");
-    // //fwrite($fp, '/n');  
-    // fclose($fp);  
-
-    //echo "File appended successfully";  
-
-
-    $query = mysqli_query($sqlConnect, $query_one);
-
-    //return $query_one;
-}
+//     //return $query_one;
+// }
 
 // function NRG_CountDGPData($type)
 // {
@@ -2192,7 +2189,7 @@ function NRG_UpdateNFTHistory($nft_uuid, $nft_id, $nft_serial, $action_type, $ac
 {
     global $nrg, $sqlConnect, $cache;
 
-    if ($nrg['loggedin'] == false) {
+    if (!isset($nrg['user'])) {
         return false;
     }
 
@@ -2200,24 +2197,15 @@ function NRG_UpdateNFTHistory($nft_uuid, $nft_id, $nft_serial, $action_type, $ac
     $time_now = time();
     $dateTime = time();
     $userId = $nrg['user']['user_id'];
+
+
     $browser_info = NRG_getBrowser() . "|" . NRG_getOS();
     $user_ip = get_ip_address();
     $owner_wallet = $nrg['user']['xumm_address'];
 
-    $query_one = "INSERT INTO nft_history
-      (
-        nft_uuid, nft_id, nft_serial, action_type
-      , action_created_date, action_complete
-      , action_complete_date, created_by, user_id
-      , issuer_wallet, owner_wallet, transaction_hash
-      , xumm_txid, xumm_payload_uuidv4
-      )VALUES(
-        '$nft_uuid', '$nft_id', $nft_serial, $action_type
-        , $action_created_date, $action_complete
-        , $action_complete_date, $created_by, $user_id
-        , '$issuer_wallet', '$owner_wallet', '$transaction_hash'
-        , '$xumm_txid', '$xumm_payload_uuidv4'
-        );";
+
+    $query_one = "INSERT INTO nft_history(nft_uuid, nft_id, nft_serial, action_type, action_created_date, action_complete, action_complete_date, created_by, user_id, issuer_wallet, owner_wallet, transaction_hash, xumm_txid, xumm_payload_uuidv4) VALUES('$nft_uuid', '$nft_id', $nft_serial, $action_type, $action_created_date, $action_complete, $action_complete_date, $created_by, $user_id , '$issuer_wallet', '$owner_wallet', '$transaction_hash', '$xumm_txid', '$xumm_payload_uuidv4');";
+
     NRG_writeFile("NRG_UpdateNFTHistory.log", "L" . __LINE__ . " | " . $query_one);
     $query = mysqli_query($sqlConnect, $query_one);
 }
@@ -2315,6 +2303,7 @@ function NRG_updateNFTAsRevealed($nftId)
 
     $nft = NRG_getNFT2($nftId);
     $assetType = $nft['assetType'];
+
     $timestamp = time();
     $userId = $nrg['user']['user_id'];
     $userWallet = $nrg['user']['xumm_address'];
@@ -2327,6 +2316,8 @@ function NRG_updateNFTAsRevealed($nftId)
         $result2 = NRG_UpdateNFTHistory($nft['nft_uuid'], $nft['nft_id'], $nft['nft_serial'], 1, $timestamp, 1, $timestamp, $userId, $userId, 'rDUSz5wt8ZVENp7ZJq4qrv2f9A2h56Cf3b', $userWallet, '', '', '');
     } else {
     }
+
+    echo $result;
     //$result = NRG_UpdateLBKNFT('', '', '', 1, $userId, $timestamp, $nftId, $userWallet);
     //$result2 = NRG_UpdateNFTHistory($nft['nft_uuid'], $nft['nft_id'], $nft['nft_serial'], 1, $timestamp, 1, $timestamp, $userId, $userId, 'rDUSz5wt8ZVENp7ZJq4qrv2f9A2h56Cf3b', $userWallet, '', '', '');
 }
@@ -2341,6 +2332,8 @@ function NRG_UpdateLBKNFT($claimed, $claimed_user_id, $claimed_date, $revealed, 
         $query_one = "UPDATE lbk_nft SET issuer_wallet=issuer_wallet, owner_wallet='$userWallet', claimed='$claimed', claimed_user_id=$claimed_user_id, claimed_date=$claimed_date, revealed=revealed, revealed_user_id=revealed_user_id, revealed_date=revealed_date $where";
         NRG_writeFile("NRG_UpdateLBKNFT.log", "L" . __LINE__ . " | " . $query_one);
     }
+
+    
     if ($revealed == '1' && $revealed_user_id == $nrg["user"]["user_id"]) {
         $query_one = "UPDATE lbk_nft SET issuer_wallet=issuer_wallet, owner_wallet='$userWallet', claimed=claimed, claimed_user_id=claimed_user_id, claimed_date=claimed_date, revealed='$revealed', revealed_user_id=$revealed_user_id, revealed_date=$revealed_date $where";
         NRG_writeFile("NRG_UpdateLBKNFT.log", "L" . __LINE__ . " | " . $query_one);
@@ -2350,7 +2343,7 @@ function NRG_UpdateLBKNFT($claimed, $claimed_user_id, $claimed_date, $revealed, 
     if ($query) {
         //if (($claimed == '1' && $revealed == '1') && ($claimed_user_id == $revealed_user_id && $revealed_user_id == $nrg["user"]["user_id"])){
         if ($revealed == '1' && $revealed_user_id == $nrg["user"]["user_id"]) {
-            NRG_UpdateLBKNFT_Metadata_File($nft_id, $userWallet);
+    //        NRG_UpdateLBKNFT_Metadata_File($nft_id, $userWallet);
         }
     } else {
         return "failed";
@@ -2377,7 +2370,7 @@ function NRG_UpdateVialsNFT($claimed, $claimed_user_id, $claimed_date, $revealed
     if ($query) {
         //if (($claimed == '1' && $revealed == '1') && ($claimed_user_id == $revealed_user_id && $revealed_user_id == $nrg["user"]["user_id"])){
         if ($revealed == '1' && $revealed_user_id == $nrg["user"]["user_id"]) {
-            NRG_UpdateVialsNFT_Metadata_File($nft_id, $userWallet);
+         //   NRG_UpdateVialsNFT_Metadata_File($nft_id, $userWallet);
         }
     } else {
         return "failed";
