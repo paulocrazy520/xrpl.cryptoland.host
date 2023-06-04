@@ -48,7 +48,7 @@
             <div class="cs-card_footer" style="padding:5px 10% 5px 10%;">
             <?php              
                   echo '
-                  <span class="'.$btnStyle.' w-100" data-modal="'.$modalId.'" nft-id="'.$nfTokenID.'" offer-id="'.$offerID.'"
+                  <span class="cs-action_item '.$btnStyle.' w-100" data-modal="'.$modalId.'" nft-id="'.$nfTokenID.'" offer-id="'.$offerID.'"
                     ><span>'.$btnStr.'</span></span
                   >';
                ?>

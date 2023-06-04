@@ -25,8 +25,8 @@ async function loadNftInfos() {
   let issuer = issuerAddress; //test address from config.js
   let userInfo = await getUserInfo();
 
-  if(!userInfo)
-    return; 
+  if (!userInfo)
+    return;
 
   let account = userInfo.xumm_address; //test address from config.js
   console.log("***************Signed account:", issuer, account);
@@ -203,13 +203,12 @@ async function createSellOffer(
 // ****************** Accept Sell Offer ******************
 // *******************************************************
 async function acceptSellOffer(account,
-  nftTokenId,  nftOfferID, tableName = "sell_offers"
+  nftTokenId, nftOfferID, tableName = "sell_offers"
 ) {
 
   var transactionBlob = null;
 
-  if(tableName == "sell_offers")
-  {
+  if (tableName == "sell_offers") {
     transactionBlob = {
       txjson: {
         "TransactionType": "NFTokenAcceptOffer",
@@ -218,8 +217,7 @@ async function acceptSellOffer(account,
       }
     }
   }
-  else if(tableName == "buy_offers")
-  {
+  else if (tableName == "buy_offers") {
     transactionBlob = {
       txjson: {
         "TransactionType": "NFTokenAcceptOffer",
@@ -228,8 +226,7 @@ async function acceptSellOffer(account,
       }
     }
   }
-  else if(tableName == "claim_offers")
-  {
+  else if (tableName == "claim_offers") {
     transactionBlob = {
       txjson: {
         "TransactionType": "NFTokenAcceptOffer",
@@ -315,12 +312,34 @@ async function postPayload(transactionBlob, cancelNftTokenId = undefined, tableN
     .then(response => {
       // console.log(response.data);
       //location.reload();
+      console.log('*********************postPayload Response*=', response, tableName, cancelNftTokenId);
+      if (tableName == "claim_offers") {
+        if (response.data == true) {
+          $('.cs-isotop_item[nft-id="' + cancelNftTokenId + '"]').removeClass('unclaimed').addClass('unrevealed');
 
-      if(tableName=="claim_offers"){
+          // $btnStr = "Reveal";
+          // $btnStyle = "cs-card_btn_2"; 
+          // $modalId= "#revealItem";
+          $('.cs-action_item[nft-id="' + cancelNftTokenId + '"]').removeClass('cs-card_btn_4').addClass('cs-card_btn_2');
+          $('.cs-action_item[nft-id="' + cancelNftTokenId + '"]').attr('data-modal', '#revealItem');
+          $('.cs-action_item[nft-id="' + cancelNftTokenId + '"] span').text('Reveal');
 
+          
+          if ($('#unclaimedCount').val() > 0) {
+            $('#unclaimedCount').val(parseInt($('#unclaimedCount').val()) - 1);
+            $('#unrevealedCount').val(parseInt($('#unrevealedCount').val()) + 1);
+          }
+
+          $('.cs-isotop').isotope('reloadItems').isotope('layout');
+
+          setTimeout(function () {
+            isotopInit();
+          }, 1000);
+        }
       }
-      
-      console.log('*********************postPayload Response=', response.data);
+      else {
+        location.reload();
+      }
       $('.cs-preloader').delay(10).fadeOut('slow'); //Show loading screen
     })
     .catch(error => {
@@ -343,14 +362,12 @@ function LoginUser(user_name, user_password) {
   })
     .then(response => {
       console.log('*********************LoginUser Response=', response.data);
-      if(response.data)
-      {
+      if (response.data) {
         alert("Login successfully! You logged with id " + response.data);
         //Refresh page after signing offer
         location.reload();
       }
-      else
-      {
+      else {
         alert("Please input correct user name and password!");
       }
 
@@ -372,7 +389,7 @@ function LogoutUser() {
   })
     .then(response => {
       console.log('*********************Logout Response=', response.data);
-      if(response.data){
+      if (response.data) {
         alert("Logout successfully!");
         //xumm.logout();
       }

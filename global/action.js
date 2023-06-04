@@ -72,8 +72,8 @@
 
                         if($('#unrevealedCount').val() > 0)
                         {
-                            $('#unrevealedCount').val($('#unrevealedCount').val()-1);
-                            $('#revealedCount').val($('#revealedCount').val()+1);
+                            $('#unrevealedCount').val(parseInt($('#unrevealedCount').val())-1);
+                            $('#revealedCount').val(parseInt($('#revealedCount').val())+1);
                         }
 
                         $('.cs-isotop').isotope('reloadItems').isotope('layout');

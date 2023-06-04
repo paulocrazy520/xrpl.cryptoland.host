@@ -2293,6 +2293,7 @@ function NRG_updateNFTAsClaimed($nftId)
         $result2 = NRG_UpdateNFTHistory($nft['nft_uuid'], $nft['nft_id'], $nft['nft_serial'], 0, $timestamp, 1, $timestamp, $userId, $userId, 'rDUSz5wt8ZVENp7ZJq4qrv2f9A2h56Cf3b', $userWallet, '', '', '');
     } else {
     }
+    echo $result;
     //$result = NRG_UpdateLBKNFT(1, $userId, $timestamp, 0, 0, 0, $nftId, $userWallet);
     //$result2 = NRG_UpdateNFTHistory($nft['nft_uuid'], $nft['nft_id'], $nft['nft_serial'], 0, $timestamp, 1, $timestamp, $userId, $userId, 'rDUSz5wt8ZVENp7ZJq4qrv2f9A2h56Cf3b', $userWallet, '', '', '');
 }
