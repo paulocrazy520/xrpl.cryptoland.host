@@ -227,8 +227,8 @@ function JEFF_SubscribePayload($user_id){
         $options=  new Xrpl\XummSdkPhp\Payload\Options(
             submit: true,
             returnUrl: new Xrpl\XummSdkPhp\Payload\ReturnUrl(
-                'https://sb236.cryptoland.host/xumm-return-payload.php',
-                'https://sb236.cryptoland.host/xumm-return-payload.php',
+                $_ENV["REDIRECT_URL"],
+                $_ENV["REDIRECT_URL"]
             )
             );
 

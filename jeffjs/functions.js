@@ -10,7 +10,7 @@ var signed_xumm_address = "";
 
 const xumm = new XummPkce(apiKey, {
     implicit: true, // Implicit: allows to e.g. move from social browser to stock browser
-    redirectUrl: "https://sb236.cryptoland.host/xumm-return-payload.php",
+    redirectUrl: env.REDIRECT_URL,
 });
 
 /*=======================================================*/
@@ -173,45 +173,6 @@ async function cancelOffer(account,
   postPayload(transactionBlob, nftTokenId, tableName);
 }// End of cancelOffer()
 
-
-// *******************************************************
-// ******************** Claim Offer *********************
-// *******************************************************
-async function claimOffer(standbyBuyerField,
-  tokenIdField
-) {
-  // Prepare transaction -------------------------------------------------------
-  const state = await xumm.state();
-
-  
-  if (!state?.me?.sub || standbyBuyerField != state.me.sub) {
-  
-    alert("Verify Xumm Auth!");
-    return null;
-  }
-
-  uuid = "0ce4ac8d-eb2e-49d8-a4c4-149d7e10d540";
-  tid = "000927107E8881FA7D8A97D316DFA235E76749D97EAADC4744B17C9E00000003";
-
-  axios.post("http://95.217.98.125:26650/claim/offer", { tid: tid, uuid: uuid }).then((result) => {
-
-    console.log(result.data);
-
-    const offerId = result.data.offerId;
-
-    var transactionBlob = {
-      txjson: {
-        "TransactionType": "NFTokenAcceptOffer",
-        "Account": standbyBuyerField,
-        "NFTokenBuyOffer": offerId
-      }
-    }
-    //server_url
-    goPayload(state, transactionBlob)
-    // End of cancelOffer()
-  })
-}
-
 /*=============================================================================*/
 /*--------------------Post payload via xumm on php server----------------------*/
 /*=============================================================================*/
@@ -318,3 +279,38 @@ function LogoutUser() {
     });
 }
 
+// ******************** Claim Offer is for test, not used*********************
+async function claimOffer(standbyBuyerField,
+  tokenIdField
+) {
+  // Prepare transaction -------------------------------------------------------
+  const state = await xumm.state();
+
+  
+  if (!state?.me?.sub || standbyBuyerField != state.me.sub) {
+  
+    alert("Verify Xumm Auth!");
+    return null;
+  }
+
+  uuid = "0ce4ac8d-eb2e-49d8-a4c4-149d7e10d540";
+  tid = "000927107E8881FA7D8A97D316DFA235E76749D97EAADC4744B17C9E00000003";
+
+  axios.post("http://95.217.98.125:26650/claim/offer", { tid: tid, uuid: uuid }).then((result) => {
+
+    console.log(result.data);
+
+    const offerId = result.data.offerId;
+
+    var transactionBlob = {
+      txjson: {
+        "TransactionType": "NFTokenAcceptOffer",
+        "Account": standbyBuyerField,
+        "NFTokenBuyOffer": offerId
+      }
+    }
+    //server_url
+    goPayload(state, transactionBlob)
+    // End of cancelOffer()
+  })
+}
