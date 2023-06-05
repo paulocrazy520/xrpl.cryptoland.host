@@ -88,7 +88,6 @@ if($isPost)
     
     <script type="module">
       import env from './env.js';
-      console.log(env.DEFAULT_PAGE_TYPE);
     </script>
     <!-------------->
   </body>

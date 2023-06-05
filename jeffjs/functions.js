@@ -1,6 +1,11 @@
-const apiKey = "04b42479-cc50-4410-a783-1686eeebe65f";  //dev2
-const apiSecret = "f53c6edc-1fb1-4c7f-8b79-f1ffef28037d"; // dev2
-const issuerAddress = "rDUSz5wt8ZVENp7ZJq4qrv2f9A2h56Cf3b"; //for test
+// const apiKey = "04b42479-cc50-4410-a783-1686eeebe65f";  //dev2
+// const apiSecret = "f53c6edc-1fb1-4c7f-8b79-f1ffef28037d"; // dev2
+// const issuerAddress = "rDUSz5wt8ZVENp7ZJq4qrv2f9A2h56Cf3b"; //for test
+
+const apiKey = env.API_KEY;
+const apiSecret = env.API_SECRET;
+const issuerAddress = env.DEFAULT_ISSUER_ADDRESS;
+
 var signed_xumm_address = "";
 
 const xumm = new XummPkce(apiKey, {
