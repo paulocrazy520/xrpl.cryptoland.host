@@ -8,28 +8,31 @@ $num_results_on_page = 20;
 $apiKey = "04b42479-cc50-4410-a783-1686eeebe65f";  //dev2
 $apiSecret = "f53c6edc-1fb1-4c7f-8b79-f1ffef28037d"; // dev2
 
-$xummSdk = new \Xrpl\XummSdkPhp\XummSdk($apiKey, $apiSecret);
 $endpoint_url = "https://s.altnet.rippletest.net:51234";
 $server_url = "https://sb237.cryptoland.host:28850/";
 
-$issuerAddress = "rDUSz5wt8ZVENp7ZJq4qrv2f9A2h56Cf3b"; //for test
-$userIdsByAddress = ["r97nyzoijsUYp5CQUQNf8dMzh4XyqZpFCU" => 3, "r3FoWNS5sHMv9nhx9H9YEsGEqJWqvFsXRn" => 4, "r9FELhVcmqCyz3QdCWPYQLR3GBz5MzdvRx" => 5, "rJAHd21L5Lwcj1PENcE2rGmUMHZSRzqwJi" => 6, "rMUzoNUXBZVh43groaeaU2dd7fBFc8N1gz" => 7];
+$issuer_address = "rDUSz5wt8ZVENp7ZJq4qrv2f9A2h56Cf3b"; //for test
 /**************************************************************************** */
 
 if(isset($_SESSION["user_id"]) && !empty($_SESSION["user_id"]))
 {    
     $userInfo = getUserInfo($_SESSION["user_id"]);
     $current_user = $userInfo['xumm_address'];
-    
-    $nrg["user"] = $userInfo;
+    $nrg["user"] = $userInfo; //For using database functions provided existing project
 }
 
-function GetNftRevealInfosFromDatabase($claimedArray)
+function GetRevealNftArraysFromDatabase($claimedArray)
 {
-    global $sqlConnect, $current_user;
+    global $sqlConnect, $current_user, $issuer_address;
 
     if(!$current_user)
-        return;
+    {
+        $account = $issuer_address;
+     //   return;
+    }
+    else
+        $account = $current_user;
+
     $sql =  "SELECT user_nft.nft_id as nft_id, 
     CASE
         WHEN user_nft.assetType = 1 THEN lbk_nft.base_uri
@@ -45,7 +48,7 @@ function GetNftRevealInfosFromDatabase($claimedArray)
     FROM user_nft
     LEFT JOIN lbk_nft ON user_nft.nft_id = lbk_nft.nft_id
     LEFT JOIN vials_nft ON user_nft.nft_id = vials_nft.nft_id 
-    WHERE user_nft.owner_wallet= '$current_user'";
+    WHERE user_nft.owner_wallet= '$account'";
 
     $result = mysqli_query($sqlConnect, $sql) or die("Error in Selecting " . mysqli_error($sqlConnect));
 
@@ -73,12 +76,17 @@ function GetNftRevealInfosFromDatabase($claimedArray)
 }
 
 /*****************Get Count Of field from Database*********** */
-function GetRevealCountFromDatabase($isRevealed)
+function GetRevealedCountFromDatabase($isRevealed)
 {
-    global $sqlConnect, $current_user;
+    global $sqlConnect, $current_user, $issuer_address;
 
     if(!$current_user)
-        return;
+    {
+        $account = $issuer_address;
+     //   return;
+    }
+    else
+        $account = $current_user;
 
     $sql =  "SELECT COUNT(*) AS total_count
     FROM user_nft
@@ -140,14 +148,16 @@ function GetNftInfoByNftIdFromDatabase($nft_id)
     return $jsonArray[0];
     
 }
-/*****************Get UnClaimed Nfts by owned account from Server******************* */
-function GetUnClaimedNftsFromServer($account = null){
-    
-    global  $current_user, $server_url;
-    if(!$current_user)
-        return;
 
-    if(!$account)
+/*****************Get UnClaimed Nfts by owned account from Server******************* */
+function GetUnClaimedNftsFromServer(){
+    global  $current_user, $server_url, $issuer_address;
+    if(!$current_user)
+    {
+        $account = $issuer_address;
+     //   return;
+    }
+    else
         $account = $current_user;
         
     $client = new \GuzzleHttp\Client();
@@ -156,25 +166,27 @@ function GetUnClaimedNftsFromServer($account = null){
         'base_uri' => $server_url 
     ]);
 
-
     $filter = "account=$account";
     $request = $client->getAsync("unclaimed_offers?$filter");
     $response = $request->wait();
 
     // Convert the JSON response to an array for easier processing
-    $transfer_history = json_decode($response->getBody());
-    return $transfer_history;    
+    $claimedArray = json_decode($response->getBody());
+    return $claimedArray;    
 }
 
 
 /*****************Get owned Nft Infos by account from Server******************* */
-function GetAccountNftsFromServer($account = null){
+function GetClaimedNftsFromServer($account = null){
     
-    global $current_user, $server_url;
+    global $current_user, $server_url, $issuer_address;
+    
     if(!$current_user)
-        return;
-        
-    if(!$account)
+    {
+        $account = $issuer_address;
+        //   return;
+    }
+    else
         $account = $current_user;
         
     $client = new \GuzzleHttp\Client();
@@ -190,6 +202,7 @@ function GetAccountNftsFromServer($account = null){
 
     // Convert the JSON response to an array for easier processing
     $transfer_history = json_decode($response->getBody());
+
     return $transfer_history;    
 }
 
@@ -294,8 +307,8 @@ function GetNftInfoFromTokenId($nftTokenId){
 
 function LoadNftInfosFromCurrentUser()
 {
-    global $current_user, $issuerAddress, $apiKey, $apiSecret;
-    $issuer = $issuerAddress; // test address from header
+    global $current_user, $issuer_address, $apiKey, $apiSecret;
+    $issuer = $issuer_address; // test address from header
     $account = $current_user; // test address from header
 
     if (!$account) {
@@ -394,7 +407,7 @@ function NRG_writeFileByMode($fn, $q, $mode = 'a')
 /*********Get User Info from database including xumm session from user id*********** */
 function getUserInfo($user_id)
 {
-    global $sqlConnect, $xummSdk;
+    global $sqlConnect;
     $sql2 = "SELECT * FROM NRG_Users WHERE user_id = '$user_id' LIMIT 1";
     $result = mysqli_query($sqlConnect, $sql2);
     if($row = mysqli_fetch_assoc($result))

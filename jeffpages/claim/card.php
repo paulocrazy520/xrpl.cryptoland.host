@@ -45,6 +45,7 @@
               Rarity: <b><?php echo $rarity ?></b>
             </div>
             <hr />
+            <?php if($current_user){ ?>
             <div class="cs-card_footer" style="padding:5px 10% 5px 10%;">
             <?php              
                   echo '
@@ -53,6 +54,7 @@
                   >';
                ?>
             </div>
+            <?php } ?>
           </div>
       </div>
   </div>

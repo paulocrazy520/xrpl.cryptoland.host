@@ -1,6 +1,8 @@
 <?php
 require_once "assets/init.php";
 
+$xummSdk = new \Xrpl\XummSdkPhp\XummSdk($apiKey, $apiSecret);
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $request_body = file_get_contents('php://input');
@@ -99,7 +101,7 @@ function JEFF_UpdateUserInfo($user_id)
         return;
     }
 
-    global $sqlConnect, $userIdsByAddress, $request_data, $issued_user_token;
+    global $sqlConnect, $request_data, $issued_user_token;
 
     if (!isset($request_data->payload) || empty($request_data->payload)) {
         echo "none_payload";

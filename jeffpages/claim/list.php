@@ -17,8 +17,8 @@
 	$tabType = isset($_POST['tabType']) ? $_POST['tabType'] : "*";
 
 	$unclaimedArray = GetUnClaimedNftsFromServer();
-	$claimedArray = GetAccountNftsFromServer();
-	$claimedWithRevealedArray = GetNftRevealInfosFromDatabase($claimedArray);
+	$claimedArray = GetClaimedNftsFromServer();
+	$claimedWithRevealedArray = GetRevealNftArraysFromDatabase($claimedArray);
 	$revealedArray = isset($claimedWithRevealedArray["revealedArray"]) ? $claimedWithRevealedArray["revealedArray"] : array();
 	$unrevealedArray = isset($claimedWithRevealedArray["unrevealedArray"]) ? $claimedWithRevealedArray["unrevealedArray"] : array();
 	 if(!$claimedArray && !$unclaimedArray)

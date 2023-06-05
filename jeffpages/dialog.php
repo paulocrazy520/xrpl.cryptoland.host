@@ -150,7 +150,7 @@
                           <option value="CRYPTO">CRYPTO</option>
                         </select>
                   </div>
-                <input type="text" class="cs-bid_quantity" placeholder="0" id="bid_quantity"/>
+                <input type="text" class="cs-bid_quantity" placeholder="0" id="list_bid_quantity"/>
               </div>
 
               <div class="cs-height_20 cs-height_lg_20"></div>
@@ -241,7 +241,7 @@
                           <option value="CRYPTO">CRYPTO</option>
                         </select>
                   </div>
-                <input type="text"  style="width:30%;" placeholder="0" id="bid_quantity"/>
+                <input type="text"  style="width:30%;" placeholder="0" id="place_bid_quantity"/>
                 <input type="text"   style="width:30%;"  placeholder="0" id="bid_expire"/>
               </div>
 

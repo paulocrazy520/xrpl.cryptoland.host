@@ -1,8 +1,9 @@
-
 const apiKey = "04b42479-cc50-4410-a783-1686eeebe65f";  //dev2
 const apiSecret = "f53c6edc-1fb1-4c7f-8b79-f1ffef28037d"; // dev2
 const issuerAddress = "rDUSz5wt8ZVENp7ZJq4qrv2f9A2h56Cf3b"; //for test
 var accountAddress = "";
+
+
 
 const xumm = new XummPkce(apiKey, {
     implicit: true, // Implicit: allows to e.g. move from social browser to stock browser
@@ -13,7 +14,7 @@ const xumm = new XummPkce(apiKey, {
 /*--------------Get User Info ---------------------------*/
 /*=======================================================*/
 async function getUserInfo() {
-  const response = await axios.post('custom.php', {
+  const response = await axios.post('jeffajax.php', {
     type: "GetUserInfo",
   });
 
@@ -215,7 +216,7 @@ async function postPayload(transactionBlob, cancelNftTokenId = undefined, tableN
   console.log("******postPayload*******", transactionBlob, cancelNftTokenId, tableName);
   $('.cs-preloader').delay(10).fadeIn('slow'); //Show loading screen
 
-  axios.post('custom.php', {
+  axios.post('jeffajax.php', {
     type: "SubscribePayload",
     payload: transactionBlob,
     cancelNftTokenId: cancelNftTokenId,
@@ -267,7 +268,7 @@ async function postPayload(transactionBlob, cancelNftTokenId = undefined, tableN
 function LoginUser(user_name, user_password) {
   console.log("******LoginUser*******", user_name, user_password);
 
-  axios.post('custom.php', {
+  axios.post('jeffajax.php', {
     type: "Login",
     user_name: user_name,
     user_password: user_password
@@ -296,7 +297,7 @@ function LoginUser(user_name, user_password) {
 function LogoutUser() {
   console.log("******LooutUser*******");
 
-  axios.post('custom.php', {
+  axios.post('jeffajax.php', {
     type: "Logout"
   })
     .then(response => {

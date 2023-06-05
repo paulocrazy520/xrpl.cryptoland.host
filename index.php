@@ -14,13 +14,20 @@ use Dotenv\Dotenv;
 $dotenv = Dotenv::createImmutable(__DIR__);
 $dotenv->load();
 
-$pageType = isset($_GET['DEFAULT_PAGE_TYPE']) ? $_GET['DEFAULT_PAGE_TYPE'] : (isset($_ENV['DEFAULT_PAGE_TYPE']) ? $_ENV['DEFAULT_PAGE_TYPE'] : 'claim');
+// Pass the environment variables to your view
+echo "<script>window.env = {";
+  foreach ($_ENV as $key => $value) {
+      echo '"' . $key . '":"' . $value . '",';
+  }
+echo "}</script>";
+
+$DEFAULT_PAGE_TYPE = isset($_GET['DEFAULT_PAGE_TYPE']) ? $_GET['DEFAULT_PAGE_TYPE'] : (isset($_ENV['DEFAULT_PAGE_TYPE']) ? $_ENV['DEFAULT_PAGE_TYPE'] : 'claim');
 $isDetail = isset($_GET['page']) ? $_GET['page'] : "";
 $isPost = isset($_POST['pageType']) ? $_POST['pageType'] : "";
 
 if($isPost)
 {
-  require_once "pages/$isPost/index.php";
+  require_once "jeffpages/$isPost/index.php";
   return;
 }
 ?>
@@ -49,18 +56,18 @@ if($isPost)
 
 <?php
   if(!$isPost)
-    require_once "pages/header.php";
+    require_once "jeffpages/header.php";
 
   if($isDetail)
-    require_once "pages/detail.php";
+    require_once "jeffpages/detail.php";
   else
   {
-    require_once "pages/$pageType/index.php";
+    require_once "jeffpages/$DEFAULT_PAGE_TYPE/index.php";
   }
   
   if(!$isPost){
-    require_once "pages/footer.php";
-    require_once "pages/dialog.php";
+    require_once "jeffpages/footer.php";
+    require_once "jeffpages/dialog.php";
   }
 
 ?>
@@ -75,9 +82,14 @@ if($isPost)
     <script src="https://unpkg.com/xrpl@2.2.3"></script>
     
     <!-- ToMarcus -->
-    <script src="./global/functions.js"></script>
-    <script src="./global/action.js"></script>
-    <script src="./global/filter.js"></script>
+    <script src="./jeffjs/functions.js"></script>
+    <script src="./jeffjs/action.js"></script>
+    <script src="./jeffjs/filter.js"></script>
+    
+    <script type="module">
+      import env from './env.js';
+      console.log(env.DEFAULT_PAGE_TYPE);
+    </script>
     <!-------------->
   </body>
 </html>

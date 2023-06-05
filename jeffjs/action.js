@@ -5,7 +5,7 @@
         // *********************ToMarcus**************************
         // ************* Check wallet connection (In this test produc, should test user_id:3)********
         // *******************************************************
-        axios.post('custom.php', { type: 'GetUserInfo' })
+        axios.post('jeffajax.php', { type: 'GetUserInfo' })
             .then(response => {
                 let json = response.data;
                 if (json && json.xumm_address) {
@@ -43,7 +43,7 @@
     // ************* Sign in Xumm on desktop****************
     // *******************************************************
     $('.auth').on('click', async () => {
-        axios.post('custom.php', { type: 'GetUserInfo' })
+        axios.post('jeffajax.php', { type: 'GetUserInfo' })
             .then(response => {
                 let json = response.data;
                 if (json) {
@@ -53,7 +53,7 @@
                     xumm.logout();
                     console.log('*************With clicking button, GetUserInfo Response=', json); // handle the response
 
-                    axios.post('custom.php', { type: 'RemoveUserInfo' })
+                    axios.post('jeffajax.php', { type: 'RemoveUserInfo' })
                         .then(response => {
                             if (response.data) {
                                 console.log('*************RemoveUnserInfo Response=', response.data); // handle the response
@@ -95,7 +95,7 @@
             const payload = await state.sdk.payload.get(pong.jwtData.payload_uuidv4);
             console.log("*************Wallet connect payload:", payload);
 
-            axios.post('custom.php', { type: 'UpdateUserInfo', payload })
+            axios.post('jeffajax.php', { type: 'UpdateUserInfo', payload })
                 .then(response => {
                     console.log(response);
                     if (response.data) {
@@ -134,7 +134,7 @@
             const payload = await state.sdk.payload.get(pong.jwtData.payload_uuidv4);
             console.log("*************Wallet connect payload:", payload);
 
-            axios.post('custom.php', { type: 'UpdateUserInfo', payload })
+            axios.post('jeffajax.php', { type: 'UpdateUserInfo', payload })
                 .then(response => {
                     console.log(response);
                     if (response.data) {
@@ -241,7 +241,7 @@
 
             $('.cs-preloader').delay(10).fadeIn('slow'); //Show loading screen
 
-            axios.post('custom.php', {
+            axios.post('jeffajax.php', {
                 type: "RevealItem",
                 nftId: nftId
             })
@@ -292,7 +292,7 @@
     async function handleListItemClick() {
         var modalId = '#listItem';
         var nftId = $(modalId).find('#nft_id').text();
-        var amount = $(modalId).find('#bid_quantity').val();
+        var amount = $(modalId).find('#list_bid_quantity').val();
 
         if (!amount || isNaN(amount)) {
             alert("Please valid amount");
@@ -310,7 +310,7 @@
     async function handlePlaceItemClick() {
         var modalId = '#placeBid';
         var nftId = $(modalId).find('#nft_id').text();
-        var amount = $(modalId).find('#bid_quantity').val();
+        var amount = $(modalId).find('#place_bid_quantity').val();
         var expire = $(modalId).find('#bid_expire').val();
         var owner = $(modalId).find('#owner').text();
         if (!amount || isNaN(amount)) {
