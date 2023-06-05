@@ -1,7 +1,7 @@
 <?php if(!$isPost){  ?>
 	<div class="cs-filter_head">
 		<div class="cs-filter_head_left">
-		<span>Results</span> <span class="cs-search_result cs-medium cs-ternary_color"> </span>		
+			<span>Results</span> <span class="cs-search_result cs-medium cs-ternary_color"> </span>		
 		</div>
 	</div>
 
@@ -61,14 +61,17 @@
 					$info = $totalArray[$index];
 					$nfTokenID = $info["nft_id"];
 				}
+
+		
 				$url = $info["base_uri"];
-			
+
 				$viewType =  str_replace(".", "", $tabType);
 
 				if (!isset($url)){
-					return;
+					continue;
 				} 
-			
+
+	
 				$jsonString = file_get_contents($url);
 				$json = json_decode($jsonString, true);
 			
@@ -123,9 +126,9 @@
 			$viewType =  str_replace(".", "", $tabType);
 
 			if (!isset($url)){
-				return;
+				continue;
 			} 
-		
+
 			$jsonString = file_get_contents($url);
 			$json = json_decode($jsonString, true);
 		
@@ -171,6 +174,7 @@
 		echo '<input type=hidden id="unclaimedCount" value="'.$unclaimedCount.'"/>';
 		echo '<input type=hidden id="unrevealedCount" value="'.$unrevealedCount.'"/>';
 		echo '<input type=hidden id="revealedCount" value="'.$revealedCount.'"/>';
+		echo "</div>";
 	}
 	
 	

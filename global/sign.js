@@ -15,7 +15,7 @@
                 }
                 else {
                     console.log('*************When page loading, since no user connectd, change button label with ...');
-                    $(".auth").text('Connect Wallet');
+                    $(".auth").text('Sign in Xumm');
                     // xumm.logout();
                 }
             })
@@ -43,13 +43,16 @@
 
 
     // *********************ToMarcus**************************
-    // ************* Connect Wallet on desktop****************
+    // ************* Sign in Xumm on desktop****************
     // *******************************************************
     $('.auth').on('click', async () => {
         axios.post('custom.php', { type: 'GetUserInfo' })
             .then(response => {
                 let json = response.data;
                 if (json) {
+                    if (!confirm("Are you sure want to sign out from xumm"))
+                        return;
+                        
                     xumm.logout();
                     console.log('*************With clicking button, GetUserInfo Response=', json); // handle the response
 
@@ -58,12 +61,12 @@
                             if (response.data) {
                                 console.log('*************RemoveUnserInfo Response=', response.data); // handle the response
                                 if (response.data.indexOf("success") >= 0) {
-                                    $(".auth").text("Connect Wallet");
+                                    $(".auth").text("Sign in Xumm");
                                     alert("You have successfully xumm signed out!");
                                 }
                             }
                             else {
-                                console.log(e);
+                                console.log("**************RemoveUnserInfo failed");
                             }
                         })
                         .catch(error => {
@@ -71,9 +74,9 @@
                         })
                 }
                 else {
-                    xumm.logout();
-                    console.log('*************With clicking button, since no user connected, go to sign...'); // handle the response
-                    signIn();
+                        xumm.logout();
+                        console.log('*************With clicking button, since no user connected, go to sign...'); // handle the response
+                        signIn();
                 }
             })
             .catch(error => {
@@ -171,7 +174,7 @@
             var user_password = $('#user_password').val();
 
             console.log("*************handleLogin ", user_id, user_password);
-            if(!user_id || !user_password){
+            if (!user_id || !user_password) {
                 alert("Please input user or password!");
             }
 

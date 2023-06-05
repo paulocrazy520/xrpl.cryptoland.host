@@ -1,6 +1,5 @@
 <?php if(!$isPost){  ?>
 <div class="cs-sidebar_frame_right">
-
 	<div class="cs-filter_head">
 		<div class="cs-filter_head_left">
 		<span class="cs-search_result cs-medium cs-ternary_color"> </span><span>Results</span>

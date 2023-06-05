@@ -7,7 +7,6 @@ if ($forceDebug == true) {
     error_reporting(E_ALL);
 }
 
-
 require_once 'assets/init.php';
 require_once __DIR__ . '/vendor/autoload.php';
 
@@ -60,7 +59,7 @@ if($isPost)
   }
   
   if(!$isPost){
-    // require_once "pages/footer.php";
+    require_once "pages/footer.php";
     require_once "pages/dialog.php";
   }
 

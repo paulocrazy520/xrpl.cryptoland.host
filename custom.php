@@ -426,7 +426,7 @@ function JEFF_SubscribePayload($user_id){
 }
 
 // *********************ToMarcus**************************
-// ************Remove user info from NRG_Users table*****
+// ************Reveal item and update database*********
 // *******************************************************
 function Jeff_RevealItem($user_id)
 {

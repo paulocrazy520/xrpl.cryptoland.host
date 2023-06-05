@@ -3,6 +3,7 @@
         <div class="container-fluid">
           <div class="cs-main_header_in">
             <div class="cs-main_header_left">
+            <a class="cs-site_branding" href="index.html"><img src="https://cryptoland.io/wp-content/uploads/2022/11/logo_t2.png" alt="Logo"></a>
             </div>
             <div class="cs-main_header_right">
               <div class="cs-search_wrap">
@@ -12,102 +13,9 @@
                   <div class="cs-nav_in">
                     <div class="cs-nav">
                       <ul class="cs-nav_list">
-                        <li class="menu-item-has-children">
-                          <a href="index.php">Home</a>
-                          <ul>
-                            <li><a href="?PAGE_TYPE=main">Market Place</a></li>
-                            <li><a href="?PAGE_TYPE=claim">Claim-Reveal</a></li>
-                          </ul>
-                        </li>
-                        
-                        <li><a href="how-it-works.html">How It Works</a></li>
-                        <li class="menu-item-has-children">
-                          <a href="blog.html">Community</a>
-                          <ul>
-                            <li><a href="blog.html">Blog</a></li>
-                            <li>
-                              <a href="blog-with-sidebar.html"
-                                >Blog With Sidebar</a
-                              >
-                            </li>
-                            <li>
-                              <a href="blog-details.html">Blog Details</a>
-                            </li>
-                          </ul>
-                        </li>
-                        <li><a href="activity.html">Activity</a></li>
-                        <li class="menu-item-has-children cs-mega-menu">
-                          <a href="#">Pages</a>
-                          <ul class="cs-mega-wrapper">
-                            <li class="menu-item-has-children">
-                              <a href="">Column One</a>
-                              <ul>
-                                <li>
-                                  <a href="connect-wallet.html"
-                                    >Connect Wallet</a
-                                  >
-                                </li>
-                                <li><a href="about.html">About Us</a></li>
-                                <li>
-                                  <a href="help-center.html">Help Center</a>
-                                </li>
-                                <li>
-                                  <a href="help-center-browser-by-category.html"
-                                    >Help Center Catagory</a
-                                  >
-                                </li>
-                                <li>
-                                  <a href="help-details.html"
-                                    >Help Center Details</a
-                                  >
-                                </li>
-                                <li>
-                                  <a href="terms-condition.html"
-                                    >Terms & Conditions</a
-                                  >
-                                </li>
-                                <li>
-                                  <a href="privacy-policy.html"
-                                    >Privacy Policy</a
-                                  >
-                                </li>
-                                <li><a href="faq.html">FAQ</a></li>
-                                <li><a href="404.html">404</a></li>
-                              </ul>
-                            </li>
-                            <li class="menu-item-has-children">
-                              <a href="">Column Two</a>
-                              <ul>
-                                <li>
-                                  <a href="user-profile.html">Edit Profile</a>
-                                </li>
-                                <li>
-                                  <a href="user-account-settings.html"
-                                    >Profile Settings</a
-                                  >
-                                </li>
-                                <li><a href="user-items.html">My Item</a></li>
-                                <li>
-                                  <a href="create-items.html">Create Items</a>
-                                </li>
-                                <li>
-                                  <a href="user-activity.html">My Activity</a>
-                                </li>
-                                <li>
-                                  <a href="user-wallet.html">My Wallet</a>
-                                </li>
-                                <li><a href="login.html">Login</a></li>
-                                <li><a href="register.html">Register</a></li>
-                                <li>
-                                  <a href="forget-password.html"
-                                    >Forget Password</a
-                                  >
-                                </li>
-                              </ul>
-                            </li>
-                          </ul>
-                        </li>
-                        <li><a href="contact.html">Contact</a></li>
+                        <li><a href="index.php">Home</a></li>
+                        <li><a href="?PAGE_TYPE=main">Marketplace</a></li>
+                        <li><a href="?PAGE_TYPE=claim">ClaimReveal</a></li>
                       </ul>
                     </div>
                   </div>
@@ -305,31 +213,10 @@
                         </div>
                       </div>
                       <ul>
-                        <!-- <li><a href="user-profile.html">My Profile</a></li>
-                        <li><a href="user-items.html">My Item</a></li>
-                        <li><a id="auth_profile">My Wallet</a></li>
-                        <li>
-                          <a href="user-account-settings.html">Settings</a>
-                        </li>
-                        <li>
-                          <div class="form-check form-switch">
-                            <input
-                              class="form-check-input"
-                              type="checkbox"
-                              id="mode_switch"
-                              checked
-                            />
-                            <label class="form-check-label" for="mode_switch"
-                              >Night Mode</label
-                            >
-                          </div>
-                        </li>
-                        <li><a  class="btn_logout">Logout</a></li>
-                      </ul> -->
                       <div class="text-center">
                         <?php if(isset($_SESSION["user_id"]) && !empty($_SESSION["user_id"])) { ?>
                         <button class="cs-btn cs-style1 w-100 auth" id="auth" >
-                          <span>Connect Wallet</span>
+                          <span>Sign in Xumm</span>
                         </button>
                         <div class="cs-height_30 cs-height_lg_30"></div>
                           <?php } ?>
@@ -349,7 +236,7 @@
 
                   <?php if(isset($_SESSION["user_id"]) && !empty($_SESSION["user_id"])) { ?>
                   <button class="cs-btn cs-style1 auth" id="auth"  >
-                    <span>Connect Wallet</span>
+                    <span>Sign in Xumm</span>
                   </button>
                     <?php } ?>
 

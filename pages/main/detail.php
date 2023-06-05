@@ -53,7 +53,7 @@
     </div>
 </section>
 <!-- End Page Head -->
-<div class="cs-height_100 cs-height_lg_70"></div>
+<div class="cs-height_30 cs-height_lg_70"></div>
 <div class="container">
     <div class="row">
         <div class="col-lg-6">

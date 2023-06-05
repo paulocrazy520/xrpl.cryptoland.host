@@ -15,6 +15,10 @@
         var cardsCount = $('#nft-list').find(key == "*" ? ".nft-card" : key).toArray().length;
         $(".cs-search_result").html(totalCount + "/" + cardsCount);
     }
+    
+    $(function () {
+        updateShowingResult(); 
+    });
 
     async function loadMorePage(key = "*") {
         if (key == "*")
@@ -63,10 +67,6 @@
         $('.cs-preloader').delay(10).fadeOut('slow'); //Show loading screen
     }
 
-    $(function () {
-        updateShowingResult();
-    });
-
     //When scrolling reach up to bottom, load more nft infos
     $(window).scroll(async function () {
         if ($('.cs-preloader').css('display') != 'none')
@@ -92,6 +92,9 @@
         }
     });
 
+
+    //**************Tab option for Claim/Reveal page****************** */
+
     $('.cs-isotop_filter ul').on('click', 'a', function () {
         var filterElement = $(this).attr('data-filter');
 
@@ -108,6 +111,9 @@
             updateShowingResult(filterElement);
     });
 
+
+
+    //**************Filter option for Marketplace page****************** */
 
     $('.form-check-label').on('click', function (event) {
         event.stopPropagation();
