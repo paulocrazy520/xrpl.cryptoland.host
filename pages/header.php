@@ -14,8 +14,8 @@
                     <div class="cs-nav">
                       <ul class="cs-nav_list">
                         <li><a href="index.php">Home</a></li>
-                        <li><a href="?PAGE_TYPE=main">Marketplace</a></li>
-                        <li><a href="?PAGE_TYPE=claim">ClaimReveal</a></li>
+                        <li><a href="?DEFAULT_PAGE_TYPE=main">Marketplace</a></li>
+                        <li><a href="?DEFAULT_PAGE_TYPE=claim">ClaimReveal</a></li>
                       </ul>
                     </div>
                   </div>

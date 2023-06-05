@@ -14,7 +14,7 @@ use Dotenv\Dotenv;
 $dotenv = Dotenv::createImmutable(__DIR__);
 $dotenv->load();
 
-$pageType = isset($_GET['PAGE_TYPE']) ? $_GET['PAGE_TYPE'] : (isset($_ENV['PAGE_TYPE']) ? $_ENV['PAGE_TYPE'] : 'claim');
+$pageType = isset($_GET['DEFAULT_PAGE_TYPE']) ? $_GET['DEFAULT_PAGE_TYPE'] : (isset($_ENV['DEFAULT_PAGE_TYPE']) ? $_ENV['DEFAULT_PAGE_TYPE'] : 'claim');
 $isDetail = isset($_GET['page']) ? $_GET['page'] : "";
 $isPost = isset($_POST['pageType']) ? $_POST['pageType'] : "";
 
@@ -52,7 +52,7 @@ if($isPost)
     require_once "pages/header.php";
 
   if($isDetail)
-    require_once "pages/main/detail.php";
+    require_once "pages/detail.php";
   else
   {
     require_once "pages/$pageType/index.php";
@@ -75,9 +75,7 @@ if($isPost)
     <script src="https://unpkg.com/xrpl@2.2.3"></script>
     
     <!-- ToMarcus -->
-    <script src="./global/config.js"></script>
     <script src="./global/functions.js"></script>
-    <script src="./global/sign.js"></script>
     <script src="./global/action.js"></script>
     <script src="./global/filter.js"></script>
     <!-------------->

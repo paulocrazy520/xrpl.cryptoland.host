@@ -166,8 +166,7 @@
     </div>
     <!-- End Modal -->
 
-    
-
+  
     <!-- Start Modal -->
     <div class="cs-modal_wrap" id="loginModal">
       <div class="cs-modal_overlay"></div>
