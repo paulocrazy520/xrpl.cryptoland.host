@@ -70,7 +70,6 @@
 				if (!isset($url)){
 					continue;
 				} 
-
 	
 				$jsonString = file_get_contents($url);
 				$json = json_decode($jsonString, true);

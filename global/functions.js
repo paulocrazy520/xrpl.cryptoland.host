@@ -22,79 +22,6 @@ async function getUserInfo() {
     return response.data;
 
 }
-/*=======================================================*/
-/*--------------Load nft infos ---------------------------*/
-/*=======================================================*/
-async function loadNftInfos() {
-  let issuer = issuerAddress; //test address from config.js
-  let userInfo = await getUserInfo();
-
-  if (!userInfo)
-    return;
-
-  let account = userInfo.xumm_address; //test address from config.js
-  console.log("***************Signed account:", issuer, account);
-
-  if (!account)
-    return;
-
-  try {
-    let response1 = await axios.get(
-      `https://test-api.xrpldata.com/api/v1/xls20-nfts/issuer/${issuer}`);
-
-    let result1 = response1.data.data.nfts;
-    writeLog("payload_issuer_issue.log", JSON.stringify(result1), 'w');
-
-    let response2 = await axios.get(
-      `https://test-api.xrpldata.com/api/v1/xls20-nfts/owner/${issuer}`);
-    let result2 = response2.data.data.nfts;
-    writeLog("payload_issuer_own.log", JSON.stringify(result2), 'w');
-
-    let response3 = await axios.get(
-      `https://test-api.xrpldata.com/api/v1/xls20-nfts/owner/${account}`);
-    let result3 = response3.data.data.nfts;
-    writeLog("payload_user_own.log", JSON.stringify(result3), 'w');
-
-
-    let offerResponse = await axios.get(
-      `https://test-api.xrpldata.com/api/v1/xls20-nfts/offers/issuer/${issuer}`);
-
-    let offerResult = offerResponse.data.data.offers; //item => offers.buy, offers.sell, offers.NFTokenID, offers.NFTokenOwner
-
-    console.log(offerResponse, issuer);
-    let result = [];
-    for (r1 of result1) {
-      if (!result2.find(r2 => r1.NFTokenID === r2.NFTokenID)) {
-
-        //add item
-        let item = {};
-        item.NFTokenID = r1.NFTokenID;
-        item.Owner = r1.Owner;
-        item.Issuer = r1.Issuer;
-        item.URI = getAsciiStringFromHex(r1.URI);
-        item.IsUser = result3.find(r3 => r1.NFTokenID === r3.NFTokenID) ? "true" : "false"
-
-        //has sell offer
-        item.hasSellOffer = (offerResult?.length > 0 && offerResult.find(offer => (offer.sell.length > 0 && offer.sell.find(data => data.NFTokenID == item.NFTokenID)))) ? "true" : "false";
-        //has sell offer by user
-        item.hasSellOfferByUser = (offerResult?.length > 0 && offerResult.find(offer => (offer.sell.length > 0 && offer.sell.find(data => data.Owner == account && data.NFTokenID == item.NFTokenID)))) ? "true" : "false";
-        //has buy offer
-        item.hasBuyOffer = (offerResult?.length > 0 && offerResult.find(offer => (offer.buy.length > 0 && offer.buy.find(data => data.NFTokenID == item.NFTokenID)))) ? "true" : "false";
-        //has buy offer by user
-        item.hasBuyOfferByUser = (offerResult?.length > 0 && offerResult.find(offer => (offer.buy.length > 0 && offer.buy.find(data => data.Owner == account && data.NFTokenID == item.NFTokenID)))) ? "true" : "false";
-
-        result.push(item);
-      }
-    }
-
-    console.log("**********Load nfts info:", result);
-    await writeLog("result.txt", JSON.stringify(result), 'w');
-  }
-  catch (e) {
-    console.log(e);
-  }
-}
-
 
 /*============================================================*/
 /*-----------------------Xumm wallet sign in-------------------------*/
@@ -104,25 +31,6 @@ function signIn() {
     console.log("e", e);
   });
 }
-
-/*============================================================*/
-/*--------------------Record log info to file----------------------*/
-/*============================================================*/
-async function writeLog(logName = "function-log.txt", content, flag = 'a') {
-  try {
-    const response = await axios.post('custom.php', {
-      type: "WriteLog",
-      fileName: logName,
-      content: content,
-      flag: flag
-    });
-
-    console.log("****************Log file updated:", response.data);
-  } catch (error) {
-    console.error(error);
-  }
-};
-
 
 // *******************************************************
 // *******************Create Buy Offer ******************
@@ -271,9 +179,9 @@ async function claimOffer(standbyBuyerField,
   // Prepare transaction -------------------------------------------------------
   const state = await xumm.state();
 
-  writeLog("payload.log", state?.me?.sub + "," + standbyBuyerField);
+  
   if (!state?.me?.sub || standbyBuyerField != state.me.sub) {
-    writeLog("payload.log", "*********Xumm sdk null************");
+  
     alert("Verify Xumm Auth!");
     return null;
   }

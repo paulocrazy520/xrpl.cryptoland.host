@@ -24,7 +24,6 @@
             });
     })
 
-
     //Login and Logout Button
     $('#btn_login').on('click', function () {
         handleLogin();
@@ -104,9 +103,6 @@
                         if (response.data.indexOf('success') >= 0) {
                             $(".auth").text(state?.me?.sub);
                             alert('You have successfully xumm signed in!');
-                            // loadNftInfos().then(() => {
-                            //     location.reload();
-                            //   });
                             location.reload();
                         } else if (response.data.indexOf('user_mismatch') >= 0) {
                             alert('In this test product, you should login with Test User');
