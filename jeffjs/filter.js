@@ -3,23 +3,30 @@
 
     let tabTypeIdArray = { "*": "total", ".unclaimed": "unclaimed", ".unrevealed": "unrevealed", ".revealed": "revealed" };
 
+    $(function () {
+        updateShowingResult(); 
+    });
+
     function getTotalCount(key = "*") {
         return Math.ceil($("#" + tabTypeIdArray[key] + "Count").val());
     }
 
     function updateShowingResult(key = "*") {
         var totalCount = $("#" + tabTypeIdArray[key] + "Count").val();
-        if (!totalCount)
-            return;
+
+        if (!totalCount || totalCount == 0)
+        {
+            $("#empty_result").show();
+        }
+        else{
+            $("#empty_result").hide();
+        }
+      
 
         var cardsCount = $('#nft-list').find(key == "*" ? ".nft-card" : key).toArray().length;
         $(".cs-search_result").html(totalCount + "/" + cardsCount);
     }
     
-    $(function () {
-        updateShowingResult(); 
-    });
-
     async function loadMorePage(key = "*") {
         if (key == "*")
         {
