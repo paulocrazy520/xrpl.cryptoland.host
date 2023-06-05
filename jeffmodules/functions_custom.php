@@ -8,7 +8,6 @@ $apiSecret =  $_ENV['API_SECRET']; //jeff
 $issuer_address = $_ENV['DEFAULT_ISSUER_ADDRESS'];
 $num_results_on_page = $_ENV['SHOW_ITEMS_PER_PAGE'];; 
 
-
 $endpoint_url = $_ENV['API_ENDPOINT_URL'];
 $server_url = $_ENV['NODEBACKEND_SERVER_URL'];
 
