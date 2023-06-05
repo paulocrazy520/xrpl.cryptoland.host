@@ -11,7 +11,7 @@
                 if (json && json.xumm_address) {
                     console.log('*************When page loading, GetUnserInfo Response=', json);
                     $(".auth").text(json.xumm_address);
-                    accountAddress = json.xumm_address;
+                    signed_xumm_address = json.xumm_address;
                 }
                 else {
                     console.log('*************When page loading, since no user connectd, change button label with ...');
@@ -43,6 +43,13 @@
     // ************* Sign in Xumm on desktop****************
     // *******************************************************
     $('.auth').on('click', async () => {
+
+        if(!$('#btn_logout').length){
+            alert("To sign in xumm, login first");
+            $("#loginModal").toggleClass('active');
+            return;
+        }
+
         axios.post('jeffajax.php', { type: 'GetUserInfo' })
             .then(response => {
                 let json = response.data;
@@ -280,8 +287,8 @@
 
         if (confirm("Are you sure want to claim this nft?")) {
             console.log("*************handleClaimItemClick ", nftId, offerId);
-            await acceptSellOffer(accountAddress, nftId, offerId, "claim_offers");
-            //await createSellOffer(accountAddress, nftId, amount);
+            await acceptSellOffer(signed_xumm_address, nftId, offerId, "claim_offers");
+            //await createSellOffer(signed_xumm_address, nftId, amount);
         }
     }
 
@@ -299,8 +306,8 @@
             return;
         }
         if (confirm("Are you sure want to sell this item with these price?")) {
-            console.log("*************handleListItemClick : Create Sell Offer", accountAddress, nftId, amount);
-            await createSellOffer(accountAddress, nftId, amount);
+            console.log("*************handleListItemClick : Create Sell Offer", signed_xumm_address, nftId, amount);
+            await createSellOffer(signed_xumm_address, nftId, amount);
         }
     }
 
@@ -319,8 +326,8 @@
         }
 
         if (confirm("Are you sure want to buy this item with these price and expire time?")) {
-            console.log("*************handlePlaceBidClick : Create Buy Offer", accountAddress, nftId, amount, expire);
-            await createBuyOffer(owner, accountAddress, nftId, amount, expire);
+            console.log("*************handlePlaceBidClick : Create Buy Offer", signed_xumm_address, nftId, amount, expire);
+            await createBuyOffer(owner, signed_xumm_address, nftId, amount, expire);
         }
     }
 
@@ -348,8 +355,8 @@
 
             let alertString = "Are you sure want to accept this item from " + offer.Owner + " with " + amount + "Xrp?";
             if (confirm(alertString)) {
-                console.log("*************handleBuyItemClick : Accept Buy Offer", accountAddress, nftId);
-                await acceptSellOffer(accountAddress, nftId, offerId, "buy_offers");
+                console.log("*************handleBuyItemClick : Accept Buy Offer", signed_xumm_address, nftId);
+                await acceptSellOffer(signed_xumm_address, nftId, offerId, "buy_offers");
             }
         }
         else {
@@ -370,8 +377,8 @@
 
             let alertString = "Are you sure want to buy this item from " + offerJson.Owner + " with " + amount + "Xrp?";
             if (confirm(alertString)) {
-                console.log("*************handleBuyItemClick : Accept Sell Offer", accountAddress, nftId);
-                await acceptSellOffer(accountAddress, nftId, offerJson.OfferID, "sell_offers");
+                console.log("*************handleBuyItemClick : Accept Sell Offer", signed_xumm_address, nftId);
+                await acceptSellOffer(signed_xumm_address, nftId, offerJson.OfferID, "sell_offers");
             }
         }
     }
@@ -382,8 +389,8 @@
     // ***********************************************************
     async function handleCancelListingClick(nftId) {
         if (confirm("Are you sure want to cancel these sell offers for this token?")) {
-            console.log("*************handleCancelListingClick : Cancel Sell Offer", accountAddress, nftId);
-            await cancelOffer(accountAddress, nftId, "sell_offers");
+            console.log("*************handleCancelListingClick : Cancel Sell Offer", signed_xumm_address, nftId);
+            await cancelOffer(signed_xumm_address, nftId, "sell_offers");
         }
     }
 
@@ -392,8 +399,8 @@
     // ***********************************************************
     async function handleCancelBidClick(nftId) {
         if (confirm("Are you sure want to cancel these buy offers for this token?")) {
-            console.log("*************handleCancelBidClick : Cancel Buy Offer", accountAddress, nftId);
-            await cancelOffer(accountAddress, nftId, "buy_offers");
+            console.log("*************handleCancelBidClick : Cancel Buy Offer", signed_xumm_address, nftId);
+            await cancelOffer(signed_xumm_address, nftId, "buy_offers");
         }
     }
 

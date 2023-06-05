@@ -3,7 +3,7 @@ $sql_db_host = "localhost";
 $sql_db_user = "root";
 $sql_db_pass = "==Z9C2ZQ@MfqebQ";
 $sql_db_name = "sample_CL_data_v1"; 
-$site_url = "https://dev2.cryptoland.io";
+$site_url = "https://sb236.cryptoland.io";
 $auto_redirect = true;
 $mobile_code = "21ecea8c-82cb-4b25-98e8-d398b2114b5d";
 $server_key = "027bf2572ed72e27412a3c6dbc3e50bd741f34d7-708dba96ab49defc587fca0d6e47acfd-45257724";

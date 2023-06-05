@@ -7,7 +7,7 @@ $sql_db_host = "localhost";
 $sql_db_user = "root";
 $sql_db_pass = "==Z9C2ZQ@MfqebQ";
 $sql_db_name = "sample_CL_data_v1";
-$site_url = "https://dev2.cryptoland.io";
+$site_url = "https://sb236.cryptoland.io";
 
 $servername = $sql_db_host;
 $username = $sql_db_user;

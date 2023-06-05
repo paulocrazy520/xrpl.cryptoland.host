@@ -96,40 +96,25 @@
                       </div>
                       <ul>
                       <div class="text-center">
-                        <?php if(isset($_SESSION["user_id"]) && !empty($_SESSION["user_id"])) { ?>
                         <button class="cs-btn cs-style1 w-100 auth" id="auth" >
                           <span>Sign in Xumm</span>
                         </button>
                         <div class="cs-height_30 cs-height_lg_30"></div>
-                          <?php } ?>
-
                           <?php if(isset($_SESSION["user_id"]) && !empty($_SESSION["user_id"])) { ?>
                               <button class="cs-btn cs-style1 w-100 btn_logout cs-color1" id="btn_logout" >
                                 <span>Logout #<?php echo $_SESSION['user_id']; ?></span>
                               </button>
-                          <?php }else{ ?>
-                          <button class="cs-btn cs-style1 btn_login_modal w-100" id="btn_login_modal" >
-                            <span>Login</span>
-                          </button>
                           <?php } ?>
                       </div>
                     </div>
                   </div>
-
-                  <?php if(isset($_SESSION["user_id"]) && !empty($_SESSION["user_id"])) { ?>
                   <button class="cs-btn cs-style1 auth" id="auth"  >
                     <span>Sign in Xumm</span>
                   </button>
-                    <?php } ?>
-
                     <?php if(isset($_SESSION["user_id"]) && !empty($_SESSION["user_id"])) { ?>
                         <button class="cs-btn cs-style1 btn_logout  cs-color1" id="btn_logout">
                         <span>Logout #<?php echo $_SESSION['user_id']; ?></span>
                         </button>
-                    <?php }else{ ?>
-                    <button class="cs-btn cs-style1 btn_login_modal" id="btn_login_modal">
-                      <span>Login</span>
-                    </button>
                     <?php } ?>
                 </div>
               </div>

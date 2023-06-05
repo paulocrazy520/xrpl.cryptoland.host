@@ -2,16 +2,16 @@
 use GuzzleHttp\Client;
 use GuzzleHttp\Promise;
 
-/********************Following statements can be updated********************* */
-$num_results_on_page = 20; 
+/********************Load Environment Variables********************* */
+$apiKey = $_ENV['API_KEY'];  //jeff
+$apiSecret =  $_ENV['API_SECRET']; //jeff
+$issuer_address = $_ENV['DEFAULT_ISSUER_ADDRESS'];
+$num_results_on_page = $_ENV['SHOW_ITEMS_PER_PAGE'];; 
 
-$apiKey = "04b42479-cc50-4410-a783-1686eeebe65f";  //dev2
-$apiSecret = "f53c6edc-1fb1-4c7f-8b79-f1ffef28037d"; // dev2
 
-$endpoint_url = "https://s.altnet.rippletest.net:51234";
-$server_url = "https://sb237.cryptoland.host:28850/";
+$endpoint_url = $_ENV['API_ENDPOINT_URL'];
+$server_url = $_ENV['NODEBACKEND_SERVER_URL'];
 
-$issuer_address = "rDUSz5wt8ZVENp7ZJq4qrv2f9A2h56Cf3b"; //for test
 /**************************************************************************** */
 
 if(isset($_SESSION["user_id"]) && !empty($_SESSION["user_id"]))

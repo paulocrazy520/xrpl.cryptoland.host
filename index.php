@@ -1,4 +1,8 @@
 <?php
+require_once __DIR__ . '/vendor/autoload.php';
+use Dotenv\Dotenv;
+$dotenv = Dotenv::createImmutable(__DIR__);
+$dotenv->load();
 
 $forceDebug = true;
 if ($forceDebug == true) {
@@ -8,11 +12,7 @@ if ($forceDebug == true) {
 }
 
 require_once 'assets/init.php';
-require_once __DIR__ . '/vendor/autoload.php';
 
-use Dotenv\Dotenv;
-$dotenv = Dotenv::createImmutable(__DIR__);
-$dotenv->load();
 
 // Pass the environment variables to your view
 echo "<script>window.env = {";
