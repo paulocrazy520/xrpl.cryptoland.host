@@ -84,12 +84,12 @@
         if (filterElement == "*")
             return;
 
-        console.log(filterElement);
-        if ($(window).scrollTop() + $(window).height() >= $(document).height() - 1) {
+            console.log($(window).scrollTop(), window.innerHeight, $(document).height() - 1)
+        if ($(window).scrollTop() + window.innerHeight >= $(document).height() - 1) {
             var cardsCount = $('#nft-list').find(filterElement == "*" ? ".nft-card" : filterElement).toArray().length;
             $('#cardsCount').val(cardsCount);
 
-            console.log(cardsCount, getTotalCount(filterElement),)
+            console.log("************scroll",  getTotalCount(filterElement), "/ ", cardsCount);
 
             if (cardsCount < getTotalCount(filterElement)) {
                 loadMorePage(filterElement);

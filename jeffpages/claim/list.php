@@ -164,21 +164,19 @@
 		}
 	}
 
-	$unclaimedCount = count($unclaimedArray);
-	$unrevealedCount = count($unrevealedArray);
-	$revealedCount = count($revealedArray);
-	$totalCount = $unclaimedCount + $unrevealedCount + $revealedCount;
-	
-	echo '<h1 class="cs-hero_title cs-white_color cs-center" id="empty_result">Empty Result</h1>';
-
 	if(!$isPost){
+		$unclaimedCount = count($unclaimedArray);
+		$unrevealedCount = count($unrevealedArray);
+		$revealedCount = count($revealedArray);
+		$totalCount = $unclaimedCount + $unrevealedCount + $revealedCount;
+
+		echo '<h1 class="cs-hero_title cs-white_color cs-center" id="empty_result">Empty Result</h1>';
 		echo '<input type=hidden id="totalCount" value="'.$totalCount.'"/>';
 		echo '<input type=hidden id="unclaimedCount" value="'.$unclaimedCount.'"/>';
 		echo '<input type=hidden id="unrevealedCount" value="'.$unrevealedCount.'"/>';
 		echo '<input type=hidden id="revealedCount" value="'.$revealedCount.'"/>';
 		echo "</div>";
 	}
-	
 	
 //***************Fiter Menu end*************
 ?>
