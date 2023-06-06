@@ -12,11 +12,11 @@
                   />
                 </a>
                 <div class="cs-card_info">
-                  <a href="?page=<?php echo $nft->NFTokenID?>" class="cs-avatar cs-white_bg">
+                  <!-- <a href="?page=<?php echo $nft->NFTokenID?>" class="cs-avatar cs-white_bg">
                     <img src="assets/img/avatar/avatar_13.png" alt="Avatar" />
                     <span >->Detail</span>
-                  </a>
-
+                  </a> -->
+                  <div class="cs-height_20 cs-height_lg_20"></div>
                   <div style="background-color: <?php echo $color ?>;  border-radius:5%; padding:5%;">
                       <h3 class="cs-card_title">
                         <a href="?page=<?php echo $nft->NFTokenID?>" ><?php echo $collectionName . ' And ' . $collectionFamily ?></a>
