@@ -46,6 +46,9 @@
 		$tab_index = 0;
 		foreach($arrayList as $totalArray)
 		{
+			if(!$totalArray)
+				continue;
+
 			$tabType = $tabTypeList[$tab_index];
 			$tab_index ++;
 
@@ -108,6 +111,8 @@
 		}
 	}
 	else{
+
+		if(!$totalArray)
 		for($index = $cardsCount ;  $index < min(count($totalArray), ($cardsCount + $num_results_on_page - ($cardsCount % $num_results_on_page))) ; $index++)
 		{
 			if($tabType == ".unclaimed")
