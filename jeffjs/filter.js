@@ -26,7 +26,7 @@
         $(".cs-search_result").html(totalCount + "/" + cardsCount);
     }
 
-    async function updatePage(key = "*", isFilter = false) {
+    async function updatePage(key = "*", isReplace = false) {
         if (key == "*" && $('#tabType').val() == "claim") {
             updateShowingResult(key);
             return;
@@ -35,7 +35,7 @@
         const formData = new FormData();
         formData.append('pageType', $('#pageType').val());
 
-        if(isFilter)
+        if(isReplace)
             formData.append('cardsCount', 0)
         else
             formData.append('cardsCount', $('#cardsCount').val())
@@ -70,8 +70,7 @@
                 }, 1000);
             }
             else if ($('#pageType').val() == "main") {
-                console.log('*****************isFilter:', isFilter);
-                if (!isFilter)
+                if (!isReplace)
                     $('#nft-list').append(html);
                 else
                 {
@@ -174,4 +173,5 @@
         $('#menuColor').val(menuColor);
         updatePage("*", true);
     });
+
 })(jQuery); // End of use strict

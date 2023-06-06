@@ -85,7 +85,6 @@
 				$collectionFamily = $json['collection']['family']; //Pull Collection data from URI[family]
 				$attributes = $json['attributes']; // Pull all Filter Data from URI
 				$color = GetTestHexColorFromColorString();
-				$colorName = "";
 			
 				foreach ($attributes as $attribute) {
 					switch ($attribute["trait_type"]) {
@@ -99,7 +98,6 @@
 							// Pull lower back ground from CSS for collectionClass
 							if (isset($attribute['value'])) {
 								$color = GetTestHexColorFromColorString($attribute['value']);
-								$colorName = $attribute['value'];
 							}
 							break;
 						default:
@@ -144,7 +142,6 @@
 			$collectionFamily = $json['collection']['family']; //Pull Collection data from URI[family]
 			$attributes = $json['attributes']; // Pull all Filter Data from URI
 			$color = GetTestHexColorFromColorString();
-			$colorName = "";
 		
 			foreach ($attributes as $attribute) {
 				switch ($attribute["trait_type"]) {
@@ -158,7 +155,6 @@
 						// Pull lower back ground from CSS for collectionClass
 						if (isset($attribute['value'])) {
 							$color = GetTestHexColorFromColorString($attribute['value']);
-							$colorName = $attribute['value'];
 						}
 						break;
 					default:

@@ -213,10 +213,10 @@
               </h2>
               <div class="cs-filter_toggle_body">
                 <div class="cs-filter_by_color">
-                  <div class="cs-color_item cs-color1" id="Red"></div>
-                  <div class="cs-color_item cs-color2"  id="Green"></div>
-                  <div class="cs-color_item cs-color3"  id="Purple"></div>
-                  <div class="cs-color_item cs-color4"  id="Other"></div>
+                  <div class="cs-color_item cs-color5" id="Red"></div>
+                  <div class="cs-color_item cs-color6"  id="Green"></div>
+                  <div class="cs-color_item cs-color4"  id="Purple"></div>
+                  <div class="cs-color_item cs-color8"  id="Other"></div>
                 </div>
               </div>
             </div>

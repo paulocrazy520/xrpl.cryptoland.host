@@ -3,10 +3,7 @@
 	<div class="cs-filter_head">
 		<div class="cs-filter_head_left">
 		<span class="cs-search_result cs-medium cs-ternary_color"> </span><span>Results</span>
-		<!-- <div class="cs-form_field_wrap">
-			<input type="text" class="cs-form_field cs-field_sm" placeholder="In Auction">
-		</div> -->
-		<!-- <a href="#" class="cs-clear_btn">Clear All</a> -->
+		<a href="#" onclick="location.reload();" class="cs-clear_btn">Clear All</a>
 		</div>
 	</div>
 
@@ -75,7 +72,7 @@ $filterArray = [];
 			}
 		}
 
-		if(($menuCollection && ($menuCollection != $collectionFamily))  || ($menuRarity && strstr($rarity, $menuRarity) == false) ||  ($menuColor && ($menuColor != $colorName)))
+		if(($menuCollection && ($menuCollection != $collectionFamily))  || ($menuRarity && strstr($rarity, $menuRarity) == false) ||  ($menuColor && (($menuColor != "Other" && $menuColor != $colorName) || ($menuColor == "Other" && $color != "#05002335"))))
 			continue;
 			
 			$asset_owner = $nft->Owner;

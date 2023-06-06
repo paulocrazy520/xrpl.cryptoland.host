@@ -376,13 +376,13 @@ function GetUserInfoByUserId($user_id)
 function GetTestHexColorFromColorString($color = "")
 {
     if ($color == 'Red') {
-        $r = "#80000035";
+        $r = "#FF4E4E35";
     } else if ($color == 'Green') {
-        $r = "#00800035";
+        $r = "#21A85A35";
     } else if ($color == 'Purple') {
-        $r = "#80008035";
+        $r = "#EF5DA835";
     } else {
-        $r = "#00008035";
+        $r = "#05002335";
     }
     return $r;
 }
