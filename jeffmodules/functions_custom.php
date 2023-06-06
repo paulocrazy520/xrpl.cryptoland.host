@@ -11,7 +11,7 @@ $num_results_on_page = $_ENV['SHOW_ITEMS_PER_PAGE'];;
 $endpoint_url = $_ENV['API_ENDPOINT_URL'];
 $server_url = $_ENV['NODEBACKEND_SERVER_URL'];
 
-/**************************************************************************** */
+/****************************************************************** */
 
 if(isset($_SESSION["user_id"]) && !empty($_SESSION["user_id"]))
 {    
@@ -19,6 +19,9 @@ if(isset($_SESSION["user_id"]) && !empty($_SESSION["user_id"]))
     $current_user = $userInfo['xumm_address'];
     $nrg["user"] = $userInfo; //For using database functions provided existing project
 }
+
+
+/****************************************************************** */
 
 function GetRevealNftArraysFromDatabase($claimedArray)
 {
@@ -177,7 +180,6 @@ function GetUnClaimedNftsFromServer(){
 
 /*****************Get owned Nft Infos by account from Server******************* */
 function GetClaimedNftsFromServer($account = null){
-    
     global $current_user, $server_url, $issuer_address;
     
     if(!$current_user)
@@ -206,8 +208,8 @@ function GetClaimedNftsFromServer($account = null){
 }
 
 
-/**************************************************** */
-function GetFullNftInfoFromParam($filter, $nftTokenId){
+/******************Get full deatiled nft info from bithomp server************************ */
+function GetDetailNftInfoFromBithomp($filter, $nftTokenId){
     
     global $apiKey, $apiSecret;
 
@@ -228,11 +230,11 @@ function GetFullNftInfoFromParam($filter, $nftTokenId){
     return $transfer_history;    
 }
 
-/*****************Newly added******************* */
-function GetOfferInfoById($offerIndex){ 
+/******************Get offer info from bithomp server************************ */
+function GetOfferInfoFromBithomp($offerIndex){ 
     global $apiKey, $apiSecret;
     
-    NRG_writeFile("Payload_UpdateTransactionStausAndQty.log", "--------GetOfferInfoById Start:".$offerIndex);
+    NRG_writeFile("Payload_UpdateTransactionStausAndQty.log", "--------GetOfferInfoFromBithomp Start:".$offerIndex);
 
     $client = new Client([
         'base_uri' => 'https://test.bithomp.com/api/cors/v2/search/', 'headers' => [
@@ -249,8 +251,6 @@ function GetOfferInfoById($offerIndex){
 
     return $result;
 }
-
-
 
 /********************************************** */
 function GetOffersByParams($offerType, $nftTokenId){ 
@@ -307,12 +307,12 @@ function GetNftInfoFromTokenId($nftTokenId){
 function LoadNftInfosFromCurrentUser()
 {
     global $current_user, $issuer_address, $apiKey, $apiSecret;
-    $issuer = $issuer_address; // test address from header
-    $account = $current_user; // test address from header
 
     if (!$account) {
-        return;
+        $account = $issuer_address; 
     }
+    else
+        $account = $current_user;
 
     $client = new Client([
         'base_uri' => 'https://test-api.xrpldata.com/api/v1/xls20-nfts/',
@@ -334,20 +334,20 @@ function LoadNftInfosFromCurrentUser()
         }
         else
         {
-            $request = $client->getAsync("issuer/$issuer");
+            $request = $client->getAsync("issuer/$issuer_address");
             $response = $request->wait();
             $result1 = json_decode($response->getBody()->getContents())->data->nfts;
             NRG_writeFileByMode($issuer_issue_file, json_encode($result1), 'w');
         }
 
-        $request = $client->getAsync("offers/issuer/$issuer");
+        $request = $client->getAsync("offers/issuer/$issuer_address");
         $response = $request->wait();
         $offerResult = json_decode($response->getBody()->getContents())->data->offers;
        
         $result = [];
 
         foreach ($result1 as $r1) {
-          if($r1->Owner == $issuer)
+          if($r1->Owner == $issuer_address)
             continue;
 
             // add item

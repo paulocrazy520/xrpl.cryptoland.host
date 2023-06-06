@@ -203,9 +203,9 @@ function JEFF_SubscribePayload($user_id){
     $userToken = $user_info["xumm_user_token"];
 
     //Check if this payload is cancel offer, then make the array of token offers
-    if( $xummPayload["txjson"]["TransactionType"] == "NFTokenCancelOffer" && isset($request_data->cancelNftTokenId)){
+    if( $xummPayload["txjson"]["TransactionType"] == "NFTokenCancelOffer" && isset($request_data->offeredNftTokenId)){
         $table_name = $request_data->tableName;
-        $offers = GetOffersByParams($table_name,$request_data->cancelNftTokenId);
+        $offers = GetOffersByParams($table_name,$request_data->offeredNftTokenId);
 
         NRG_writeFile("Payload_UpdateTransactionStausAndQty.log", "--------GetOffersByParams Offers Result:".json_encode($offers));
 
@@ -305,7 +305,7 @@ function JEFF_SubscribePayload($user_id){
                     $offer_date = time();
                     $tx = $payload_data["txid"];
                     $offer_status = "cancelled";
-                    $nft_token_id =  $request_data->cancelNftTokenId;
+                    $nft_token_id =  $request_data->offeredNftTokenId;
                     /**************Insert Data to table ***************/
                     $table_name = $request_data->tableName;
                     if(!isset($table_name) || empty($table_name))
@@ -336,7 +336,7 @@ function JEFF_SubscribePayload($user_id){
                     $offer_date = time();
                     $tx = $payload_data["txid"];
                     $offer_status = "accepted";
-                    $nft_token_id =  $request_data->cancelNftTokenId;
+                    $nft_token_id =  $request_data->offeredNftTokenId;
                     /**************Insert Data to table ***************/
                     $table_name = $request_data->tableName;
                     if(!isset($table_name) || empty($table_name))
@@ -374,7 +374,7 @@ function JEFF_SubscribePayload($user_id){
             echo false;
             //echo "Payment request rejected :(\n";
             return [];
-            //NRG_updateNFTAsClaimed($$request_data->cancelNftTokenId);
+            //NRG_updateNFTAsClaimed($$request_data->offeredNftTokenId);
         };
         
         try {

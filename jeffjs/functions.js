@@ -176,30 +176,30 @@ async function cancelOffer(account,
 /*=============================================================================*/
 /*--------------------Post payload via xumm on php server----------------------*/
 /*=============================================================================*/
-async function postPayload(transactionBlob, cancelNftTokenId = undefined, tableName = undefined) {
-  console.log("******postPayload*******", transactionBlob, cancelNftTokenId, tableName);
+async function postPayload(transactionBlob, offeredNftTokenId = undefined, tableName = undefined) {
+  console.log("******postPayload*******", transactionBlob, offeredNftTokenId, tableName);
   $('.cs-preloader').delay(10).fadeIn('slow'); //Show loading screen
 
   axios.post('jeffajax.php', {
     type: "SubscribePayload",
     payload: transactionBlob,
-    cancelNftTokenId: cancelNftTokenId,
+    offeredNftTokenId: offeredNftTokenId,
     tableName: tableName
   })
     .then(response => {
       // console.log(response.data);
       //location.reload();
-      console.log('*********************postPayload Response*=', response, tableName, cancelNftTokenId);
+      console.log('*********************postPayload Response*=', response, tableName, offeredNftTokenId);
       if (tableName == "claim_offers") {
         if (response.data == true) {
-          $('.cs-isotop_item[nft-id="' + cancelNftTokenId + '"]').removeClass('unclaimed').addClass('unrevealed');
+          $('.cs-isotop_item[nft-id="' + offeredNftTokenId + '"]').removeClass('unclaimed').addClass('unrevealed');
 
           // $btnStr = "Reveal";
           // $btnStyle = "cs-card_btn_2"; 
           // $modalId= "#revealItem";
-          $('.cs-action_item[nft-id="' + cancelNftTokenId + '"]').removeClass('cs-card_btn_4').addClass('cs-card_btn_2');
-          $('.cs-action_item[nft-id="' + cancelNftTokenId + '"]').attr('data-modal', '#revealItem');
-          $('.cs-action_item[nft-id="' + cancelNftTokenId + '"] span').text('Reveal');
+          $('.cs-action_item[nft-id="' + offeredNftTokenId + '"]').removeClass('cs-card_btn_4').addClass('cs-card_btn_2');
+          $('.cs-action_item[nft-id="' + offeredNftTokenId + '"]').attr('data-modal', '#revealItem');
+          $('.cs-action_item[nft-id="' + offeredNftTokenId + '"] span').text('Reveal');
 
           
           if ($('#unclaimedCount').val() > 0) {

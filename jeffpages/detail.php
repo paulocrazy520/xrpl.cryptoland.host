@@ -4,7 +4,7 @@
     if(!$nftTokenId)
             return;
 
-    $nft = GetFullNftInfoFromParam("", $nftTokenId);
+    $nft = GetDetailNftInfoFromBithomp("", $nftTokenId);
 
     if(!$nft)
         return;
@@ -302,7 +302,7 @@
                             {
                                 if(isset($history->offerIndex) && $history->offerIndex)
                                 {
-                                    $offer = GetOfferInfoById($history->offerIndex);
+                                    $offer = GetOfferInfoFromBithomp($history->offerIndex);
                                     $owner = $offer->owner;
                                     $amount = intval($offer->amount) / 1000000;
                                     $formatedCreatedData = date('m/d/Y, h:i:s A', intval($offer->createdAt)); //

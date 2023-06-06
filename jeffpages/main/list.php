@@ -6,12 +6,11 @@
 		<!-- <div class="cs-form_field_wrap">
 			<input type="text" class="cs-form_field cs-field_sm" placeholder="In Auction">
 		</div> -->
-		<a href="#" class="cs-clear_btn">Clear All</a>
+		<!-- <a href="#" class="cs-clear_btn">Clear All</a> -->
 		</div>
 	</div>
 
     <div class="cs-height_30 cs-height_lg_30"></div>
-
     <div class="row" id="nft-list">
 <?php
 }
