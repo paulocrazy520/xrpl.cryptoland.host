@@ -246,6 +246,7 @@
             console.log("*************hhandleRevealItemClick ", nftId);
 
             $('.cs-preloader').delay(10).fadeIn('slow'); //Show loading screen
+            $('.cs-preloader span').html("Processing...");
 
             axios.post('jeffajax.php', {
                 type: "RevealItem",

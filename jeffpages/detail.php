@@ -49,6 +49,7 @@
         <div class="text-center">
             <h3 class="cs-page_title">Single Item page</h3>
             <ol class="breadcrumb">
+                <li class="breadcrumb-item">NftTokenID</li>
                 <li class="breadcrumb-item active">
                     <?php echo $nftTokenId; ?>
                 </li>

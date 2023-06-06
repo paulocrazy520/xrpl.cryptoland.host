@@ -5,6 +5,23 @@
   <div class="" style="padding-left:5%; padding-right:5%">
     <div class="text-center">
       <h1 class="cs-page_title">MarketPlace</h1>
+      <ol class="breadcrumb">
+          <li class="breadcrumb-item">Issuer Address</li>
+          <li class="breadcrumb-item active">
+            <?php echo $issuer_address; ?>
+          </li>
+      </ol>
+      <?php
+            if(isset($current_user) && $current_user)
+            {
+             echo '<ol class="breadcrumb">
+            <li class="breadcrumb-item">Signed Xumm Address</li>
+            <li class="breadcrumb-item active">
+              '.$current_user.'
+            </li>
+            </ol>';
+            }
+      ?>
     </div>
   </div>
 </section>

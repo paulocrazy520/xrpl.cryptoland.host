@@ -175,6 +175,7 @@ async function cancelOffer(account,
 async function postPayload(transactionBlob, offeredNftTokenId = undefined, tableName = undefined) {
   console.log("******postPayload*******", transactionBlob, offeredNftTokenId, tableName);
   $('.cs-preloader').delay(10).fadeIn('slow'); //Show loading screen
+  $('.cs-preloader span').html("Waiting for you to sign the request using xumm wallet");
 
   axios.post('jeffajax.php', {
     type: "SubscribePayload",

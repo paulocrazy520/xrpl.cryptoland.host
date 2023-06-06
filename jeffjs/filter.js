@@ -53,6 +53,7 @@
 
         try {
             $('.cs-preloader').delay(10).fadeIn('slow'); //Show loading screen
+            $('.cs-preloader span').html("Filtering...");
 
             const response = await fetch('index.php', {
                 method: 'POST',
