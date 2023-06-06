@@ -101,7 +101,6 @@
 
 
     //**************Tab option for Claim/Reveal page****************** */
-
     $('.cs-isotop_filter ul').on('click', 'a', function () {
         var filterElement = $(this).attr('data-filter');
 
@@ -161,6 +160,4 @@
         $('#menuColor').val(menuColor);
         loadMorePage();
     });
-    ///////////////////////////////////////////////////////
-
 })(jQuery); // End of use strict

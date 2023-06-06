@@ -3,7 +3,7 @@
     $(function () {
         $('.cs-preloader').delay(150).fadeOut('slow');
         // *********************ToMarcus**************************
-        // ************* Check wallet connection (In this test produc, should test user_id:3)********
+        // ************* Check wallet connection ****************
         // *******************************************************
         axios.post('jeffajax.php', { type: 'GetUserInfo' })
             .then(response => {
@@ -37,7 +37,6 @@
     $('.btn_login_modal').on('click', function () {
         $("#loginModal").toggleClass('active');
     });
-
 
     // *********************ToMarcus**************************
     // ************* Sign in Xumm on desktop****************
@@ -194,7 +193,7 @@
             case "#buyItem": //When click Buy Item button
                 var nftId = $(this).attr('nft-id');
                 var offerId = $(this).attr('offer-id');
-                console.log("***********BuyItem selected by nft token:***********", modalId, nftId);
+                console.log("***********BuyItem selected by nft token:***********", modalId, nftId, offerId);
                 handleBuyItemClick(nftId, offerId);
                 break;
             case "#revealItem": //When click Buy Item button
@@ -281,7 +280,7 @@
     }
 
     // *********************ToMarcus**************************
-    // ***********Handle List Item(Create Sell Offer)********
+    // ***********Handle Claim Item(Create Sell Offer with Destination Specified)********
     // *******************************************************
     async function handleClaimItemClick(nftId, offerId) {
 
@@ -291,7 +290,6 @@
             //await createSellOffer(signed_xumm_address, nftId, amount);
         }
     }
-
 
     // *********************ToMarcus**************************
     // ***********Handle List Item(Create Sell Offer)********

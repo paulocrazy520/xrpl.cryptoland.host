@@ -79,7 +79,7 @@ function Jeff_GetUserInfo($user_id)
     }
 
     global $sqlConnect, $xummSdk;
-    $row = getUserInfo($user_id);
+    $row = GetUserInfoByUserId($user_id);
     
     if($row["xumm_user_token"])
     {
@@ -125,7 +125,7 @@ function JEFF_UpdateUserInfo($user_id)
     $txid = $payload_json["response"]["txid"];
     $address = $payload_json["response"]["account"];
 
-    $user_info  = getUserInfo($user_id);
+    $user_info  = GetUserInfoByUserId($user_id);
 
     if(!$user_info) //Check user exist
         return;
@@ -192,10 +192,9 @@ function JEFF_SubscribePayload($user_id){
 
     NRG_writeFile("Payload_UpdateTransactionStausAndQty.log", "-------------------New Offer Created-----------------");
     NRG_writeFile("Payload_UpdateTransactionStausAndQty.log", json_encode($xummPayload));
-
     NRG_writeFile("Payload_UpdateTransactionStausAndQty.log", json_encode($request_data));
 
-    $user_info = getUserInfo($user_id);
+    $user_info = GetUserInfoByUserId($user_id);
 
     if(!$user_info)
         return;
@@ -205,9 +204,9 @@ function JEFF_SubscribePayload($user_id){
     //Check if this payload is cancel offer, then make the array of token offers
     if( $xummPayload["txjson"]["TransactionType"] == "NFTokenCancelOffer" && isset($request_data->offeredNftTokenId)){
         $table_name = $request_data->tableName;
-        $offers = GetOffersByParams($table_name,$request_data->offeredNftTokenId);
+        $offers = GetNftOffersByParams($table_name, $request_data->offeredNftTokenId);
 
-        NRG_writeFile("Payload_UpdateTransactionStausAndQty.log", "--------GetOffersByParams Offers Result:".json_encode($offers));
+        NRG_writeFile("Payload_UpdateTransactionStausAndQty.log", "--------GetNftOffersByParams Offers Result:".json_encode($offers));
 
         $offerArray = []; 
         for($i = 0 ; $i < count($offers) ; $i++)

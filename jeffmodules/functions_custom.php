@@ -15,14 +15,13 @@ $server_url = $_ENV['NODEBACKEND_SERVER_URL'];
 
 if(isset($_SESSION["user_id"]) && !empty($_SESSION["user_id"]))
 {    
-    $userInfo = getUserInfo($_SESSION["user_id"]);
+    $userInfo = GetUserInfoByUserId($_SESSION["user_id"]);
     $current_user = $userInfo['xumm_address'];
     $nrg["user"] = $userInfo; //For using database functions provided existing project
 }
 
 
-/****************************************************************** */
-
+/*****************Get revealed and unrevealed items from Database and claim items from Node server*****************/
 function GetRevealNftArraysFromDatabase($claimedArray)
 {
     global $sqlConnect, $current_user, $issuer_address;
@@ -77,40 +76,6 @@ function GetRevealNftArraysFromDatabase($claimedArray)
     }
 }
 
-/*****************Get Count Of field from Database*********** */
-function GetRevealedCountFromDatabase($isRevealed)
-{
-    global $sqlConnect, $current_user, $issuer_address;
-
-    if(!$current_user)
-    {
-        $account = $issuer_address;
-     //   return;
-    }
-    else
-        $account = $current_user;
-
-    $sql =  "SELECT COUNT(*) AS total_count
-    FROM user_nft
-    LEFT JOIN lbk_nft ON user_nft.nft_id = lbk_nft.nft_id AND user_nft.assetType = 1 AND lbk_nft.revealed = '$isRevealed'
-    LEFT JOIN vials_nft ON user_nft.nft_id = vials_nft.nft_id AND user_nft.assetType = 2 AND vials_nft.revealed = '$isRevealed'
-    WHERE user_nft.owner_wallet= '$current_user'
-    AND (lbk_nft.revealed = '$isRevealed' OR vials_nft.revealed = '$isRevealed')";
-    
-
-    $result = mysqli_query($sqlConnect, $sql) or die("Error in Selecting " . mysqli_error($sqlConnect));
-
-    $jsonArray = array();
-    while ($row = mysqli_fetch_assoc($result)) {
-        $jsonArray[] = $row;
-    }
-
-    if($jsonArray && count($jsonArray) >= 1)
-    {
-        return $jsonArray[0]["total_count"];
-    }
-    
-}
 /*****************Get Nft Infos from Database*****************/
 function GetNftInfoByNftIdFromDatabase($nft_id)
 {
@@ -151,7 +116,7 @@ function GetNftInfoByNftIdFromDatabase($nft_id)
     
 }
 
-/*****************Get UnClaimed Nfts by owned account from Server******************* */
+/*****************Get UnClaimed Nfts by owned account from Node Server******************* */
 function GetUnClaimedNftsFromServer(){
     global  $current_user, $server_url, $issuer_address;
     if(!$current_user)
@@ -178,7 +143,7 @@ function GetUnClaimedNftsFromServer(){
 }
 
 
-/*****************Get owned Nft Infos by account from Server******************* */
+/*****************Get owned Nft Infos by account from Node Server******************* */
 function GetClaimedNftsFromServer($account = null){
     global $current_user, $server_url, $issuer_address;
     
@@ -252,11 +217,11 @@ function GetOfferInfoFromBithomp($offerIndex){
     return $result;
 }
 
-/********************************************** */
-function GetOffersByParams($offerType, $nftTokenId){ 
+/*************Get nft offers from token id and offer type******************** */
+function GetNftOffersByParams($offerType, $nftTokenId){ 
     global $apiKey, $apiSecret;
     
-    NRG_writeFile("Payload_UpdateTransactionStausAndQty.log", "--------GetOffersByParams Start:".$offerType.",".$nftTokenId);
+    NRG_writeFile("Payload_UpdateTransactionStausAndQty.log", "--------GetNftOffersByParams Start:".$offerType.",".$nftTokenId);
 
     $client = new Client([
         'base_uri' => 'https://test-api.xrpldata.com/api/v1/xls20-nfts/', 'headers' => [
@@ -279,9 +244,8 @@ function GetOffersByParams($offerType, $nftTokenId){
     return $result;
 }
 
-
-/********************************************** */
-function GetNftInfoFromTokenId($nftTokenId){
+/*************Get nft info from xrpl data api************** */
+function GetNftInfoFromApi($nftTokenId){
     global $apiKey, $apiSecret;
     
     $client = new Client([
@@ -298,13 +262,12 @@ function GetNftInfoFromTokenId($nftTokenId){
     ];
 
     $results = Promise\unwrap($promises);
-
     $result = json_decode($results['result']->getBody()->getContents())->data;
-
     return $result;
 }
 
-function LoadNftInfosFromCurrentUser()
+/*************Get nft infos for marketplacve from xrpl data api************** */
+function GetNftArrayForMarketplace()
 {
     global $current_user, $issuer_address, $apiKey, $apiSecret;
 
@@ -404,7 +367,7 @@ function NRG_writeFileByMode($fn, $q, $mode = 'a')
 }
 
 /*********Get User Info from database including xumm session from user id*********** */
-function getUserInfo($user_id)
+function GetUserInfoByUserId($user_id)
 {
     global $sqlConnect;
     $sql2 = "SELECT * FROM NRG_Users WHERE user_id = '$user_id' LIMIT 1";
@@ -414,7 +377,7 @@ function getUserInfo($user_id)
 }
 
 /*********This is only for test color*********** */
-function getHexColor($color = "")
+function GetTestHexColorFromColorString($color = "")
 {
     if ($color == 'Red') {
         $r = "#80000035";

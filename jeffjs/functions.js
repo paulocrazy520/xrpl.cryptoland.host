@@ -1,7 +1,3 @@
-// const apiKey = "04b42479-cc50-4410-a783-1686eeebe65f";  //dev2
-// const apiSecret = "f53c6edc-1fb1-4c7f-8b79-f1ffef28037d"; // dev2
-// const issuerAddress = "rDUSz5wt8ZVENp7ZJq4qrv2f9A2h56Cf3b"; //for test
-
 const apiKey = env.API_KEY;
 const apiSecret = env.API_SECRET;
 const issuerAddress = env.DEFAULT_ISSUER_ADDRESS;
@@ -28,7 +24,7 @@ async function getUserInfo() {
 }
 
 /*============================================================*/
-/*-----------------------Xumm wallet sign in-------------------------*/
+/*-----------------------Xumm wallet sign in-------------------*/
 /*============================================================*/
 function signIn() {
   xumm.authorize().catch((e) => {
@@ -166,7 +162,7 @@ async function cancelOffer(account,
     txjson: {
       "TransactionType": "NFTokenCancelOffer",
       "Account": account
-      // "NFTokenOffers": String(tokenOfferIDs)
+      // "NFTokenOffers": This is specified from jeffajax.php
     }
   }
 
@@ -194,9 +190,6 @@ async function postPayload(transactionBlob, offeredNftTokenId = undefined, table
         if (response.data == true) {
           $('.cs-isotop_item[nft-id="' + offeredNftTokenId + '"]').removeClass('unclaimed').addClass('unrevealed');
 
-          // $btnStr = "Reveal";
-          // $btnStyle = "cs-card_btn_2"; 
-          // $modalId= "#revealItem";
           $('.cs-action_item[nft-id="' + offeredNftTokenId + '"]').removeClass('cs-card_btn_4').addClass('cs-card_btn_2');
           $('.cs-action_item[nft-id="' + offeredNftTokenId + '"]').attr('data-modal', '#revealItem');
           $('.cs-action_item[nft-id="' + offeredNftTokenId + '"] span').text('Reveal');
@@ -310,7 +303,7 @@ async function claimOffer(standbyBuyerField,
       }
     }
     //server_url
-    goPayload(state, transactionBlob)
+
     // End of cancelOffer()
   })
 }

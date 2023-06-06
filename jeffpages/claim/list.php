@@ -83,7 +83,7 @@
 				$collectionName = $json['collection']['name']; //Pull Collection data from URI[name]
 				$collectionFamily = $json['collection']['family']; //Pull Collection data from URI[family]
 				$attributes = $json['attributes']; // Pull all Filter Data from URI
-				$color = getHexColor();
+				$color = GetTestHexColorFromColorString();
 				$colorName = "";
 			
 				foreach ($attributes as $attribute) {
@@ -97,7 +97,7 @@
 						case 'Liquid Color':
 							// Pull lower back ground from CSS for collectionClass
 							if (isset($attribute['value'])) {
-								$color = getHexColor($attribute['value']);
+								$color = GetTestHexColorFromColorString($attribute['value']);
 								$colorName = $attribute['value'];
 							}
 							break;
@@ -142,7 +142,7 @@
 			$collectionName = $json['collection']['name']; //Pull Collection data from URI[name]
 			$collectionFamily = $json['collection']['family']; //Pull Collection data from URI[family]
 			$attributes = $json['attributes']; // Pull all Filter Data from URI
-			$color = getHexColor();
+			$color = GetTestHexColorFromColorString();
 			$colorName = "";
 		
 			foreach ($attributes as $attribute) {
@@ -156,7 +156,7 @@
 					case 'Liquid Color':
 						// Pull lower back ground from CSS for collectionClass
 						if (isset($attribute['value'])) {
-							$color = getHexColor($attribute['value']);
+							$color = GetTestHexColorFromColorString($attribute['value']);
 							$colorName = $attribute['value'];
 						}
 						break;
