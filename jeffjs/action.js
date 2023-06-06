@@ -338,7 +338,7 @@
 
         if (offerId) {
             let response = await axios.get(
-                `https://test-api.xrpldata.com/api/v1/xls20-nfts/offer/id/${offerId}`);
+                `${env.XRPL_DATA_URL}/api/v1/xls20-nfts/offer/id/${offerId}`);
             let offer = response.data.data.offer;
 
             console.log("***********handleBuyItemClick: OfferId", offer);
@@ -359,7 +359,7 @@
         }
         else {
             let response = await axios.get(
-                `https://test-api.xrpldata.com/api/v1/xls20-nfts/offers/nft/${nftId}`);
+                `${env.XRPL_DATA_URL}/api/v1/xls20-nfts/offers/nft/${nftId}`);
             let sellArray = response.data.data.offers.sell;
 
             console.log("***********handleBuyItemClick", sellArray);

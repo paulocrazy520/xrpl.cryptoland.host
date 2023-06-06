@@ -29,7 +29,6 @@ function GetRevealNftArraysFromDatabase($claimedArray)
     if(!$current_user)
     {
         $account = $issuer_address;
-     //   return;
     }
     else
         $account = $current_user;
@@ -113,7 +112,6 @@ function GetNftInfoByNftIdFromDatabase($nft_id)
 
     if($jsonArray && count($jsonArray) >= 1)
     return $jsonArray[0];
-    
 }
 
 /*****************Get UnClaimed Nfts by owned account from Node Server******************* */
@@ -122,7 +120,6 @@ function GetUnClaimedNftsFromServer(){
     if(!$current_user)
     {
         $account = $issuer_address;
-     //   return;
     }
     else
         $account = $current_user;
@@ -143,14 +140,13 @@ function GetUnClaimedNftsFromServer(){
 }
 
 
-/*****************Get owned Nft Infos by account from Node Server******************* */
+/*****************Get Owned Nft Infos by account from Node Server******************* */
 function GetClaimedNftsFromServer($account = null){
     global $current_user, $server_url, $issuer_address;
     
     if(!$current_user)
     {
         $account = $issuer_address;
-        //   return;
     }
     else
         $account = $current_user;
@@ -181,7 +177,7 @@ function GetDetailNftInfoFromBithomp($filter, $nftTokenId){
     $client = new \GuzzleHttp\Client();
     
     $client = new Client([
-        'base_uri' => 'https://test.bithomp.com/api/cors/v2/nft/'
+        'base_uri' => $_ENV['XRPL_BITHOMP_URL'].'/api/cors/v2/nft/'
     ]);
 
     if(!$filter)
@@ -202,7 +198,7 @@ function GetOfferInfoFromBithomp($offerIndex){
     NRG_writeFile("Payload_UpdateTransactionStausAndQty.log", "--------GetOfferInfoFromBithomp Start:".$offerIndex);
 
     $client = new Client([
-        'base_uri' => 'https://test.bithomp.com/api/cors/v2/search/', 'headers' => [
+        'base_uri' => $_ENV['XRPL_BITHOMP_URL'].'/api/cors/v2/search/', 'headers' => [
             'Accept' => 'application/json',
             'Content-Type' => 'application/json',
             'X-API-Key' => $apiKey,
@@ -224,7 +220,7 @@ function GetNftOffersByParams($offerType, $nftTokenId){
     NRG_writeFile("Payload_UpdateTransactionStausAndQty.log", "--------GetNftOffersByParams Start:".$offerType.",".$nftTokenId);
 
     $client = new Client([
-        'base_uri' => 'https://test-api.xrpldata.com/api/v1/xls20-nfts/', 'headers' => [
+        'base_uri' => $_ENV['XRPL_DATA_URL'].'/api/v1/xls20-nfts/', 'headers' => [
             'Accept' => 'application/json',
             'Content-Type' => 'application/json',
             'X-API-Key' => $apiKey,
@@ -249,7 +245,7 @@ function GetNftInfoFromApi($nftTokenId){
     global $apiKey, $apiSecret;
     
     $client = new Client([
-        'base_uri' => 'https://test-api.xrpldata.com/api/v1/xls20-nfts/', 'headers' => [
+        'base_uri' => $_ENV['XRPL_DATA_URL'].'/api/v1/xls20-nfts/', 'headers' => [
             'Accept' => 'application/json',
             'Content-Type' => 'application/json',
             'X-API-Key' => $apiKey,
@@ -271,14 +267,14 @@ function GetNftArrayForMarketplace()
 {
     global $current_user, $issuer_address, $apiKey, $apiSecret;
 
-    if (!$account) {
+    if (!$current_user) {
         $account = $issuer_address; 
     }
     else
         $account = $current_user;
 
     $client = new Client([
-        'base_uri' => 'https://test-api.xrpldata.com/api/v1/xls20-nfts/',
+        'base_uri' => $_ENV['XRPL_DATA_URL'].'/api/v1/xls20-nfts/',
         'headers' => [
             'Accept' => 'application/json',
             'Content-Type' => 'application/json',
@@ -300,7 +296,7 @@ function GetNftArrayForMarketplace()
             $request = $client->getAsync("issuer/$issuer_address");
             $response = $request->wait();
             $result1 = json_decode($response->getBody()->getContents())->data->nfts;
-            NRG_writeFileByMode($issuer_issue_file, json_encode($result1), 'w');
+            JEFF_writeFileByMode($issuer_issue_file, json_encode($result1), 'w');
         }
 
         $request = $client->getAsync("offers/issuer/$issuer_address");
@@ -340,7 +336,7 @@ function GetNftArrayForMarketplace()
 
 
 /*********Write log file with mode*********** */
-function NRG_writeFileByMode($fn, $q, $mode = 'a')
+function JEFF_writeFileByMode($fn, $q, $mode = 'a')
 {
 
     $year = date("Y");
@@ -391,7 +387,7 @@ function GetTestHexColorFromColorString($color = "")
     return $r;
 }
 
-/*------------ Metadata String from UUID string---------------*/
+/****************** Metadata String from UUID string***********/
 function GetAsciiStringFromHex($hexString) {
     // convert hex string to binary string
     $binaryString = hex2bin($hexString);

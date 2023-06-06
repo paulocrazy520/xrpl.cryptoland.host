@@ -1,4 +1,6 @@
 
+<input type="hidden" id="cardsCount" name="cardsCount" value='0' />
+
 <input type="hidden" id="menuCollection" name="menuCollection" value='' />
 <input type="hidden" id="menuRarity" name="menuRarity" value=''/>
 <input type="hidden" id="menuColor" name="menuColor" value='' />
@@ -6,6 +8,7 @@
 <input type="hidden" id="menuBid" name="menuBid" value='' />
 <input type="hidden" id="page" name="page" value='1' />
 <input type="hidden" id="pageType" name="pageType" value='main' />
+<input type="hidden" id="tabType" name="tabType" value='*' />
 
 <div class="cs-sidebar_frame cs-style1">
         <div class="cs-sidebar_frame_left">

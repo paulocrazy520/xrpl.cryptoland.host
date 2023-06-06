@@ -31,7 +31,7 @@ $filterArray = [];
 	$menuSale = isset($_POST['menuSale']) ? $_POST['menuSale'] : "";
 	$menuBid = isset($_POST['menuBid']) ? $_POST['menuBid'] : "";
 
-	$page = isset($_POST['page']) && is_numeric($_POST['page']) ? $_POST['page'] : 1;
+	$cardsCount = isset($_POST['cardsCount']) && is_numeric($_POST['cardsCount']) ? $_POST['cardsCount'] : 0;
 
 	$index = 0 ;
 	foreach($totalArray as $nft){
@@ -88,17 +88,19 @@ $filterArray = [];
 			if(($menuSale == "checked" && !$asset_has_sell_offer) || ($menuBid == "checked" && !$asset_has_bid))
 				continue;
 
-			if( ($page-1) * $num_results_on_page <= $index &&  $index < $page * $num_results_on_page)
-			require "card.php";
+			if($index >= $cardsCount &&  $index < $cardsCount + $num_results_on_page - ($cardsCount % $num_results_on_page))
+				require "card.php";
 			
 			$index = $index + 1;
-			array_push($filterArray, $nft);
 	}
 //***************Fiter Menu end*************
-	$total_cards = count($filterArray);
-
+	if(!$cardsCount)
+	{
+		echo '<input type=hidden id="totalCount" value="'.$index.'"/>';
+	}
+	
 	if(!$isPost){
-		echo '<input type=hidden id="totalCount" value="'.$total_cards.'"/>';
+		echo '<input type=hidden id="totalCount" value="'.$index.'"/>';
 		echo "</div></div>";
 	}
 ?>

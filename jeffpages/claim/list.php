@@ -46,15 +46,16 @@
 		$tab_index = 0;
 		foreach($arrayList as $totalArray)
 		{
-			if(!$totalArray)
-				continue;
 
-			$tabType = $tabTypeList[$tab_index];
+			$subTabType = $tabTypeList[$tab_index];
 			$tab_index ++;
+
+			if(!$totalArray)
+			continue;
 
 			for($index = $cardsCount ;  $index < min(count($totalArray), ($cardsCount + $num_results_on_page - ($cardsCount % $num_results_on_page))) ; $index++)
 			{
-				if($tabType == ".unclaimed")
+				if($subTabType == ".unclaimed")
 				{
 					$nfTokenID = $totalArray[$index]->NFTokenID;
 					$offerID = $totalArray[$index]->OfferID;
@@ -68,7 +69,7 @@
 		
 				$url = $info["base_uri"];
 
-				$viewType =  str_replace(".", "", $tabType);
+				$viewType =  str_replace(".", "", $subTabType);
 
 				if (!isset($url)){
 					continue;

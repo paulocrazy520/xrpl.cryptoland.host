@@ -10,7 +10,7 @@ const xumm = new XummPkce(apiKey, {
 });
 
 /*=======================================================*/
-/*--------------Get User Info ---------------------------*/
+/*-------------------Get User Info ----------------------*/
 /*=======================================================*/
 async function getUserInfo() {
   const response = await axios.post('jeffajax.php', {
@@ -220,11 +220,9 @@ async function postPayload(transactionBlob, offeredNftTokenId = undefined, table
 
 
 /*=============================================================================*/
-/*-----------------------------------Login--------------------------------------*/
+/*------------------------------Login and Logout-------------------------------*/
 /*=============================================================================*/
 function LoginUser(user_name, user_password) {
-  console.log("******LoginUser*******", user_name, user_password);
-
   axios.post('jeffajax.php', {
     type: "Login",
     user_name: user_name,
@@ -247,14 +245,8 @@ function LoginUser(user_name, user_password) {
     });
 }
 
-
-/*=============================================================================*/
-/*-----------------------------------Logout--------------------------------------*/
-/*=============================================================================*/
 function LogoutUser() {
-  console.log("******LooutUser*******");
-
-  axios.post('jeffajax.php', {
+    axios.post('jeffajax.php', {
     type: "Logout"
   })
     .then(response => {
@@ -263,9 +255,8 @@ function LogoutUser() {
         alert("Logout successfully!");
         //xumm.logout();
       }
-      //Refresh page after signing offer
-      location.reload();
 
+      location.reload();
     })
     .catch(error => {
       console.error(error);

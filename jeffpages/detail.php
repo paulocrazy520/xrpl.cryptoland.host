@@ -48,7 +48,11 @@
     <div class="container">
         <div class="text-center">
             <h3 class="cs-page_title">Single Item page</h3>
-            <h3 class=""><?php echo $nftTokenId; ?></h3>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item active">
+                    <?php echo $nftTokenId; ?>
+                </li>
+            </ol>
         </div>
     </div>
 </section>

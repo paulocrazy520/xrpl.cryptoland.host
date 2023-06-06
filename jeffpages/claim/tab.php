@@ -1,5 +1,5 @@
 
-<input type="hidden" id="cardsCount" name="cardsCount" value='1' />
+<input type="hidden" id="cardsCount" name="cardsCount" value='0' />
 <input type="hidden" id="pageType" name="pageType" value='claim' />
 <input type="hidden" id="tabType" name="tabType" value='*' />
 

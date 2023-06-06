@@ -4,7 +4,7 @@
     let tabTypeIdArray = { "*": "total", ".unclaimed": "unclaimed", ".unrevealed": "unrevealed", ".revealed": "revealed" };
 
     $(function () {
-        updateShowingResult(); 
+        updateShowingResult();
     });
 
     function getTotalCount(key = "*") {
@@ -14,30 +14,31 @@
     function updateShowingResult(key = "*") {
         var totalCount = $("#" + tabTypeIdArray[key] + "Count").val();
 
-        if (!totalCount || totalCount == 0)
-        {
+        if (!totalCount || totalCount == 0) {
             $("#empty_result").show();
         }
-        else{
+        else {
             $("#empty_result").hide();
         }
-      
+
 
         var cardsCount = $('#nft-list').find(key == "*" ? ".nft-card" : key).toArray().length;
         $(".cs-search_result").html(totalCount + "/" + cardsCount);
     }
-    
-    async function loadMorePage(key = "*") {
-        if (key == "*")
-        {
+
+    async function updatePage(key = "*", isFilter = false) {
+        if (key == "*" && $('#tabType').val() == "claim") {
             updateShowingResult(key);
             return;
         }
 
         const formData = new FormData();
-
         formData.append('pageType', $('#pageType').val());
-        formData.append('cardsCount', $('#cardsCount').val())
+
+        if(isFilter)
+            formData.append('cardsCount', 0)
+        else
+            formData.append('cardsCount', $('#cardsCount').val())
 
         if ($('#pageType').val() == "main") {
             formData.append('menuCollection', $('#menuCollection').val());
@@ -57,13 +58,25 @@
                 method: 'POST',
                 body: formData
             });
-            const html = await response.text();
-            $('.cs-isotop').append(html);
-            $('.cs-isotop').isotope('reloadItems').isotope('layout');
 
-            setTimeout(function () {
-                isotopInit();
-            }, 1000);
+            const html = await response.text();
+
+            if ($('#pageType').val() == "claim") {
+                $('.cs-isotop').append(html);
+                $('.cs-isotop').isotope('reloadItems').isotope('layout');
+                setTimeout(function () {
+                    isotopInit();
+                }, 1000);
+            }
+            else if ($('#pageType').val() == "main") {
+                console.log('*****************isFilter:', isFilter);
+                if (!isFilter)
+                    $('#nft-list').append(html);
+                else
+                {
+                    $('#nft-list').html(html);
+                }
+            }
 
         } catch (error) {
             console.error(error);
@@ -81,18 +94,18 @@
 
         var filterElement = $('#tabType').val();
 
-        if (filterElement == "*")
+        console.log("***************tabType:", filterElement);
+        if (filterElement == "*" && $('#tabType').val() == "claim")
             return;
 
-            console.log($(window).scrollTop(), window.innerHeight, $(document).height() - 1)
         if ($(window).scrollTop() + window.innerHeight >= $(document).height() - 1) {
             var cardsCount = $('#nft-list').find(filterElement == "*" ? ".nft-card" : filterElement).toArray().length;
             $('#cardsCount').val(cardsCount);
 
-            console.log("************scroll",  getTotalCount(filterElement), "/ ", cardsCount);
+            console.log("************scroll:", getTotalCount(filterElement), "/ ", cardsCount);
 
             if (cardsCount < getTotalCount(filterElement)) {
-                loadMorePage(filterElement);
+                updatePage(filterElement);
             }
             else
                 updateShowingResult(filterElement);
@@ -111,7 +124,7 @@
 
         console.log(cardsCount, getTotalCount(filterElement))
         if ((getTotalCount(filterElement) > 0 && cardsCount == 0) || (cardsCount < getTotalCount(filterElement) && cardsCount % $('#numCardsPerPage').val() != 0)) {
-            loadMorePage(filterElement);
+            updatePage(filterElement);
         }
         else
             updateShowingResult(filterElement);
@@ -131,12 +144,12 @@
         if (id == "collection") {
             var menuCollection = $(this).find(".form-check-label").text().trim();
             $('#menuCollection').val(menuCollection);
-            loadMorePage();
+            updatePage("*", true);
         }
         else if (id == "rarity") {
             var menuRarity = $(this).find(".form-check-label").text().trim();
             $('#menuRarity').val(menuRarity);
-            loadMorePage();
+            updatePage("*", true);
         }
         $(this).find(".form-check-input").prop("checked");
     });
@@ -147,17 +160,17 @@
 
         if (id == "flexCheckDefault1") {
             $('#menuSale').val(checked);
-            loadMorePage();
+            updatePage("*", true);
         }
         else if (id == "flexCheckDefault2") {
             $('#menuBid').val(checked);
-            loadMorePage();
+            updatePage("*", true);
         }
     });
 
     $('.cs-color_item').on('click', function () {
         var menuColor = $(this).attr("id");
         $('#menuColor').val(menuColor);
-        loadMorePage();
+        updatePage("*", true);
     });
 })(jQuery); // End of use strict
