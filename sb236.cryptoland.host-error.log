@@ -52,3 +52,8 @@
 [Tue Jun 06 07:52:09.253989 2023] [proxy_fcgi:error] [pid 2983904:tid 139855194797824] (70007)The timeout specified has expired: [client 188.43.136.46:25643] AH01075: Error dispatching request to : (polling), referer: https://sb236.cryptoland.host/?DEFAULT_PAGE_TYPE=claim
 [Tue Jun 06 07:53:35.237515 2023] [proxy_fcgi:error] [pid 2984282:tid 139855144441600] (70007)The timeout specified has expired: [client 188.43.136.46:10869] AH01075: Error dispatching request to : (polling), referer: https://sb236.cryptoland.host/?DEFAULT_PAGE_TYPE=claim
 [Tue Jun 06 11:24:28.219136 2023] [proxy_fcgi:error] [pid 2984282:tid 139855119263488] [client 138.197.223.80:16578] AH01071: Got error 'Primary script unknown', referer: http://email.ehostpk.com
+[Tue Jun 06 22:31:03.377078 2023] [proxy_fcgi:error] [pid 2983904:tid 139855119263488] [client 139.59.253.68:40684] AH01071: Got error 'Primary script unknown'
+[Tue Jun 06 22:31:07.579368 2023] [proxy_fcgi:error] [pid 2983903:tid 139853698152192] [client 139.59.253.68:40736] AH01071: Got error 'Primary script unknown'
+[Tue Jun 06 23:57:35.749719 2023] [proxy_fcgi:error] [pid 2983902:tid 139854503458560] (70007)The timeout specified has expired: [client 83.97.73.89:41574] AH01075: Error dispatching request to : (polling)
+[Wed Jun 07 00:41:02.988438 2023] [proxy_fcgi:error] [pid 2983904:tid 139854587352832] (70007)The timeout specified has expired: [client 83.97.73.89:49842] AH01075: Error dispatching request to : (polling)
+[Wed Jun 07 01:05:38.670328 2023] [proxy_fcgi:error] [pid 2983902:tid 139854947878656] (70007)The timeout specified has expired: [client 188.43.136.46:61922] AH01075: Error dispatching request to : (polling)

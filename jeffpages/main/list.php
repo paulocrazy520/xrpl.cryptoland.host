@@ -14,7 +14,7 @@
 
 
 //Load nft infos from issuer and account
-$totalArray = GetNftArrayForMarketplace();
+$totalArray = GetNftArrayForMarketplaceFromServer();
 
 if(!$totalArray)
 	return;

@@ -144,12 +144,15 @@ function GetUnClaimedNftsFromServer(){
 function GetClaimedNftsFromServer($account = null){
     global $current_user, $server_url, $issuer_address;
     
-    if(!$current_user)
+    if(!$account)
     {
-        $account = $issuer_address;
+        if(!$current_user)
+        {
+            $account = $issuer_address;
+        }
+        else
+            $account = $current_user;
     }
-    else
-        $account = $current_user;
         
     $client = new \GuzzleHttp\Client();
     
@@ -167,6 +170,38 @@ function GetClaimedNftsFromServer($account = null){
 
     return $transfer_history;    
 }
+
+/*****************Get Owned Nft Infos by account from Node Server******************* */
+function GetNftArrayForMarketplaceFromServer($account = null){
+    global $current_user, $server_url, $issuer_address;
+    
+    if(!$account)
+    {
+        if(!$current_user)
+        {
+            $account = $issuer_address;
+        }
+        else
+            $account = $current_user;
+    }
+        
+    $client = new \GuzzleHttp\Client();
+    
+    $client = new Client([
+        'base_uri' =>$server_url 
+    ]);
+
+
+    $filter = "account=$account";
+    $request = $client->getAsync("marketplace_infos?$filter");
+    $response = $request->wait();
+
+    // Convert the JSON response to an array for easier processing
+    $transfer_history = json_decode($response->getBody());
+
+    return $transfer_history;    
+}
+
 
 
 /******************Get full deatiled nft info from bithomp server************************ */
@@ -263,7 +298,7 @@ function GetNftInfoFromApi($nftTokenId){
 }
 
 /*************Get nft infos for marketplacve from xrpl data api************** */
-function GetNftArrayForMarketplace()
+function GetNftArrayForMarketplacFromApi()
 {
     global $current_user, $issuer_address, $apiKey, $apiSecret;
 
