@@ -130,10 +130,11 @@ function GetUnClaimedNftsFromServer(){
         'base_uri' => $server_url 
     ]);
 
-    $filter = "account=$account";
-    $request = $client->getAsync("unclaimed_offers?$filter");
-    $response = $request->wait();
-
+    $query_params = [
+        'account' => $account
+    ];
+    $response = $client->request('GET', '/unclaimed_offers', ['query' => $query_params]);
+    
     // Convert the JSON response to an array for easier processing
     $claimedArray = json_decode($response->getBody());
     return $claimedArray;    
@@ -171,19 +172,17 @@ function GetClaimedNftsFromServer($account = null){
     return $transfer_history;    
 }
 
-/*****************Get Owned Nft Infos by account from Node Server******************* */
-function GetNftArrayForMarketplaceFromServer($account = null){
+/*****************Get Marketplace Nft Infos by account from Node Server******************* */
+//$totalArray = GetNftArrayForMarketplaceFromServer($menuCollection, $menuRarity, $menuColor, $menuSale, $menuBid, $cardsCount);
+function GetNftArrayForMarketplaceFromServer($menuCollection, $menuRarity, $menuColor, $menuSale, $menuBid, $cardsCount){
     global $current_user, $server_url, $issuer_address;
-    
-    if(!$account)
+
+     if(!$current_user)
     {
-        if(!$current_user)
-        {
-            $account = $issuer_address;
-        }
-        else
-            $account = $current_user;
+        $account = $issuer_address;
     }
+    else
+        $account = $current_user;
         
     $client = new \GuzzleHttp\Client();
     
@@ -191,11 +190,17 @@ function GetNftArrayForMarketplaceFromServer($account = null){
         'base_uri' =>$server_url 
     ]);
 
+    $query_params = [
+        'account' => $account,
+        'menuCollection' => $menuCollection,
+        'menuRarity' => $menuRarity,
+        'menuColor' => $menuColor,
+        'menuSale' => $menuSale,
+        'menuBid' => $menuBid,
+        'cardsCount' => $cardsCount
+    ];
 
-    $filter = "account=$account";
-    $request = $client->getAsync("marketplace_infos?$filter");
-    $response = $request->wait();
-
+    $response = $client->request('GET', '/marketplace_infos', ['query' => $query_params]);
     // Convert the JSON response to an array for easier processing
     $transfer_history = json_decode($response->getBody());
 

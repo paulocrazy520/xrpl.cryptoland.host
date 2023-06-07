@@ -12,93 +12,92 @@
 <?php
 }
 
+$menuCollection = isset($_POST['menuCollection']) ? $_POST['menuCollection'] : "";
+$menuRarity = isset($_POST['menuRarity']) ? $_POST['menuRarity'] : "";
+$menuColor = isset($_POST['menuColor']) ? $_POST['menuColor'] : "";
+$menuSale = isset($_POST['menuSale']) ? $_POST['menuSale'] : "";
+$menuBid = isset($_POST['menuBid']) ? $_POST['menuBid'] : "";
+$cardsCount = isset($_POST['cardsCount']) && is_numeric($_POST['cardsCount']) ? $_POST['cardsCount'] : 0;
 
 //Load nft infos from issuer and account
-$totalArray = GetNftArrayForMarketplaceFromServer();
+$totalArray = GetNftArrayForMarketplaceFromServer($menuCollection, $menuRarity, $menuColor, $menuSale, $menuBid, $cardsCount);
 
 if(!$totalArray)
 	return;
 
-$filterArray = [];
-
 //******************Filter Menu Begin*****************
-	$menuCollection = isset($_POST['menuCollection']) ? $_POST['menuCollection'] : "";
-	$menuRarity = isset($_POST['menuRarity']) ? $_POST['menuRarity'] : "";
-	$menuColor = isset($_POST['menuColor']) ? $_POST['menuColor'] : "";
-	$menuSale = isset($_POST['menuSale']) ? $_POST['menuSale'] : "";
-	$menuBid = isset($_POST['menuBid']) ? $_POST['menuBid'] : "";
+$totalCount = 0;
+foreach($totalArray as $nft){
+	$nft = json_decode(json_encode($nft));
 
-	$cardsCount = isset($_POST['cardsCount']) && is_numeric($_POST['cardsCount']) ? $_POST['cardsCount'] : 0;
+	if (empty($nft))
+		continue;
 
-	$index = 0 ;
-	foreach($totalArray as $nft){
-
-		$nft = json_decode(json_encode($nft));
-        $url = $nft->URI;
-
-		if (!isset($url) || !isset($nft)){
-			return;
-		} 
-		
-		$jsonString = file_get_contents($url);
-		$json = json_decode($jsonString, true);
-		
-		$name = $json['name']; // Pull Name data from URI
-		$imgPath = $json['image']; //Pull  Image data from URI
-		$videoPath = $json['video']; //Pull Video data from URI
-		$collectionName = $json['collection']['name']; //Pull Collection data from URI[name]
-		$collectionFamily = $json['collection']['family']; //Pull Collection data from URI[family]
-		$attributes = $json['attributes']; // Pull all Filter Data from URI
-		$color = GetTestHexColorFromColorString();
-		$colorName = "";
-		
-		foreach ($attributes as $attribute) {
-			switch ($attribute["trait_type"]) {
-				case 'Consumable Class':
-					$collectionValue = $attribute['value']; //Pull Collection Class
-					break;
-				case 'Rarity':
-					$rarity = $attribute['value']; // Pull Rarity data from URI
-					break;
-				case 'Liquid Color':
-					// Pull lower back ground from CSS for collectionClass
-					if (isset($attribute['value'])) {
-						$color = GetTestHexColorFromColorString($attribute['value']);
-						$colorName = $attribute['value'];
-					}
-					break;
-				default:
-					break;
-			}
-		}
-
-		if(($menuCollection && ($menuCollection != $collectionFamily))  || ($menuRarity && strstr($rarity, $menuRarity) == false) ||  ($menuColor && (($menuColor != "Other" && $menuColor != $colorName) || ($menuColor == "Other" && $color != "#05002335"))))
-			continue;
-			
-			$asset_owner = $nft->Owner;
-			$asset_has_sell_offer = filter_var($nft->hasSellOffer, FILTER_VALIDATE_BOOLEAN);
-			$current_user_has_sell = filter_var($nft->hasSellOfferByUser, FILTER_VALIDATE_BOOLEAN);
-			$asset_has_bid = filter_var($nft->hasBuyOffer, FILTER_VALIDATE_BOOLEAN);
-			$current_user_has_bid = filter_var($nft->hasBuyOfferByUser, FILTER_VALIDATE_BOOLEAN);
-			
-
-			if(($menuSale == "checked" && !$asset_has_sell_offer) || ($menuBid == "checked" && !$asset_has_bid))
-				continue;
-
-			if($index >= $cardsCount &&  $index < $cardsCount + $num_results_on_page - ($cardsCount % $num_results_on_page))
-				require "card.php";
-			
-			$index = $index + 1;
-	}
-//***************Fiter Menu end*************
-	if(!$cardsCount)
-	{
-		echo '<input type=hidden id="totalCount" value="'.$index.'"/>';
+	if(isset($nft->totalCount)){
+		$totalCount = $nft->totalCount;
+		continue;
 	}
 	
-	if(!$isPost){
-		echo '<input type=hidden id="totalCount" value="'.$index.'"/>';
-		echo "</div></div>";
+	$url = $nft->URI;
+
+	$jsonString = file_get_contents($url);
+	$json = json_decode($jsonString, true);
+	
+	$name = $json['name']; // Pull Name data from URI
+	$imgPath = $json['image']; //Pull  Image data from URI
+	$videoPath = $json['video']; //Pull Video data from URI
+	$collectionName = $json['collection']['name']; //Pull Collection data from URI[name]
+	$collectionFamily = $json['collection']['family']; //Pull Collection data from URI[family]
+	$attributes = $json['attributes']; // Pull all Filter Data from URI
+	$color = GetTestHexColorFromColorString();
+	$colorName = "";
+	
+	foreach ($attributes as $attribute) {
+		switch ($attribute["trait_type"]) {
+			case 'Consumable Class':
+				$collectionValue = $attribute['value']; //Pull Collection Class
+				break;
+			case 'Rarity':
+				$rarity = $attribute['value']; // Pull Rarity data from URI
+				break;
+			case 'Liquid Color':
+				// Pull lower back ground from CSS for collectionClass
+				if (isset($attribute['value'])) {
+					$color = GetTestHexColorFromColorString($attribute['value']);
+					$colorName = $attribute['value'];
+				}
+				break;
+			default:
+				break;
+		}
 	}
+
+	// if(($menuCollection && ($menuCollection != $collectionFamily))  || ($menuRarity && strstr($rarity, $menuRarity) == false) ||  ($menuColor && (($menuColor != "Other" && $menuColor != $colorName) || ($menuColor == "Other" && $color != "#05002335"))))
+	// 	continue;
+		
+		$asset_owner = $nft->Owner;
+		$asset_has_sell_offer = filter_var($nft->hasSellOffer, FILTER_VALIDATE_BOOLEAN);
+		$current_user_has_sell = filter_var($nft->hasSellOfferByUser, FILTER_VALIDATE_BOOLEAN);
+		$asset_has_bid = filter_var($nft->hasBuyOffer, FILTER_VALIDATE_BOOLEAN);
+		$current_user_has_bid = filter_var($nft->hasBuyOfferByUser, FILTER_VALIDATE_BOOLEAN);
+		
+
+		// if(($menuSale == "checked" && !$asset_has_sell_offer) || ($menuBid == "checked" && !$asset_has_bid))
+		// 	continue;
+
+		// if($index >= $cardsCount &&  $index < $cardsCount + $num_results_on_page - ($cardsCount % $num_results_on_page))
+		require "card.php";
+}
+
+
+//***************Fiter Menu end*************
+if(!$cardsCount)
+{
+	echo '<input type=hidden id="totalCount" value="'.$totalCount.'"/>';
+}
+
+if(!$isPost){
+	echo "</div></div>";
+}
 ?>
 	

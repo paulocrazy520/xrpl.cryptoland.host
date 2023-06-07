@@ -46,7 +46,6 @@
 		$tab_index = 0;
 		foreach($arrayList as $totalArray)
 		{
-
 			$subTabType = $tabTypeList[$tab_index];
 			$tab_index ++;
 
