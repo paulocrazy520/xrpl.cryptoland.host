@@ -1,8 +1,29 @@
+<style>
+
+.cs-card.cs-style4 .cs-card_btn_disabled {
+  font-weight: 500;
+  font-size: 12px;
+  color: #fff;
+  background-color: #3c4049;
+  border-radius: 1.6em;
+  line-height: 1.5em;
+  padding: 4px 16px;
+  position: relative;
+  -webkit-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+}
+
+</style>
 <?php 
   switch($viewType){
     case "unclaimed":
       $btnStr =  "Claim";
-      $btnStyle = "cs-card_btn_4";
+
+      if(!$info["transfer_status"])
+        $btnStyle = "cs-card_btn_4";
+      else
+        $btnStyle = "cs-card_btn_disabled";
+
       $modalId= "#claimItem";
       break;
     case "unrevealed":
@@ -15,9 +36,11 @@
       $btnStyle = "cs-card_btn_1";
       break;
     default:
-      $btnStr = "";
+      $btnStyle = "cs-card_btn_disabled";
       break;
   }
+
+  $disabled = "cs-gray_bg";
 
   $offerID = isset($offerID) ? $offerID : "";
 ?>

@@ -66,7 +66,7 @@ if($isPost)
   }
   
   if(!$isPost){
-    require_once "jeffpages/footer.php";
+    // require_once "jeffpages/footer.php";
     require_once "jeffpages/dialog.php";
   }
 

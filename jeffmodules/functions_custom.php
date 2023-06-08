@@ -5,7 +5,7 @@ use GuzzleHttp\Promise;
 /********************Load Environment Variables********************* */
 $apiKey = $_ENV['API_KEY'];  //jeff
 $apiSecret =  $_ENV['API_SECRET']; //jeff
-$issuer_address = $_ENV['DEFAULT_ISSUER_ADDRESS'];
+$default_issuer_address = $_ENV['DEFAULT_ISSUER_ADDRESS'];
 $num_results_on_page = $_ENV['SHOW_ITEMS_PER_PAGE'];; 
 
 $endpoint_url = $_ENV['API_ENDPOINT_URL'];
@@ -21,14 +21,122 @@ if(isset($_SESSION["user_id"]) && !empty($_SESSION["user_id"]))
 }
 
 
+/******************Update user_nft, lbk_nft and vials_nft tables for specific issuer address using infos from xrpl server************************ */
+function updateDatabaseFromServerbyIssuer($issuer = null){
+
+    global $sqlConnect, $current_user, $default_issuer_address;
+
+    if(!$issuer)
+        $issuer = $default_issuer_address;
+
+    $ownedNfts = GetIssuedNftsFromServer($issuer);
+
+    $index = 0;
+    $user_id = 3;
+    foreach($ownedNfts as $nft){
+        if(!GetNftInfoFromDatabase($nft->NFTokenID))
+        {
+
+            $nft_id = $nft->NFTokenID;
+            $owner_wallet = $nft->Owner;
+            $issuer_wallet = $nft->Issuer;
+            $base_uri = GetAsciiStringFromHex($nft->URI);
+            $nft_serial = $nft->Sequence;
+            $taxon = $nft->Taxon;
+
+            $jsonString = file_get_contents($base_uri);
+            $json = json_decode($jsonString, true);
+            $name = $json['name']; // Pull Name data from URI
+
+            if($index >= 24)
+                $user_id = 0;
+
+            if(strpos($name, "Loot Box Key") !== false) 
+                $assetType = 1;
+            else if(strpos($name, "Consumable Vial") !== false)
+                $assetType = 2;
+
+            $tableName = $assetType == 1 ? "lbk_nft"  : "vials_nft";
+
+            $timeNow = time();
+
+            $sql = "INSERT INTO user_nft
+                    ( nft_uuid, nft_id
+                    ,user_id, date_created
+                    ,last_update ,owner_wallet
+                    ,assetType
+                    )
+                    VALUES
+                    (UUID(), '$nft_id', '$user_id', $timeNow, $timeNow, '$owner_wallet', '$assetType');";       
+
+            print_r($sql);
+            echo "<br/>";
+
+            $result = mysqli_query($sqlConnect, $sql) or die("Error in Selecting " . mysqli_error($sqlConnect));
+
+
+            if($result){
+                $sql = "DELETE FROM $tableName WHERE nft_id = '$nft_id'";
+                $result = mysqli_query($sqlConnect, $sql);
+
+                $sql = "INSERT INTO $tableName (
+                    nft_uuid
+                    , nft_id
+                    , issuer_wallet
+                    , owner_wallet
+                    , nft_serial
+                    , minted_date
+                    , base_uri
+                    , taxon
+                    , burnable
+                    , only_xrp
+                    , transferable
+                    , transfer_status
+                    , transfer_date
+                    , claimed
+                    , claimed_user_id
+                    , claimed_date
+                    , revealed
+                    , revealed_user_id
+                    , revealed_date
+                    , assetType
+                    )
+                    VALUES
+                    (
+                      (SELECT nft_uuid FROM user_nft WHERE nft_id = '$nft_id')
+                      , '$nft_id', '$issuer_wallet', '$owner_wallet', '$nft_serial'
+                      , $timeNow, '$base_uri' 
+                      , '0'
+                      , '1'
+                      , '0'
+                      , '1'
+                      , '0', 0
+                      , '0'
+                      , 0
+                      , 0
+                      , '0'
+                      , 0
+                      , 0
+                      , '$assetType'
+                      )";
+
+                print_r($sql);
+                echo "<br/>";
+                $result = mysqli_query($sqlConnect, $sql);
+            }
+            $index++;
+        }
+    }
+
+}
 /*****************Get revealed and unrevealed items from Database and claim items from Node server*****************/
 function GetRevealNftArraysFromDatabase($claimedArray)
 {
-    global $sqlConnect, $current_user, $issuer_address;
+    global $sqlConnect, $current_user, $default_issuer_address;
 
     if(!$current_user)
     {
-        $account = $issuer_address;
+        $account = $default_issuer_address;
     }
     else
         $account = $current_user;
@@ -75,34 +183,37 @@ function GetRevealNftArraysFromDatabase($claimedArray)
     }
 }
 
+
 /*****************Get Nft Infos from Database*****************/
-function GetNftInfoByNftIdFromDatabase($nft_id)
+function GetNftInfoFromDatabase($nft_id)
 {
     global $sqlConnect;
 
-    $sql =  "SELECT 
-    user_nft.nft_id, 
-    user_nft.assetType, 
-    CASE
-        WHEN user_nft.assetType = 1 THEN lbk_nft.base_uri
-        WHEN user_nft.assetType = 2 THEN vials_nft.base_uri
-        ELSE NULL
-    END AS base_uri,
-    CASE
-        WHEN user_nft.assetType = 1 THEN lbk_nft.claimed
-        WHEN user_nft.assetType = 2 THEN vials_nft.claimed
-        ELSE NULL
-    END AS claimed,
-		CASE
-        WHEN user_nft.assetType = 1 THEN lbk_nft.revealed
-        WHEN user_nft.assetType = 2 THEN vials_nft.revealed
-        ELSE NULL
-    END AS revealed
-    FROM user_nft
-    LEFT JOIN lbk_nft ON user_nft.nft_id = lbk_nft.nft_id AND user_nft.assetType = 1
-    LEFT JOIN vials_nft ON user_nft.nft_id = vials_nft.nft_id AND user_nft.assetType = 2
-    WHERE user_nft.nft_id = '$nft_id'";
+    // $sql =  "SELECT 
+    // user_nft.nft_id, 
+    // user_nft.assetType, 
+    // CASE
+    //     WHEN user_nft.assetType = 1 THEN lbk_nft.base_uri
+    //     WHEN user_nft.assetType = 2 THEN vials_nft.base_uri
+    //     ELSE NULL
+    // END AS base_uri,
+    // CASE
+    //     WHEN user_nft.assetType = 1 THEN lbk_nft.claimed
+    //     WHEN user_nft.assetType = 2 THEN vials_nft.claimed
+    //     ELSE NULL
+    // END AS claimed,
+	// 	CASE
+    //     WHEN user_nft.assetType = 1 THEN lbk_nft.revealed
+    //     WHEN user_nft.assetType = 2 THEN vials_nft.revealed
+    //     ELSE NULL
+    // END AS revealed
+    // FROM user_nft
+    // LEFT JOIN lbk_nft ON user_nft.nft_id = lbk_nft.nft_id AND user_nft.assetType = 1
+    // LEFT JOIN vials_nft ON user_nft.nft_id = vials_nft.nft_id AND user_nft.assetType = 2
+    // WHERE user_nft.nft_id = '$nft_id'";
 
+    $sql =  "SELECT nft_id FROM user_nft WHERE user_nft.nft_id = '$nft_id'";
+    
     $result = mysqli_query($sqlConnect, $sql) or die("Error in Selecting " . mysqli_error($sqlConnect));
 
     $jsonArray = array();
@@ -114,15 +225,78 @@ function GetNftInfoByNftIdFromDatabase($nft_id)
     return $jsonArray[0];
 }
 
-/*****************Get UnClaimed Nfts by owned account from Node Server******************* */
-function GetUnClaimedNftsFromServer(){
-    global  $current_user, $server_url, $issuer_address;
+
+/*****************Get revealed and unrevealed items from Database and claim items from Node server*****************/
+function GetOwnedNftArrayByIssuersFromDatabase($unclaimedArray)
+{
+    global $sqlConnect, $current_user, $default_issuer_address;
+
+    if(!$unclaimedArray ||  !count($unclaimedArray) || !isset($_SESSION["user_id"]))
+        return;
+
     if(!$current_user)
     {
-        $account = $issuer_address;
+        $account = $default_issuer_address;
     }
     else
         $account = $current_user;
+
+
+    //Get un transferred nft array from datbase
+    $sql =  "SELECT user_nft.nft_id as nft_id, 
+    CASE
+        WHEN user_nft.assetType = 1 THEN lbk_nft.base_uri
+        WHEN user_nft.assetType = 2 THEN vials_nft.base_uri
+        ELSE NULL
+    END AS base_uri,
+    CASE
+        WHEN user_nft.assetType = 1 THEN lbk_nft.transfer_status
+        WHEN user_nft.assetType = 2 THEN vials_nft.transfer_status
+        ELSE NULL
+    END AS transfer_status
+
+    FROM user_nft
+    LEFT JOIN lbk_nft ON user_nft.nft_id = lbk_nft.nft_id
+    LEFT JOIN vials_nft ON user_nft.nft_id = vials_nft.nft_id WHERE  user_nft.user_id='".$_SESSION["user_id"]."' AND (
+    (user_nft.assetType = 1 AND lbk_nft.transfer_status = '0') OR 
+    (user_nft.assetType = 2 AND vials_nft.transfer_status = '0'))";
+//    WHERE  user_nft.user_id='".$_SESSION["user_id"]."' ";
+
+    $result = mysqli_query($sqlConnect, $sql) or die("Error in Selecting " . mysqli_error($sqlConnect));
+
+    $jsonArray = array();
+    while ($row = mysqli_fetch_assoc($result)) {
+        $jsonArray[] = $row;
+    }
+
+    if($jsonArray && count($jsonArray) >= 1)
+    {
+        $finalArray = array();
+
+        foreach($jsonArray as $nft){
+            if (in_array( $nft["nft_id"], $unclaimedArray)) {
+                    array_push($finalArray, $nft);
+            }
+        }
+
+        return $finalArray;
+    }
+}
+
+
+/*****************Get UnClaimed(Owned) Nfts from all issuers by owned account from Node Server******************* */
+function GetOwnedNftsByIssuersFromServer($account = null){
+    global  $current_user, $server_url, $default_issuer_address;
+
+    if(!$account)
+    {
+        if(!$current_user)
+        {
+            $account = $default_issuer_address;
+        }
+        else
+            $account = $current_user;
+    }
         
     $client = new \GuzzleHttp\Client();
     
@@ -131,9 +305,9 @@ function GetUnClaimedNftsFromServer(){
     ]);
 
     $query_params = [
-        'account' => $account
+        // 'account' => $account
     ];
-    $response = $client->request('GET', '/unclaimed_offers', ['query' => $query_params]);
+    $response = $client->request('GET', '/owned_nfts_issuers', ['query' => $query_params]);
     
     // Convert the JSON response to an array for easier processing
     $claimedArray = json_decode($response->getBody());
@@ -141,15 +315,15 @@ function GetUnClaimedNftsFromServer(){
 }
 
 
-/*****************Get Owned Nft Infos by account from Node Server******************* */
-function GetClaimedNftsFromServer($account = null){
-    global $current_user, $server_url, $issuer_address;
+/*****************Get Issued Nft Infos by account from Node Server******************* */
+function GetIssuedNftsFromServer($account = null){
+    global $current_user, $server_url, $default_issuer_address;
     
     if(!$account)
     {
         if(!$current_user)
         {
-            $account = $issuer_address;
+            $account = $default_issuer_address;
         }
         else
             $account = $current_user;
@@ -163,7 +337,40 @@ function GetClaimedNftsFromServer($account = null){
 
 
     $filter = "account=$account";
-    $request = $client->getAsync("account_nfts?$filter");
+    $request = $client->getAsync("issued_nfts?$filter");
+    $response = $request->wait();
+
+    // Convert the JSON response to an array for easier processing
+    $transfer_history = json_decode($response->getBody());
+
+    return $transfer_history;    
+}
+
+
+
+/*****************Get Owned Nft Infos by account from Node Server******************* */
+function GetOwnedNftsFromServer($account = null){
+    global $current_user, $server_url, $default_issuer_address;
+    
+    if(!$account)
+    {
+        if(!$current_user)
+        {
+            $account = $default_issuer_address;
+        }
+        else
+            $account = $current_user;
+    }
+        
+    $client = new \GuzzleHttp\Client();
+    
+    $client = new Client([
+        'base_uri' =>$server_url 
+    ]);
+
+
+    $filter = "account=$account";
+    $request = $client->getAsync("owned_nfts?$filter");
     $response = $request->wait();
 
     // Convert the JSON response to an array for easier processing
@@ -175,11 +382,11 @@ function GetClaimedNftsFromServer($account = null){
 /*****************Get Marketplace Nft Infos by account from Node Server******************* */
 //$totalArray = GetNftArrayForMarketplaceFromServer($menuCollection, $menuRarity, $menuColor, $menuSale, $menuBid, $cardsCount);
 function GetNftArrayForMarketplaceFromServer($menuCollection, $menuRarity, $menuColor, $menuSale, $menuBid, $cardsCount){
-    global $current_user, $server_url, $issuer_address;
+    global $current_user, $server_url, $default_issuer_address;
 
      if(!$current_user)
     {
-        $account = $issuer_address;
+        $account = $default_issuer_address;
     }
     else
         $account = $current_user;
@@ -305,10 +512,10 @@ function GetNftInfoFromApi($nftTokenId){
 /*************Get nft infos for marketplacve from xrpl data api************** */
 function GetNftArrayForMarketplacFromApi()
 {
-    global $current_user, $issuer_address, $apiKey, $apiSecret;
+    global $current_user, $default_issuer_address, $apiKey, $apiSecret;
 
     if (!$current_user) {
-        $account = $issuer_address; 
+        $account = $default_issuer_address; 
     }
     else
         $account = $current_user;
@@ -333,20 +540,20 @@ function GetNftArrayForMarketplacFromApi()
         }
         else
         {
-            $request = $client->getAsync("issuer/$issuer_address");
+            $request = $client->getAsync("issuer/$default_issuer_address");
             $response = $request->wait();
             $result1 = json_decode($response->getBody()->getContents())->data->nfts;
             JEFF_writeFileByMode($issuer_issue_file, json_encode($result1), 'w');
         }
 
-        $request = $client->getAsync("offers/issuer/$issuer_address");
+        $request = $client->getAsync("offers/issuer/$default_issuer_address");
         $response = $request->wait();
         $offerResult = json_decode($response->getBody()->getContents())->data->offers;
        
         $result = [];
 
         foreach ($result1 as $r1) {
-          if($r1->Owner == $issuer_address)
+          if($r1->Owner == $default_issuer_address)
             continue;
 
             // add item

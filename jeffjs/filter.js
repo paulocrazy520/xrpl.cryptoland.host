@@ -27,7 +27,7 @@
     }
 
     async function updatePage(key = "*", isReplace = false) {
-        if (key == "*" && $('#tabType').val() == "claim") {
+        if (key == "*" && $('#pageType').val() == "claim") {
             updateShowingResult(key);
             return;
         }
@@ -63,6 +63,7 @@
             const html = await response.text();
 
             if ($('#pageType').val() == "claim") {
+                console.log(html);
                 $('.cs-isotop').append(html);
                 $('.cs-isotop').isotope('reloadItems').isotope('layout');
                 setTimeout(function () {
@@ -94,11 +95,12 @@
 
         var filterElement = $('#tabType').val();
 
-        console.log("***************tabType:", filterElement);
-        if (filterElement == "*" && $('#tabType').val() == "claim")
+        console.log("*******uuuu******tabType:", filterElement);
+        if (filterElement == "*" && $('#pageType').val() == "claim")
             return;
 
-        if ($(window).scrollTop() + window.innerHeight >= $(document).height() - 1) {
+            console.log("*******scroll info******tabType:", $(window).scrollTop() + window.innerHeight, $(document).height() - 100);
+        if ($(window).scrollTop() + window.innerHeight >= $(document).height() - 100) {
             var cardsCount = $('#nft-list').find(filterElement == "*" ? ".nft-card" : filterElement).toArray().length;
             $('#cardsCount').val(cardsCount);
 

@@ -9,7 +9,7 @@
       <ol class="breadcrumb">
           <li class="breadcrumb-item">Issuer Address</li>
           <li class="breadcrumb-item active">
-            <?php echo $issuer_address; ?>
+            <?php echo $default_issuer_address; ?>
           </li>
       </ol>
       <?php
@@ -28,7 +28,7 @@
 </section>
 <!-- End Page Head -->
 <div class="cs-height_10 cs-height_lg_10"></div>
-<div class="container" style="min-height:30vh;" >
+<div class="container" style="min-height:30vh; margin-bottom: 10vh;" >
     <?php require_once "tab.php"?>
     <?php require_once "list.php"?>
 </div>

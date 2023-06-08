@@ -7,22 +7,52 @@
 
 	<div class="cs-height_30 cs-height_lg_30"></div>
 
-	<div class="cs-isotop cs-style1 cs-isotop_col_5 cs-has_gutter_30" id="nft-list">
+	<div class="cs-isotop cs-style1 cs-isotop_col_5 cs-has_gutter_30"  id="nft-list">
 		<div class="cs-grid_sizer"></div>
 	<?php
 }
 
+
+	//*****************Test for updating database from xrpl server by issuer address***************** */
+	// updateDatabaseFromServerbyIssuer();
+	// return;
+	//*********************************************************************************************** */
 	//******************Filter Menu Begin*****************
 	$cardsCount = isset($_POST['cardsCount']) && is_numeric($_POST['cardsCount']) ? $_POST['cardsCount'] : 0;
 	$tabType = isset($_POST['tabType']) ? $_POST['tabType'] : "*";
 
-	$unclaimedArray = GetUnClaimedNftsFromServer();
-	$claimedArray = GetClaimedNftsFromServer();
-	$claimedWithRevealedArray = GetRevealNftArraysFromDatabase($claimedArray);
-	$revealedArray = isset($claimedWithRevealedArray["revealedArray"]) ? $claimedWithRevealedArray["revealedArray"] : array();
-	$unrevealedArray = isset($claimedWithRevealedArray["unrevealedArray"]) ? $claimedWithRevealedArray["unrevealedArray"] : array();
-	 if(!$claimedArray && !$unclaimedArray)
-	 	return;
+	$unclaimedCount = 0;
+	$unrevealedCount = 0;
+	$revealedCount = 0;
+
+	if($tabType == "*" || $tabType == ".unclaimed")
+	{
+		$tempUnclaimedArrayFromServer = GetOwnedNftsByIssuersFromServer();
+		$unclaimedArray = GetOwnedNftArrayByIssuersFromDatabase($tempUnclaimedArrayFromServer);
+
+		if($unclaimedArray)
+			$unclaimedCount = count($unclaimedArray);
+	}
+
+	if($tabType == "*" || $tabType == ".unrevealed" || $tabType == ".revealed" )
+	{
+		$claimedArray = GetOwnedNftsFromServer();
+		
+		if(!$claimedArray)
+			return;
+
+		$claimedWithRevealedArray = GetRevealNftArraysFromDatabase($claimedArray);
+		$revealedArray = isset($claimedWithRevealedArray["revealedArray"]) ? $claimedWithRevealedArray["revealedArray"] : array();
+		$unrevealedArray = isset($claimedWithRevealedArray["unrevealedArray"]) ? $claimedWithRevealedArray["unrevealedArray"] : array();
+
+		if($unrevealedArray)
+			$unrevealedCount = count($unrevealedArray);
+
+		if($revealedArray)
+			$revealedCount = count($revealedArray);
+	}
+
+	$totalCount = $unclaimedCount + $unrevealedCount + $revealedCount;
 
 	switch($tabType){
 		case "*":
@@ -54,26 +84,12 @@
 
 			for($index = $cardsCount ;  $index < min(count($totalArray), ($cardsCount + $num_results_on_page - ($cardsCount % $num_results_on_page))) ; $index++)
 			{
-				if($subTabType == ".unclaimed")
-				{
-					$nfTokenID = $totalArray[$index]->NFTokenID;
-					$offerID = $totalArray[$index]->OfferID;
-					$info = GetNftInfoByNftIdFromDatabase($nfTokenID);
-				}else
-				{
-					$info = $totalArray[$index];
-					$nfTokenID = $info["nft_id"];
-				}
-
+				$info = $totalArray[$index];
+				$nfTokenID = $info["nft_id"];
 		
 				$url = $info["base_uri"];
 
 				$viewType =  str_replace(".", "", $subTabType);
-
-				if (!isset($url)){
-					continue;
-				} 
-	
 				$jsonString = file_get_contents($url);
 				$json = json_decode($jsonString, true);
 			
@@ -110,66 +126,56 @@
 	}
 	else{
 
-		if(!$totalArray)
-		for($index = $cardsCount ;  $index < min(count($totalArray), ($cardsCount + $num_results_on_page - ($cardsCount % $num_results_on_page))) ; $index++)
+		if($totalArray)
 		{
-			if($tabType == ".unclaimed")
+			for($index = $cardsCount ;  $index < min(count($totalArray), ($cardsCount + $num_results_on_page - ($cardsCount % $num_results_on_page))) ; $index++)
 			{
-				$nfTokenID = $totalArray[$index]->NFTokenID;
-				$offerID = $totalArray[$index]->OfferID;
-				$info = GetNftInfoByNftIdFromDatabase($nfTokenID);
-			}else
-			{
+
+				if(!isset($totalArray[$index]))
+					break;
+
 				$info = $totalArray[$index];
 				$nfTokenID = $info["nft_id"];
-			}
-			$url = $info["base_uri"];
-		
-			$viewType =  str_replace(".", "", $tabType);
 
-			if (!isset($url)){
-				continue;
-			} 
+				$url = $info["base_uri"];
+				$viewType =  str_replace(".", "", $tabType);
 
-			$jsonString = file_get_contents($url);
-			$json = json_decode($jsonString, true);
-		
-			$name = $json['name']; // Pull Name data from URI
-			$imgPath = $json['image']; //Pull  Image data from URI
-			$videoPath = $json['video']; //Pull Video data from URI
-			$collectionName = $json['collection']['name']; //Pull Collection data from URI[name]
-			$collectionFamily = $json['collection']['family']; //Pull Collection data from URI[family]
-			$attributes = $json['attributes']; // Pull all Filter Data from URI
-			$color = GetTestHexColorFromColorString();
-		
-			foreach ($attributes as $attribute) {
-				switch ($attribute["trait_type"]) {
-					case 'Consumable Class':
-						$collectionValue = $attribute['value']; //Pull Collection Class
-						break;
-					case 'Rarity':
-						$rarity = $attribute['value']; // Pull Rarity data from URI
-						break;
-					case 'Liquid Color':
-						// Pull lower back ground from CSS for collectionClass
-						if (isset($attribute['value'])) {
-							$color = GetTestHexColorFromColorString($attribute['value']);
-						}
-						break;
-					default:
-						break;
+				$jsonString = file_get_contents($url);
+				$json = json_decode($jsonString, true);
+			
+				$name = $json['name']; // Pull Name data from URI
+				$imgPath = $json['image']; //Pull  Image data from URI
+				$videoPath = $json['video']; //Pull Video data from URI
+				$collectionName = $json['collection']['name']; //Pull Collection data from URI[name]
+				$collectionFamily = $json['collection']['family']; //Pull Collection data from URI[family]
+				$attributes = $json['attributes']; // Pull all Filter Data from URI
+				$color = GetTestHexColorFromColorString();
+			
+				foreach ($attributes as $attribute) {
+					switch ($attribute["trait_type"]) {
+						case 'Consumable Class':
+							$collectionValue = $attribute['value']; //Pull Collection Class
+							break;
+						case 'Rarity':
+							$rarity = $attribute['value']; // Pull Rarity data from URI
+							break;
+						case 'Liquid Color':
+							// Pull lower back ground from CSS for collectionClass
+							if (isset($attribute['value'])) {
+								$color = GetTestHexColorFromColorString($attribute['value']);
+							}
+							break;
+						default:
+							break;
+					}
 				}
-			}
 
-			require "card.php";
+				require "card.php";
+			}
 		}
 	}
 
 	if(!$isPost){
-		$unclaimedCount = count($unclaimedArray);
-		$unrevealedCount = count($unrevealedArray);
-		$revealedCount = count($revealedArray);
-		$totalCount = $unclaimedCount + $unrevealedCount + $revealedCount;
 
 		echo '<h1 class="cs-hero_title cs-white_color cs-center" id="empty_result">Empty Result</h1>';
 		echo '<input type=hidden id="totalCount" value="'.$totalCount.'"/>';

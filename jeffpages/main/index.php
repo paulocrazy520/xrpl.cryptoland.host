@@ -8,7 +8,7 @@
       <ol class="breadcrumb">
           <li class="breadcrumb-item">Issuer Address</li>
           <li class="breadcrumb-item active">
-            <?php echo $issuer_address; ?>
+            <?php echo $default_issuer_address; ?>
           </li>
       </ol>
       <?php
