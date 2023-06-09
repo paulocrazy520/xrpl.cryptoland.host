@@ -19,7 +19,7 @@
     case "unclaimed":
       $btnStr =  "Claim";
 
-      if(!$info["transfer_status"])
+      if(!$info["claimed"])
         $btnStyle = "cs-card_btn_4";
       else
         $btnStyle = "cs-card_btn_disabled";
@@ -72,7 +72,7 @@
             <div class="cs-card_footer" style="padding:5px 10% 5px 10%;">
             <?php              
                   echo '
-                  <span class="cs-action_item '.$btnStyle.' w-100" data-modal="'.$modalId.'" nft-id="'.$nfTokenID.'" offer-id="'.$offerID.'"
+                  <span class="cs-action_item '.$btnStyle.' w-100" data-modal="'.(($viewType!="unclaimed" || !$info["claimed"])? $modalId : "").'" nft-id="'.$nfTokenID.'" offer-id="'.$offerID.'"
                     ><span>'.$btnStr.'</span></span
                   >';
                ?>

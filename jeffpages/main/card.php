@@ -31,8 +31,7 @@
                       <div class="cs-card_footer" style="padding:5px 10% 5px 10%;">
 <?php
 
-
-                if(isset($current_user) && !empty($current_user))
+                if(isset($current_user) && !empty($current_user) )
                 {
                 if ($asset_owner == $current_user && $asset_has_sell_offer){
                     /* Display DeList Button */

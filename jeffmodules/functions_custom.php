@@ -11,13 +11,29 @@ $num_results_on_page = $_ENV['SHOW_ITEMS_PER_PAGE'];;
 $endpoint_url = $_ENV['API_ENDPOINT_URL'];
 $server_url = $_ENV['NODEBACKEND_SERVER_URL'];
 
+$xummSdk = new \Xrpl\XummSdkPhp\XummSdk($apiKey, $apiSecret);
 /****************************************************************** */
 
 if(isset($_SESSION["user_id"]) && !empty($_SESSION["user_id"]))
 {    
     $userInfo = GetUserInfoByUserId($_SESSION["user_id"]);
-    $current_user = $userInfo['xumm_address'];
-    $nrg["user"] = $userInfo; //For using database functions provided existing project
+
+    if($userInfo["xumm_user_token"])
+    {
+        if($result = $xummSdk->verifyUserToken($userInfo["xumm_user_token"]))
+        {
+            $timestamp = $userInfo["xumm_timestamp"];
+            $twenty_four_hours_ago = time() - (24 * 60 * 60);
+
+            if ($timestamp < $twenty_four_hours_ago) { // The timestamp is older than 24 hours
+                //own code
+            }
+            else{
+                $current_user = $userInfo['xumm_address'];
+                $nrg["user"] = $userInfo; //For using database functions provided existing project
+            }
+        }
+    }
 }
 
 
@@ -91,8 +107,8 @@ function updateDatabaseFromServerbyIssuer($issuer = null){
                     , burnable
                     , only_xrp
                     , transferable
-                    , transfer_status
-                    , transfer_date
+                    , transferred_status
+                    , transferred_date
                     , claimed
                     , claimed_user_id
                     , claimed_date
@@ -156,7 +172,9 @@ function GetRevealNftArraysFromDatabase($claimedArray)
     FROM user_nft
     LEFT JOIN lbk_nft ON user_nft.nft_id = lbk_nft.nft_id
     LEFT JOIN vials_nft ON user_nft.nft_id = vials_nft.nft_id 
-    WHERE user_nft.owner_wallet= '$account'";
+    WHERE 
+    (lbk_nft.owner_wallet= '$account' AND user_nft.assetType = 1 AND lbk_nft.transferred_status = '1') OR 
+    (vials_nft.owner_wallet= '$account' AND user_nft.assetType = 2 AND vials_nft.transferred_status = '1')";
 
     $result = mysqli_query($sqlConnect, $sql) or die("Error in Selecting " . mysqli_error($sqlConnect));
 
@@ -165,22 +183,52 @@ function GetRevealNftArraysFromDatabase($claimedArray)
         $jsonArray[] = $row;
     }
 
+    
     if($jsonArray && count($jsonArray) >= 1)
     {
         $revealedArray = array();
         $unrevealedArray = array();
 
-        foreach($jsonArray as $nft){
-            if (in_array( $nft["nft_id"], $claimedArray)) {
-                if($nft['revealed'] == 1)
-                    array_push($revealedArray, $nft);
-                else
-                    array_push($unrevealedArray, $nft);
+        foreach($claimedArray as $nft_id){
+            $flag = false;
+            $nft = null;
+            foreach($jsonArray as $item){
+                if ($item['nft_id'] == $nft_id)
+                {   
+                    $nft = $item;
+                    $flag = true;
+                    break;
+                }
             }
+
+            if($flag == false) continue;
+
+            if($nft['revealed'] == 1)
+                array_push($revealedArray, $nft);
+            else
+                array_push($unrevealedArray, $nft);
+            
         }
 
         return ["revealedArray"=>$revealedArray, "unrevealedArray" =>$unrevealedArray];
     }
+    
+    // if($jsonArray && count($jsonArray) >= 1)
+    // {
+    //     $revealedArray = array();
+    //     $unrevealedArray = array();
+
+    //     foreach($jsonArray as $nft){
+    //         if (in_array( $nft["nft_id"], $claimedArray)) {
+    //             if($nft['revealed'] == 1)
+    //                 array_push($revealedArray, $nft);
+    //             else
+    //                 array_push($unrevealedArray, $nft);
+    //         }
+    //     }
+
+    //     return ["revealedArray"=>$revealedArray, "unrevealedArray" =>$unrevealedArray];
+    // }
 }
 
 
@@ -250,16 +298,20 @@ function GetOwnedNftArrayByIssuersFromDatabase($unclaimedArray)
         ELSE NULL
     END AS base_uri,
     CASE
-        WHEN user_nft.assetType = 1 THEN lbk_nft.transfer_status
-        WHEN user_nft.assetType = 2 THEN vials_nft.transfer_status
+        WHEN user_nft.assetType = 1 THEN lbk_nft.transferred_status
+        WHEN user_nft.assetType = 2 THEN vials_nft.transferred_status
         ELSE NULL
-    END AS transfer_status
-
+    END AS transferred_status,
+    CASE
+        WHEN user_nft.assetType = 1 THEN lbk_nft.claimed
+        WHEN user_nft.assetType = 2 THEN vials_nft.claimed
+        ELSE NULL
+    END AS claimed
     FROM user_nft
     LEFT JOIN lbk_nft ON user_nft.nft_id = lbk_nft.nft_id
     LEFT JOIN vials_nft ON user_nft.nft_id = vials_nft.nft_id WHERE  user_nft.user_id='".$_SESSION["user_id"]."' AND (
-    (user_nft.assetType = 1 AND lbk_nft.transfer_status = '0') OR 
-    (user_nft.assetType = 2 AND vials_nft.transfer_status = '0'))";
+    (user_nft.assetType = 1 AND lbk_nft.transferred_status = '0') OR 
+    (user_nft.assetType = 2 AND vials_nft.transferred_status = '0'))";
 //    WHERE  user_nft.user_id='".$_SESSION["user_id"]."' ";
 
     $result = mysqli_query($sqlConnect, $sql) or die("Error in Selecting " . mysqli_error($sqlConnect));

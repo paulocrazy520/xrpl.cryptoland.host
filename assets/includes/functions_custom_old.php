@@ -2275,7 +2275,8 @@ function NRG_getUserNFTs2($userId)
     return $items;
 }
 
-function NRG_updateNFTAsClaimed($nftId)
+
+function NRG_updateNFTAsTransferred($nftId, $tx)
 {
     global $nrg;
 
@@ -2286,14 +2287,37 @@ function NRG_updateNFTAsClaimed($nftId)
     $userWallet = $nrg['user']['xumm_address'];
 
     if ($assetType == 1) {
-        $result = NRG_UpdateLBKNFT(1, $userId, $timestamp, 0, 0, 0, $nftId, $userWallet);
+        $result = NRG_UpdateLBKNFT(0, $userId, $timestamp, 0, 0, 0, $nftId, $userWallet, 1, $timestamp, $tx);
         $result2 = NRG_UpdateNFTHistory($nft['nft_uuid'], $nft['nft_id'], $nft['nft_serial'], 0, $timestamp, 1, $timestamp, $userId, $userId, 'rDUSz5wt8ZVENp7ZJq4qrv2f9A2h56Cf3b', $userWallet, '', '', '');
     } elseif ($assetType == 2) {
-        $result = NRG_UpdateVialsNFT(1, $userId, $timestamp, 0, 0, 0, $nftId, $userWallet);
+        $result = NRG_UpdateVialsNFT(0, $userId, $timestamp, 0, 0, 0, $nftId, $userWallet, 1, $timestamp, $tx);
         $result2 = NRG_UpdateNFTHistory($nft['nft_uuid'], $nft['nft_id'], $nft['nft_serial'], 0, $timestamp, 1, $timestamp, $userId, $userId, 'rDUSz5wt8ZVENp7ZJq4qrv2f9A2h56Cf3b', $userWallet, '', '', '');
     } else {
     }
     echo $result;
+    //$result = NRG_UpdateLBKNFT(1, $userId, $timestamp, 0, 0, 0, $nftId, $userWallet);
+    //$result2 = NRG_UpdateNFTHistory($nft['nft_uuid'], $nft['nft_id'], $nft['nft_serial'], 0, $timestamp, 1, $timestamp, $userId, $userId, 'rDUSz5wt8ZVENp7ZJq4qrv2f9A2h56Cf3b', $userWallet, '', '', '');
+}
+
+function NRG_updateNFTAsClaimed($nftId, $value = '1')
+{
+    global $nrg;
+
+    $nft = NRG_getNFT2($nftId);
+    $assetType = $nft['assetType'];
+    $timestamp = time();
+    $userId = $nrg['user']['user_id'];
+    $userWallet = $nrg['user']['xumm_address'];
+
+    if ($assetType == 1) {
+        $result = NRG_UpdateLBKNFT($value, $userId, $timestamp, 0, 0, 0, $nftId, $userWallet, 0, '');
+        $result2 = NRG_UpdateNFTHistory($nft['nft_uuid'], $nft['nft_id'], $nft['nft_serial'], 0, $timestamp, 1, $timestamp, $userId, $userId, 'rDUSz5wt8ZVENp7ZJq4qrv2f9A2h56Cf3b', $userWallet, '', '', '');
+    } elseif ($assetType == 2) {
+        $result = NRG_UpdateVialsNFT($value, $userId, $timestamp, 0, 0, 0, $nftId, $userWallet, 0, '');
+        $result2 = NRG_UpdateNFTHistory($nft['nft_uuid'], $nft['nft_id'], $nft['nft_serial'], 0, $timestamp, 1, $timestamp, $userId, $userId, 'rDUSz5wt8ZVENp7ZJq4qrv2f9A2h56Cf3b', $userWallet, '', '', '');
+    } else {
+    }
+
     //$result = NRG_UpdateLBKNFT(1, $userId, $timestamp, 0, 0, 0, $nftId, $userWallet);
     //$result2 = NRG_UpdateNFTHistory($nft['nft_uuid'], $nft['nft_id'], $nft['nft_serial'], 0, $timestamp, 1, $timestamp, $userId, $userId, 'rDUSz5wt8ZVENp7ZJq4qrv2f9A2h56Cf3b', $userWallet, '', '', '');
 }
@@ -2310,10 +2334,10 @@ function NRG_updateNFTAsRevealed($nftId)
     $userWallet = $nrg['user']['xumm_address'];
 
     if ($assetType == 1) {
-        $result = NRG_UpdateLBKNFT('', '', '', 1, $userId, $timestamp, $nftId, $userWallet);
+        $result = NRG_UpdateLBKNFT('', '', '', 1, $userId, $timestamp, $nftId, $userWallet, 0, '');
         $result2 = NRG_UpdateNFTHistory($nft['nft_uuid'], $nft['nft_id'], $nft['nft_serial'], 1, $timestamp, 1, $timestamp, $userId, $userId, 'rDUSz5wt8ZVENp7ZJq4qrv2f9A2h56Cf3b', $userWallet, '', '', '');
     } elseif ($assetType == 2) {
-        $result = NRG_UpdateVialsNFT('', '', '', 1, $userId, $timestamp, $nftId, $userWallet);
+        $result = NRG_UpdateVialsNFT('', '', '', 1, $userId, $timestamp, $nftId, $userWallet. 0, '');
         $result2 = NRG_UpdateNFTHistory($nft['nft_uuid'], $nft['nft_id'], $nft['nft_serial'], 1, $timestamp, 1, $timestamp, $userId, $userId, 'rDUSz5wt8ZVENp7ZJq4qrv2f9A2h56Cf3b', $userWallet, '', '', '');
     } else {
     }
@@ -2323,22 +2347,30 @@ function NRG_updateNFTAsRevealed($nftId)
     //$result2 = NRG_UpdateNFTHistory($nft['nft_uuid'], $nft['nft_id'], $nft['nft_serial'], 1, $timestamp, 1, $timestamp, $userId, $userId, 'rDUSz5wt8ZVENp7ZJq4qrv2f9A2h56Cf3b', $userWallet, '', '', '');
 }
 
-function NRG_UpdateLBKNFT($claimed, $claimed_user_id, $claimed_date, $revealed, $revealed_user_id, $revealed_date, $nft_id, $userWallet)
+function NRG_UpdateLBKNFT($claimed, $claimed_user_id, $claimed_date, $revealed, $revealed_user_id, $revealed_date, $nft_id, $userWallet, $transferred_status, $transferred_date, $tx_id = '')
 {
     global $nrg, $sqlConnect, $cache;
 
     $where = "WHERE nft_id = '$nft_id'";
 
     if ($claimed == '1' && $claimed_user_id == $nrg["user"]["user_id"]) {
-        $query_one = "UPDATE lbk_nft SET issuer_wallet=issuer_wallet, owner_wallet='$userWallet', claimed='$claimed', claimed_user_id=$claimed_user_id, claimed_date=$claimed_date, revealed=revealed, revealed_user_id=revealed_user_id, revealed_date=revealed_date $where";
+        $query_one = "UPDATE lbk_nft SET issuer_wallet=issuer_wallet, owner_wallet='$userWallet', claimed='$claimed', claimed_user_id=$claimed_user_id, claimed_date=$claimed_date, revealed=revealed, revealed_user_id=revealed_user_id, revealed_date=revealed_date, transferred_status=transferred_status, transferred_date=transferred_date  $where";
         NRG_writeFile("NRG_UpdateLBKNFT.log", "L" . __LINE__ . " | " . $query_one);
+    }  
+    else if ($revealed == '1' && $revealed_user_id == $nrg["user"]["user_id"]) {
+        $query_one = "UPDATE lbk_nft SET issuer_wallet=issuer_wallet, owner_wallet='$userWallet', claimed=claimed, claimed_user_id=claimed_user_id, claimed_date=claimed_date, revealed='$revealed', revealed_user_id=$revealed_user_id, revealed_date=$revealed_date, transferred_status=transferred_status, transferred_date=transferred_date $where";
+        NRG_writeFile("NRG_UpdateLBKNFT.log", "L" . __LINE__ . " | " . $query_one);
+    }
+    else if ($transferred_status == '1') {
+        $query_one = "UPDATE lbk_nft SET issuer_wallet=issuer_wallet, owner_wallet='$userWallet', claimed=claimed, claimed_user_id=claimed_user_id, claimed_date=claimed_date, revealed=revealed, revealed_user_id=revealed_user_id, revealed_date=revealed_date, transferred_status='$transferred_status', transferred_date='$transferred_date', tx_id='$tx_id' $where";
+        NRG_writeFile("NRG_UpdateLBKNFT.log", "L" . __LINE__ . " | " . $query_one);
+    }
+    else{ //set unclaim data
+        $query_one = "UPDATE lbk_nft SET issuer_wallet=issuer_wallet, owner_wallet=owner_wallet, claimed='$claimed', claimed_user_id='0', claimed_date='0', revealed=revealed, revealed_user_id=revealed_user_id, revealed_date=revealed_date, transferred_status=transferred_status, transferred_date=transferred_date  $where";
+        NRG_writeFile("NRG_UpdateLBKNFT.log", "L" . __LINE__ . " | " . $query_one);   
     }
 
-    
-    if ($revealed == '1' && $revealed_user_id == $nrg["user"]["user_id"]) {
-        $query_one = "UPDATE lbk_nft SET issuer_wallet=issuer_wallet, owner_wallet='$userWallet', claimed=claimed, claimed_user_id=claimed_user_id, claimed_date=claimed_date, revealed='$revealed', revealed_user_id=$revealed_user_id, revealed_date=$revealed_date $where";
-        NRG_writeFile("NRG_UpdateLBKNFT.log", "L" . __LINE__ . " | " . $query_one);
-    }
+
     $query = mysqli_query($sqlConnect, $query_one);
 
     if ($query) {
@@ -2352,20 +2384,26 @@ function NRG_UpdateLBKNFT($claimed, $claimed_user_id, $claimed_date, $revealed, 
     return "true";
 }
 
-function NRG_UpdateVialsNFT($claimed, $claimed_user_id, $claimed_date, $revealed, $revealed_user_id, $revealed_date, $nft_id, $userWallet)
+function NRG_UpdateVialsNFT($claimed, $claimed_user_id, $claimed_date, $revealed, $revealed_user_id, $revealed_date, $nft_id, $userWallet, $transferred_status, $transferred_date, $tx_id = '')
 {
     global $nrg, $sqlConnect, $cache;
 
     $where = "WHERE nft_id = '$nft_id'";
 
     if ($claimed == '1' && $claimed_user_id == $nrg["user"]["user_id"]) {
-        $query_one = "UPDATE vials_nft SET issuer_wallet=issuer_wallet, owner_wallet='$userWallet', claimed='$claimed', claimed_user_id=$claimed_user_id, claimed_date=$claimed_date, revealed=revealed, revealed_user_id=revealed_user_id, revealed_date=revealed_date $where";
+        $query_one = "UPDATE vials_nft SET issuer_wallet=issuer_wallet, owner_wallet='$userWallet', claimed='$claimed', claimed_user_id=$claimed_user_id, claimed_date=$claimed_date, revealed=revealed, revealed_user_id=revealed_user_id, revealed_date=revealed_date ,transferred_status=transferred_status, transferred_date=transferred_date $where";
         NRG_writeFile("NRG_UpdateVialsNFT.log", "L" . __LINE__ . " | " . $query_one);
     }
     if ($revealed == '1' && $revealed_user_id == $nrg["user"]["user_id"]) {
-        $query_one = "UPDATE vials_nft SET issuer_wallet=issuer_wallet, owner_wallet='$userWallet', claimed=claimed, claimed_user_id=claimed_user_id, claimed_date=claimed_date, revealed='$revealed', revealed_user_id=$revealed_user_id, revealed_date=$revealed_date $where";
+        $query_one = "UPDATE vials_nft SET issuer_wallet=issuer_wallet, owner_wallet='$userWallet', claimed=claimed, claimed_user_id=claimed_user_id, claimed_date=claimed_date, revealed='$revealed', revealed_user_id=$revealed_user_id, revealed_date=$revealed_date, transferred_status=transferred_status, transferred_date=transferred_date $where";
         NRG_writeFile("NRG_UpdateVialsNFT.log", "L" . __LINE__ . " | " . $query_one);
     }
+
+    if ($transferred_status == '1') {
+        $query_one = "UPDATE vials_nft SET issuer_wallet=issuer_wallet, owner_wallet='$userWallet', claimed=claimed, claimed_user_id=claimed_user_id, claimed_date=claimed_date, revealed=revealed, revealed_user_id=revealed_user_id, revealed_date=revealed_date, transferred_status='$transferred_status', transferred_date='$transferred_date', tx_id='$tx_id'  $where";
+        NRG_writeFile("NRG_UpdateVialsNFT.log", "L" . __LINE__ . " | " . $query_one);
+    }
+
     $query = mysqli_query($sqlConnect, $query_one);
 
     if ($query) {
@@ -2702,3 +2740,4 @@ function NRG_Assign_XUMM_Vial($uNewAvatar, $user_id)
         }
     }
 }
+ 

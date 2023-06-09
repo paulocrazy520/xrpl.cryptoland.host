@@ -5,8 +5,8 @@ const issuerAddress = env.DEFAULT_ISSUER_ADDRESS;
 var signed_xumm_address = "";
 
 const xumm = new XummPkce(apiKey, {
-    implicit: true, // Implicit: allows to e.g. move from social browser to stock browser
-    redirectUrl: env.REDIRECT_URL,
+  implicit: true, // Implicit: allows to e.g. move from social browser to stock browser
+  redirectUrl: env.REDIRECT_URL,
 });
 
 /*=======================================================*/
@@ -175,13 +175,18 @@ async function cancelOffer(account,
 async function postPayload(transactionBlob, offeredNftTokenId = undefined, tableName = undefined) {
   console.log("******postPayload*******", transactionBlob, offeredNftTokenId, tableName);
   $('.cs-preloader').delay(10).fadeIn('slow'); //Show loading screen
-  $('.cs-preloader span').html("Waiting for you to sign the request using xumm wallet");
+
+  if (tableName == "claim_offer")
+    $('.cs-preloader span').html("The Claim has been sent to your Xumm wallet. Please log in and sign the transaction to receive your asset.");
+  else
+    $('.cs-preloader span').html("Waiting for you to sign the request using xumm wallet");
 
   axios.post('jeffajax.php', {
     type: "SubscribePayload",
     payload: transactionBlob,
     offeredNftTokenId: offeredNftTokenId,
-    tableName: tableName
+    tableName: tableName,
+    timeout: 50000 // Set a timeout of 50 seconds
   })
     .then(response => {
       // console.log(response.data);
@@ -191,11 +196,11 @@ async function postPayload(transactionBlob, offeredNftTokenId = undefined, table
         if (response.data == true) {
           $('.cs-isotop_item[nft-id="' + offeredNftTokenId + '"]').removeClass('unclaimed').addClass('unrevealed');
 
-          $('.cs-action_item[nft-id="' + offeredNftTokenId + '"]').removeClass('cs-card_btn_4').addClass('cs-card_btn_2');
+          $('.cs-action_item[nft-id="' + offeredNftTokenId + '"]').removeClass('cs-card_btn_disabled').addClass('cs-card_btn_2');
           $('.cs-action_item[nft-id="' + offeredNftTokenId + '"]').attr('data-modal', '#revealItem');
           $('.cs-action_item[nft-id="' + offeredNftTokenId + '"] span').text('Reveal');
 
-          
+
           if ($('#unclaimedCount').val() > 0) {
             $('#unclaimedCount').val(parseInt($('#unclaimedCount').val()) - 1);
             $('#unrevealedCount').val(parseInt($('#unrevealedCount').val()) + 1);
@@ -206,6 +211,24 @@ async function postPayload(transactionBlob, offeredNftTokenId = undefined, table
           setTimeout(function () {
             isotopInit();
           }, 1000);
+        }
+        else { //undo claimed
+          axios.post('jeffajax.php', {
+            type: "UnclaimItem",
+            nftId: offeredNftTokenId
+          })
+            .then(response => {
+              //const offerId = transactionBlob.txjson.NFTokenSellOffer;
+              console.log('*********************unclaimItem Response=', response.data);
+              //alert(offerId);
+              if (response.data.offerId)
+                $('.cs-action_item[nft-id="' + offeredNftTokenId + '"]').removeClass('cs-card_btn_disabled').addClass('cs-card_btn_4');
+
+              //Cancel Offer
+            })
+            .catch(error => {
+              console.error(error);        
+            });
         }
       }
       else {
@@ -247,7 +270,7 @@ function LoginUser(user_name, user_password) {
 }
 
 function LogoutUser() {
-    axios.post('jeffajax.php', {
+  axios.post('jeffajax.php', {
     type: "Logout"
   })
     .then(response => {
@@ -271,9 +294,9 @@ async function claimOffer(standbyBuyerField,
   // Prepare transaction -------------------------------------------------------
   const state = await xumm.state();
 
-  
+
   if (!state?.me?.sub || standbyBuyerField != state.me.sub) {
-  
+
     alert("Verify Xumm Auth!");
     return null;
   }

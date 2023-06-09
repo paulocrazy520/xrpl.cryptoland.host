@@ -1,4 +1,8 @@
 <?php
+
+use GuzzleHttp\Client;
+use GuzzleHttp\Promise;
+
 require_once __DIR__ . '/vendor/autoload.php';
 use Dotenv\Dotenv;
 $dotenv = Dotenv::createImmutable(__DIR__);
@@ -44,6 +48,12 @@ switch ($request_data->type) {
         break;
     case "RevealItem":
         JEFF_RevealItem($_SESSION["user_id"]);
+        break;
+    case "ClaimItem":
+        JEFF_ClaimItem($_SESSION["user_id"]);
+        break;
+    case "UnclaimItem":
+        JEFF_UnclaimItem($_SESSION["user_id"]);
         break;
     default:
         break;
@@ -106,7 +116,7 @@ function JEFF_UpdateUserInfo($user_id)
         return;
     }
 
-    global $sqlConnect, $request_data, $issued_user_token;
+    global $sqlConnect, $request_data, $issued_user_token, $xummSdk;
 
     if (!isset($request_data->payload) || empty($request_data->payload)) {
         echo "none_payload";
@@ -131,9 +141,24 @@ function JEFF_UpdateUserInfo($user_id)
         return;
     
     if ($user_info["xumm_address"] && $user_info["xumm_txid"]) {
-            echo "user_exist";
-
-        return;
+        
+        if($user_info["xumm_user_token"])
+        {
+            if($result = $xummSdk->verifyUserToken($user_info["xumm_user_token"]))
+            {
+                $timestamp = $user_info["xumm_timestamp"];
+                $twenty_four_hours_ago = time() - (24 * 60 * 60);
+    
+                if ($timestamp < $twenty_four_hours_ago) { // The timestamp is older than 24 hours
+                    //
+                }
+                else
+                {
+                    echo "user_exist";
+                    return;
+                }
+            }
+        }
     }
 
     NRG_writeFile("NRG_UpdateTransactionStausAndQty.log", json_encode($user_info));
@@ -233,8 +258,7 @@ function JEFF_SubscribePayload($user_id){
 
         $payloadData = new Xrpl\XummSdkPhp\Payload\Payload(
             transactionBody: $xummPayload["txjson"],
-            userToken: $userToken,
-            options: $options
+            userToken: $userToken
         );
 
         $callback = function(Xrpl\XummSdkPhp\Subscription\CallbackParams $event) use ($owner_wallet, $request_data, $user_id, $user_info, $xummPayload, $sqlConnect): ?array
@@ -343,7 +367,8 @@ function JEFF_SubscribePayload($user_id){
 
                     if($table_name == "claim_offers")
                     {
-                        NRG_updateNFTAsClaimed($nft_token_id);
+                  
+                        NRG_updateNFTAsTransferred($nft_token_id, $tx);
                         //echo $table_name;
                     }
                     else
@@ -377,9 +402,15 @@ function JEFF_SubscribePayload($user_id){
         };
         
         try {
-            $createdPayload = $xummSdk->createPayload($payloadData);
             $loop = \React\EventLoop\Factory::create();
+            $createdPayload = $xummSdk->createPayload($payloadData);
             $result = $xummSdk->subscribe($createdPayload, $callback);
+
+            $timeout = 50; // Set a timeout of 10 seconds
+            $loop->addTimer($timeout, function () use ($loop) {
+                $loop->stop(); // Stop the event loop after the timeout
+            });
+
             $loop->run();
         } catch(Exception $e) {
             print_r($e);
@@ -407,4 +438,114 @@ function Jeff_RevealItem($user_id)
     }
 
     NRG_updateNFTAsRevealed($request_data->nftId); 
+}
+
+
+
+
+// *********************ToMarcus**************************
+// *******************Unclaim Item data*******************
+// *******************************************************
+function Jeff_UnclaimItem($user_id)
+{
+    global $sqlConnect, $request_data, $nrg;
+    $nft_id = $request_data->nftId;
+    $user_info = GetUserInfoByUserId($user_id);
+    
+    if($user_info["xumm_user_token"]){
+        
+        $client = new Client([
+            'base_uri' => $_ENV['NODEBACKEND_SERVER_URL']
+        ]);
+    
+        $query_params = [
+            'tokenID' =>  $nft_id ,
+            'account' => $user_info["xumm_address"]
+        ];
+        $response = $client->request('GET', '/cancel', ['query' => $query_params]);
+        
+        $result = $response->getBody();
+        $json = json_decode($result, true);
+
+        if (!empty($json['offerId'])) {
+            NRG_updateNFTAsClaimed($nft_id, '0');           
+            echo  $result;
+        }
+    }
+
+}
+
+// *********************ToMarcus**************************
+// ************Claim item and update database*********
+// *******************************************************
+function Jeff_ClaimItem($user_id)
+{
+    global $sqlConnect, $request_data, $nrg;
+
+    $nft_id = $request_data->nftId;
+
+    if(!isset($user_id) || empty($user_id) || !isset($nrg["user"])){
+        return;
+    }
+
+    $sql =  "SELECT user_nft.nft_id as nft_id, 
+    CASE
+        WHEN user_nft.assetType = 1 THEN lbk_nft.transferred_status
+        WHEN user_nft.assetType = 2 THEN vials_nft.transferred_status
+        ELSE NULL
+    END AS transferred_status,
+    CASE
+        WHEN user_nft.assetType = 1 THEN lbk_nft.transferred_date
+        WHEN user_nft.assetType = 2 THEN vials_nft.transferred_date
+        ELSE NULL
+    END AS transferred_date
+    FROM user_nft
+    LEFT JOIN lbk_nft ON user_nft.nft_id = lbk_nft.nft_id
+    LEFT JOIN vials_nft ON user_nft.nft_id = vials_nft.nft_id WHERE  user_nft.user_id='".$user_id."' AND  user_nft.nft_id ='".$nft_id."' AND (
+    (user_nft.assetType = 1 AND lbk_nft.transferred_status = '0') OR 
+    (user_nft.assetType = 2 AND vials_nft.transferred_status = '0'))";
+
+    try{
+        $result = mysqli_query($sqlConnect, $sql) or die("Error in Selecting " . mysqli_error($sqlConnect));
+
+        $jsonArray = array();
+        while ($row = mysqli_fetch_assoc($result)) {
+            $jsonArray[] = $row;
+        }
+
+        if($jsonArray && count($jsonArray) >= 1)
+        {
+            $json = $jsonArray[0];
+            $status = $json['transferred_status'];
+            $date = $json['transferred_date'];
+
+            $user_info = GetUserInfoByUserId($user_id);
+    
+            if(!$status && $user_info["xumm_user_token"]){
+                
+                $client = new Client([
+                    'base_uri' => $_ENV['NODEBACKEND_SERVER_URL']
+                ]);
+            
+                $query_params = [
+                    'tokenID' =>  $nft_id ,
+                    'account' => $user_info["xumm_address"]
+                ];
+                $response = $client->request('GET', '/claim', ['query' => $query_params]);
+                
+                $result = $response->getBody();
+                $json = json_decode($result, true);
+
+                if (!empty($json['offerId'])) {
+                    NRG_updateNFTAsClaimed($nft_id);           
+                    echo  $result;
+                }
+            }
+        }
+    }
+    catch(Exception $e){
+        print_r($e);
+    }
+
+    //NRG_updateNFTAsRevealed($request_data->nftId); 
 }

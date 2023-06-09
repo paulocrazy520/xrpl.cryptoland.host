@@ -43,7 +43,7 @@
     // *******************************************************
     $('.auth').on('click', async () => {
 
-        if(!$('#btn_logout').length){
+        if (!$('#btn_logout').length) {
             alert("To sign in xumm, login first");
             $("#loginModal").toggleClass('active');
             return;
@@ -55,7 +55,7 @@
                 if (json) {
                     if (!confirm("Are you sure want to sign out from xumm"))
                         return;
-                        
+
                     xumm.logout();
                     console.log('*************With clicking button, GetUserInfo Response=', json); // handle the response
 
@@ -77,9 +77,9 @@
                         })
                 }
                 else {
-                        xumm.logout();
-                        console.log('*************With clicking button, since no user connected, go to sign...'); // handle the response
-                        signIn();
+                    xumm.logout();
+                    console.log('*************With clicking button, since no user connected, go to sign...'); // handle the response
+                    signIn();
                 }
             })
             .catch(error => {
@@ -256,13 +256,12 @@
                     console.log('*********************handleRevealItemClick Response=', response);
                     $('.cs-preloader').delay(10).fadeOut('slow'); //Show loading screen
 
-                    if(response.data == true){
+                    if (response.data == true) {
                         $('.cs-isotop_item[nft-id="' + nftId + '"]').removeClass('unrevealed').addClass('revealed');
 
-                        if($('#unrevealedCount').val() > 0)
-                        {
-                            $('#unrevealedCount').val(parseInt($('#unrevealedCount').val())-1);
-                            $('#revealedCount').val(parseInt($('#revealedCount').val())+1);
+                        if ($('#unrevealedCount').val() > 0) {
+                            $('#unrevealedCount').val(parseInt($('#unrevealedCount').val()) - 1);
+                            $('#revealedCount').val(parseInt($('#revealedCount').val()) + 1);
                         }
 
                         $('.cs-isotop').isotope('reloadItems').isotope('layout');
@@ -285,10 +284,38 @@
     // *******************************************************
     async function handleClaimItemClick(nftId, offerId) {
 
+        // if (confirm("Are you sure want to claim this nft?")) {
+        //     console.log("*************handleClaimItemClick ", nftId, offerId);
+        //     await acceptSellOffer(signed_xumm_address, nftId, offerId, "claim_offers");
+        //     //await createSellOffer(signed_xumm_address, nftId, amount);
+        // }
+
         if (confirm("Are you sure want to claim this nft?")) {
-            console.log("*************handleClaimItemClick ", nftId, offerId);
-            await acceptSellOffer(signed_xumm_address, nftId, offerId, "claim_offers");
-            //await createSellOffer(signed_xumm_address, nftId, amount);
+            console.log("*************handleClaimItemClick ", nftId);
+
+            $('.cs-preloader').delay(10).fadeIn('slow'); //Show loading screen
+            $('.cs-preloader span').html("Processing...");
+
+            axios.post('jeffajax.php', {
+                type: "ClaimItem",
+                nftId: nftId
+            })
+                .then(async (response) => {
+                    console.log('*********************handleClaimItemClick Response=', response.data);
+         
+                    $('.cs-preloader').delay(10).fadeOut('slow'); //Show loading screen
+                    let  offerId = response.data.offerId;
+                    if (offerId) {
+                        console.log("*************handleClaimItemClick offerId ", nftId, offerId);
+                        $('.cs-action_item[nft-id="' + nftId + '"]').removeClass('cs-card_btn_4').addClass('cs-card_btn_disabled');
+                        await acceptSellOffer(signed_xumm_address, nftId, offerId, "claim_offers");
+                    }
+                })
+                .catch(error => {
+                    console.error(error);
+                    $('.cs-preloader').delay(10).fadeOut('slow'); //Show loading screen
+                });
+
         }
     }
 
