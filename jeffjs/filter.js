@@ -27,7 +27,7 @@
     }
 
     async function updatePage(key = "*", isReplace = false) {
-        if (key == "*" && $('#pageType').val() == "claim") {
+        if (key == "*" && $('#pageType').val() == "claim" && !isReplace) {
             updateShowingResult(key);
             return;
         }
@@ -48,6 +48,7 @@
             formData.append('menuBid', $('#menuBid').val());
         }
         else if ($('#pageType').val() == "claim") {
+            formData.append('menuCollection', $('#menuCollection').val());
             formData.append('tabType', $('#tabType').val());
         }
 
@@ -64,7 +65,13 @@
 
             if ($('#pageType').val() == "claim") {
                 //console.log(html);
-                $('.cs-isotop').append(html);
+                if(!isReplace)
+                    $('.cs-isotop').append(html);
+                else{
+                    $('.cs-isotop').html('<div class="cs-grid_sizer"></div>');
+                    $('.cs-isotop').append(html);
+                }
+
                 $('.cs-isotop').isotope('reloadItems').isotope('layout');
                 setTimeout(function () {
                     isotopInit();
@@ -142,16 +149,18 @@
 
     $('.form-check').on('click', function () {
         var id = $(this).attr("type");
+        var tab = $('#tabType' ).val();
+        var key = tab ? tab : "*";
 
         if (id == "collection") {
             var menuCollection = $(this).find(".form-check-label").text().trim();
             $('#menuCollection').val(menuCollection);
-            updatePage("*", true);
+            updatePage(key, true);
         }
         else if (id == "rarity") {
             var menuRarity = $(this).find(".form-check-label").text().trim();
             $('#menuRarity').val(menuRarity);
-            updatePage("*", true);
+            updatePage(key, true);
         }
         $(this).find(".form-check-input").prop("checked");
     });

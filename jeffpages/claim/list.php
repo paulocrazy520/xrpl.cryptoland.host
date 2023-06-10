@@ -7,7 +7,7 @@
 
 	<div class="cs-height_30 cs-height_lg_30"></div>
 
-	<div class="cs-isotop cs-style1 cs-isotop_col_5 cs-has_gutter_30"  id="nft-list">
+	<div class="cs-isotop cs-style1 cs-isotop_col_4 cs-has_gutter_30"  id="nft-list">
 		<div class="cs-grid_sizer"></div>
 	<?php
 }
@@ -25,9 +25,24 @@
 	$unrevealedCount = 0;
 	$revealedCount = 0;
 
+	$menuCollection = isset($_POST['menuCollection']) ? $_POST['menuCollection'] : "";
+
+	if(!isset($current_user) || !$current_user)
+	{
+		$account = $default_issuer_address;
+	}
+	else
+		$account = $current_user;
+
+
+	$query_params = [
+        'menuCollection' => $menuCollection,
+		'account' => $account
+    ];
+
 	if($tabType == "*" || $tabType == ".unclaimed")
 	{
-		$tempUnclaimedArrayFromServer = GetOwnedNftsByIssuersFromServer();
+		$tempUnclaimedArrayFromServer = GetOwnedNftsByIssuersFromServer($query_params);
 		$unclaimedArray = GetOwnedNftArrayByIssuersFromDatabase($tempUnclaimedArrayFromServer);
 
 		if($unclaimedArray)
@@ -36,7 +51,7 @@
 
 	if($tabType == "*" || $tabType == ".unrevealed" || $tabType == ".revealed" )
 	{
-		$claimedArray = GetOwnedNftsFromServer();
+		$claimedArray = GetOwnedNftsFromServer($query_params);
 		
 		if(!$claimedArray)
 			return;
@@ -119,7 +134,7 @@
 							break;
 					}
 				}
-
+				
 				require "card.php";
 			}
 		}
@@ -175,8 +190,9 @@
 		}
 	}
 
-	if(!$isPost){
+	if(!$isPost || $menuCollection){
 
+		if(!$isPost)
 		echo '<h1 class="cs-hero_title cs-white_color cs-center" id="empty_result">Empty Result</h1>';
 		echo '<input type=hidden id="totalCount" value="'.$totalCount.'"/>';
 		echo '<input type=hidden id="unclaimedCount" value="'.$unclaimedCount.'"/>';

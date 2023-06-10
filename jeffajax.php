@@ -261,125 +261,64 @@ function JEFF_SubscribePayload($user_id){
             userToken: $userToken
         );
 
-        $callback = function(Xrpl\XummSdkPhp\Subscription\CallbackParams $event) use ($owner_wallet, $request_data, $user_id, $user_info, $xummPayload, $sqlConnect): ?array
-        {
-            //global $user_id, $user_info, $xummPayload, $sqlConnect;
-            if (!isset($event->data['signed'])) {
-                return null; // Don't do anything, wait for the next message.
-            }
-        
-            if ($event->data['signed'] === true) {
-                
-                //echo "🎉 Payment request accepted!\n";
+       
+        try {
+            $loop = \React\EventLoop\Factory::create();
 
-                NRG_writeFile("Payload_UpdateTransactionStausAndQty.log", "--------After sign, return response data-------------");
-                NRG_writeFile("Payload_UpdateTransactionStausAndQty.log", json_encode($event->data));
-                                
-                $payload_data = json_decode(json_encode($event->data), true);
+            $callback = function(Xrpl\XummSdkPhp\Subscription\CallbackParams $event) use ( $loop, $owner_wallet, $request_data, $user_id, $user_info, $xummPayload, $sqlConnect): ?array
+            {
 
-                if( $xummPayload["txjson"]["TransactionType"] == "NFTokenCreateOffer")
-                {
-                    //$user_id from parameter
-                    $user_wallet = $user_info["xumm_address"];
-                    $uuid = $payload_data["payload_uuidv4"];
-                    $nft_token_id =  $xummPayload["txjson"]["NFTokenID"];
-                    $offer_date = time();
-                    $offer_currency = "Xrp";               
-                    $offer_amount =  intval($xummPayload["txjson"]["Amount"]);
-                    $tx = $payload_data["txid"];
-                    $offer_status = "active";
+                //global $user_id, $user_info, $xummPayload, $sqlConnect;
+                if (!isset($event->data['signed'])) {
+                    return null; // Don't do anything, wait for the next message.
+                }
 
-                    if($xummPayload["txjson"]["Owner"])
-                        $table_name = "buy_offers";
-                    else
-                        $table_name = "sell_offers";
+                $loop->stop();
 
-                    /**************Insert Data to table ***************/
-                    try{
-                        $query = "SELECT * FROM $table_name WHERE uuid = '$uuid' or (nft_token_id = '$nft_token_id' and offer_status = 'active') LIMIT 1";
-                        $result = mysqli_query($sqlConnect, $query);
-
-                        $subQuery = "INSERT INTO $table_name (user_id, user_wallet, uuid, nft_token_id, offer_date, offer_currency, offer_amount, tx, offer_status) 
-                        VALUES  ($user_id, '$user_wallet', '$uuid', '$nft_token_id', $offer_date, '$offer_currency', $offer_amount, '$tx', '$offer_status');";
-
-                        NRG_writeFile("Payload_UpdateTransactionStausAndQty.log", $subQuery);
-
-                        if (!mysqli_num_rows($result)) {
-                            $subResult = mysqli_query($sqlConnect, $subQuery);
-
-                            NRG_writeFile("Payload_UpdateTransactionStausAndQty.log", json_encode($subResult));
-                        }
+                if ($event->data['signed'] === true) {
+                    
+                    //echo "🎉 Payment request accepted!\n";
+    
+                    NRG_writeFile("Payload_UpdateTransactionStausAndQty.log", "--------After sign, return response data-------------");
+                    NRG_writeFile("Payload_UpdateTransactionStausAndQty.log", json_encode($event->data));
+                                    
+                    $payload_data = json_decode(json_encode($event->data), true);
+    
+                    if( $xummPayload["txjson"]["TransactionType"] == "NFTokenCreateOffer")
+                    {
+                        //$user_id from parameter
+                        $user_wallet = $user_info["xumm_address"];
+                        $uuid = $payload_data["payload_uuidv4"];
+                        $nft_token_id =  $xummPayload["txjson"]["NFTokenID"];
+                        $offer_date = time();
+                        $offer_currency = "Xrp";               
+                        $offer_amount =  intval($xummPayload["txjson"]["Amount"]);
+                        $tx = $payload_data["txid"];
+                        $offer_status = "active";
+    
+                        if($xummPayload["txjson"]["Owner"])
+                            $table_name = "buy_offers";
                         else
-                        {
-                            $subQuery = "DELETE FROM $table_name WHERE nft_token_id = '$nft_token_id' and offer_status = 'active'";
-                            NRG_writeFile("Payload_UpdateTransactionStausAndQty.log", $subQuery);
-                            $subResult = mysqli_query($sqlConnect, $subQuery);
-                        }
-                    }
-                    catch(Exception $e){
-                        print_r($e);
-                    }
-                }
-                else if( $xummPayload["txjson"]["TransactionType"] == "NFTokenCancelOffer" )
-                {
-                    //$user_id from parameter
-                    $user_wallet = $user_info["xumm_address"];
-                    $uuid = $payload_data["payload_uuidv4"];
-                    $offer_date = time();
-                    $tx = $payload_data["txid"];
-                    $offer_status = "cancelled";
-                    $nft_token_id =  $request_data->offeredNftTokenId;
-                    /**************Insert Data to table ***************/
-                    $table_name = $request_data->tableName;
-                    if(!isset($table_name) || empty($table_name))
-                        $table_name = "sell_offers";
-
-                    try{
-                        $query = "SELECT * FROM $table_name WHERE nft_token_id = '$nft_token_id' and offer_status = 'active' LIMIT 1";
-                        $result = mysqli_query($sqlConnect, $query);
-
-                        if (mysqli_num_rows($result)) 
-                        {
-                            $subQuery = "UPDATE $table_name SET cancelled_by_userid = '$user_id', cancelled_by_user_wallet = '$user_wallet', cancelled_by_uuid = '$uuid', cancelled_date = '$offer_date', cancelled_tx = '$tx', offer_status = '$offer_status' WHERE nft_token_id = '$nft_token_id' and offer_status = 'active'";
-                            NRG_writeFile("Payload_UpdateTransactionStausAndQty.log", $subQuery);
-                            $subResult = mysqli_query($sqlConnect, $subQuery);
-                        }
-                    }
-                    catch(Exception $e){
-                        print_r($e);
-                    }
-                }
-                else if( $xummPayload["txjson"]["TransactionType"] == "NFTokenAcceptOffer" )
-                {
-
-                    //echo "NFTokenAcceptOffer";
-                    //$user_id from parameter
-                    $user_wallet = $user_info["xumm_address"];
-                    $uuid = $payload_data["payload_uuidv4"];
-                    $offer_date = time();
-                    $tx = $payload_data["txid"];
-                    $offer_status = "accepted";
-                    $nft_token_id =  $request_data->offeredNftTokenId;
-                    /**************Insert Data to table ***************/
-                    $table_name = $request_data->tableName;
-                    if(!isset($table_name) || empty($table_name))
-                        $table_name = "sell_offers";
-
-                    if($table_name == "claim_offers")
-                    {
-                  
-                        NRG_updateNFTAsTransferred($nft_token_id, $tx);
-                        //echo $table_name;
-                    }
-                    else
-                    {
+                            $table_name = "sell_offers";
+    
+                        /**************Insert Data to table ***************/
                         try{
-                            $query = "SELECT * FROM $table_name WHERE nft_token_id = '$nft_token_id' and offer_status = 'active' LIMIT 1";
+                            $query = "SELECT * FROM $table_name WHERE uuid = '$uuid' or (nft_token_id = '$nft_token_id' and offer_status = 'active') LIMIT 1";
                             $result = mysqli_query($sqlConnect, $query);
-
-                            if (mysqli_num_rows($result)) 
+    
+                            $subQuery = "INSERT INTO $table_name (user_id, user_wallet, uuid, nft_token_id, offer_date, offer_currency, offer_amount, tx, offer_status) 
+                            VALUES  ($user_id, '$user_wallet', '$uuid', '$nft_token_id', $offer_date, '$offer_currency', $offer_amount, '$tx', '$offer_status');";
+    
+                            NRG_writeFile("Payload_UpdateTransactionStausAndQty.log", $subQuery);
+    
+                            if (!mysqli_num_rows($result)) {
+                                $subResult = mysqli_query($sqlConnect, $subQuery);
+    
+                                NRG_writeFile("Payload_UpdateTransactionStausAndQty.log", json_encode($subResult));
+                            }
+                            else
                             {
-                                $subQuery = "UPDATE $table_name SET accepted_by_userid = '$user_id', accepted_by_user_wallet = '$user_wallet', accepted_by_uuid = '$uuid', accepted_date = '$offer_date', accepted_tx = '$tx', offer_status = '$offer_status' WHERE  nft_token_id = '$nft_token_id' and offer_status = 'active'";
+                                $subQuery = "DELETE FROM $table_name WHERE nft_token_id = '$nft_token_id' and offer_status = 'active'";
                                 NRG_writeFile("Payload_UpdateTransactionStausAndQty.log", $subQuery);
                                 $subResult = mysqli_query($sqlConnect, $subQuery);
                             }
@@ -388,28 +327,103 @@ function JEFF_SubscribePayload($user_id){
                             print_r($e);
                         }
                     }
+                    else if( $xummPayload["txjson"]["TransactionType"] == "NFTokenCancelOffer" )
+                    {
+                        //$user_id from parameter
+                        $user_wallet = $user_info["xumm_address"];
+                        $uuid = $payload_data["payload_uuidv4"];
+                        $offer_date = time();
+                        $tx = $payload_data["txid"];
+                        $offer_status = "cancelled";
+                        $nft_token_id =  $request_data->offeredNftTokenId;
+                        /**************Insert Data to table ***************/
+                        $table_name = $request_data->tableName;
+                        if(!isset($table_name) || empty($table_name))
+                            $table_name = "sell_offers";
+    
+                        try{
+                            $query = "SELECT * FROM $table_name WHERE nft_token_id = '$nft_token_id' and offer_status = 'active' LIMIT 1";
+                            $result = mysqli_query($sqlConnect, $query);
+    
+                            if (mysqli_num_rows($result)) 
+                            {
+                                $subQuery = "UPDATE $table_name SET cancelled_by_userid = '$user_id', cancelled_by_user_wallet = '$user_wallet', cancelled_by_uuid = '$uuid', cancelled_date = '$offer_date', cancelled_tx = '$tx', offer_status = '$offer_status' WHERE nft_token_id = '$nft_token_id' and offer_status = 'active'";
+                                NRG_writeFile("Payload_UpdateTransactionStausAndQty.log", $subQuery);
+                                $subResult = mysqli_query($sqlConnect, $subQuery);
+                            }
+                        }
+                        catch(Exception $e){
+                            print_r($e);
+                        }
+                    }
+                    else if( $xummPayload["txjson"]["TransactionType"] == "NFTokenAcceptOffer" )
+                    {
+    
+                        //echo "NFTokenAcceptOffer";
+                        //$user_id from parameter
+                        $user_wallet = $user_info["xumm_address"];
+                        $uuid = $payload_data["payload_uuidv4"];
+                        $offer_date = time();
+                        $tx = $payload_data["txid"];
+                        $offer_status = "accepted";
+                        $nft_token_id =  $request_data->offeredNftTokenId;
+                        /**************Insert Data to table ***************/
+                        $table_name = $request_data->tableName;
+                        if(!isset($table_name) || empty($table_name))
+                            $table_name = "sell_offers";
+    
+                        if($table_name == "claim_offers")
+                        {
+                      
+                            NRG_updateNFTAsTransferred($nft_token_id, $tx);
+                            //echo $table_name;
+                        }
+                        else
+                        {
+                            try{
+                                $query = "SELECT * FROM $table_name WHERE nft_token_id = '$nft_token_id' and offer_status = 'active' LIMIT 1";
+                                $result = mysqli_query($sqlConnect, $query);
+    
+                                if (mysqli_num_rows($result)) 
+                                {
+                                    $subQuery = "UPDATE $table_name SET accepted_by_userid = '$user_id', accepted_by_user_wallet = '$user_wallet', accepted_by_uuid = '$uuid', accepted_date = '$offer_date', accepted_tx = '$tx', offer_status = '$offer_status' WHERE  nft_token_id = '$nft_token_id' and offer_status = 'active'";
+                                    NRG_writeFile("Payload_UpdateTransactionStausAndQty.log", $subQuery);
+                                    $subResult = mysqli_query($sqlConnect, $subQuery);
+                                }
+                            }
+                            catch(Exception $e){
+                                print_r($e);
+                            }
+                        }
+                    }
+                    //
+                    //**************************************************************** */
+    
+                    return $event->data;  // Returning a value ends the subscription.
                 }
-                //
-                //**************************************************************** */
-
-                return $event->data;  // Returning a value ends the subscription.
-            }
-            
-            echo false;
-            //echo "Payment request rejected :(\n";
-            return [];
-            //NRG_updateNFTAsClaimed($$request_data->offeredNftTokenId);
-        };
+                
+                echo false;
+                //echo "Payment request rejected :(\n";
+                return [];
+                //NRG_updateNFTAsClaimed($$request_data->offeredNftTokenId);
+            };
         
-        try {
-            $loop = \React\EventLoop\Factory::create();
+            
             $createdPayload = $xummSdk->createPayload($payloadData);
             $result = $xummSdk->subscribe($createdPayload, $callback);
-
             $timeout = 50; // Set a timeout of 10 seconds
             $loop->addTimer($timeout, function () use ($loop) {
+
                 $loop->stop(); // Stop the event loop after the timeout
             });
+
+            // $loop->addPeriodicTimer(1, function () use ($loop, &$callbackExecuted, $timeout) {
+            //     if ($callbackExecuted) { // Exit when flag is true
+            //         $loop->stop();
+            //     } elseif ($timeout-- === 0) { // Timeout reached
+            //         $loop->stop();
+            //     }
+            // });
 
             $loop->run();
         } catch(Exception $e) {

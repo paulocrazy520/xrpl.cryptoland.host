@@ -1,19 +1,3 @@
-<style>
-
-.cs-card.cs-style4 .cs-card_btn_disabled {
-  font-weight: 500;
-  font-size: 12px;
-  color: #fff;
-  background-color: #3c4049;
-  border-radius: 1.6em;
-  line-height: 1.5em;
-  padding: 4px 16px;
-  position: relative;
-  -webkit-transition: all 0.3s ease;
-  transition: all 0.3s ease;
-}
-
-</style>
 <?php 
   switch($viewType){
     case "unclaimed":
@@ -34,6 +18,7 @@
     case "revealed":
       $btnStr = "Revealed";
       $btnStyle = "cs-card_btn_1";
+      $modalId= "#";
       break;
     default:
       $btnStyle = "cs-card_btn_disabled";
@@ -45,7 +30,7 @@
   $offerID = isset($offerID) ? $offerID : "";
 ?>
  <!-- .col -->
- <div class="cs-isotop_item <?php echo $viewType; ?> nft-card"  nft-id='<?php echo $nfTokenID; ?>'  style="text-align:center">
+ <div class="cs-isotop_item <?php echo $viewType; ?> nft-card"  nft-id='<?php echo $nfTokenID; ?>'  style="text-align:center ; ">
     <div class="cs-card cs-style4 cs-box_shadow cs-white_bg" style="background-color: <?php echo $color ?>;">
       <!-- <a href="#" class="cs-card_thumb cs-zoom_effect"  onClick="window.open('<?php echo $videoPath ?>', 'newwindow', 'width=600,height=600,left='+((screen.width-600)/2)+',top='+((screen.height-600)/2));  return false;"> -->
       <a href="?page=<?php echo $nfTokenID?>" class="cs-card_thumb cs-zoom_effect" >
@@ -65,14 +50,14 @@
               Name: <b><?php echo $name ?></b>
             </div>
             <div class="cs-card_price" style="display: flex; justify-content: space-between;">
-              Rarity: <b><?php echo $rarity ?></b>
+              Rarity: <b style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis;"><?php echo $rarity ?></b>
             </div>
             <hr />
             <?php if($current_user){ ?>
             <div class="cs-card_footer" style="padding:5px 10% 5px 10%;">
             <?php              
                   echo '
-                  <span class="cs-action_item '.$btnStyle.' w-100" data-modal="'.(($viewType!="unclaimed" || !$info["claimed"])? $modalId : "").'" nft-id="'.$nfTokenID.'" offer-id="'.$offerID.'"
+                  <span class="cs-action_item '.$btnStyle.' w-100" data-modal="'.(($viewType!="unclaimed" || ($viewType=="unclaimed" && !$info["claimed"]))? $modalId : "").'" nft-id="'.$nfTokenID.'"
                     ><span>'.$btnStr.'</span></span
                   >';
                ?>

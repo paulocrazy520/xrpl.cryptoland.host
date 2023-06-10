@@ -337,28 +337,15 @@ function GetOwnedNftArrayByIssuersFromDatabase($unclaimedArray)
 
 
 /*****************Get UnClaimed(Owned) Nfts from all issuers by owned account from Node Server******************* */
-function GetOwnedNftsByIssuersFromServer($account = null){
+function GetOwnedNftsByIssuersFromServer($query_params){
     global  $current_user, $server_url, $default_issuer_address;
 
-    if(!$account)
-    {
-        if(!$current_user)
-        {
-            $account = $default_issuer_address;
-        }
-        else
-            $account = $current_user;
-    }
-        
     $client = new \GuzzleHttp\Client();
     
     $client = new Client([
         'base_uri' => $server_url 
     ]);
 
-    $query_params = [
-        // 'account' => $account
-    ];
     $response = $client->request('GET', '/owned_nfts_issuers', ['query' => $query_params]);
     
     // Convert the JSON response to an array for easier processing
@@ -401,29 +388,17 @@ function GetIssuedNftsFromServer($account = null){
 
 
 /*****************Get Owned Nft Infos by account from Node Server******************* */
-function GetOwnedNftsFromServer($account = null){
+function GetOwnedNftsFromServer($query_params){
     global $current_user, $server_url, $default_issuer_address;
     
-    if(!$account)
-    {
-        if(!$current_user)
-        {
-            $account = $default_issuer_address;
-        }
-        else
-            $account = $current_user;
-    }
-        
+            
     $client = new \GuzzleHttp\Client();
     
     $client = new Client([
-        'base_uri' =>$server_url 
+        'base_uri' => $server_url 
     ]);
 
-
-    $filter = "account=$account";
-    $request = $client->getAsync("owned_nfts?$filter");
-    $response = $request->wait();
+    $response = $client->request('GET', '/owned_nfts', ['query' => $query_params]);
 
     // Convert the JSON response to an array for easier processing
     $transfer_history = json_decode($response->getBody());

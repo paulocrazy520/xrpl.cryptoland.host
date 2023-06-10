@@ -1,3 +1,8 @@
+function handleClick() {
+    var a = "Button Clicked";
+    alert(a);
+  }
+
 (function ($) {
     'use strict';
     $(function () {
@@ -175,8 +180,11 @@
         handlePlaceItemClick();
     });
 
+
+
     //When click Cancel Listing button on the main explorer page
-    $('[data-modal]').on('click', function () {
+    $(document).on('click', '.cs-action_item', function () {
+    
         var modalId = $(this).attr('data-modal');
 
         switch (modalId) {
@@ -203,9 +211,8 @@
                 break;
             case "#claimItem": //When click Buy Item button
                 var nftId = $(this).attr('nft-id');
-                var offerId = $(this).attr('offer-id');
-                console.log("***********ClaimItem selected by nft token:***********", modalId, nftId, offerId);
-                handleClaimItemClick(nftId, offerId);
+                console.log("***********ClaimItem selected by nft token:***********", modalId, nftId);
+                handleClaimItemClick(nftId);
                 break;
             default:
                 break;
@@ -258,6 +265,10 @@
 
                     if (response.data == true) {
                         $('.cs-isotop_item[nft-id="' + nftId + '"]').removeClass('unrevealed').addClass('revealed');
+                        $('.cs-action_item[nft-id="' + nftId + '"]').removeClass('cs-card_btn_2').addClass('cs-card_btn_1');
+                        $('.cs-action_item[nft-id="' + nftId + '"]').attr('data-modal', '#');
+                        $('.cs-action_item[nft-id="' + nftId + '"] span').text('Revealed');
+
 
                         if ($('#unrevealedCount').val() > 0) {
                             $('#unrevealedCount').val(parseInt($('#unrevealedCount').val()) - 1);
@@ -282,14 +293,7 @@
     // *********************ToMarcus**************************
     // ***********Handle Claim Item(Create Sell Offer with Destination Specified)********
     // *******************************************************
-    async function handleClaimItemClick(nftId, offerId) {
-
-        // if (confirm("Are you sure want to claim this nft?")) {
-        //     console.log("*************handleClaimItemClick ", nftId, offerId);
-        //     await acceptSellOffer(signed_xumm_address, nftId, offerId, "claim_offers");
-        //     //await createSellOffer(signed_xumm_address, nftId, amount);
-        // }
-
+    async function handleClaimItemClick(nftId) {
         if (confirm("Are you sure want to claim this nft?")) {
             console.log("*************handleClaimItemClick ", nftId);
 

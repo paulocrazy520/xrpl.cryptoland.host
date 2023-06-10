@@ -1,3 +1,19 @@
+<style>
+
+.cs-card.cs-style4 .cs-card_btn_disabled {
+  font-weight: 500;
+  font-size: 12px;
+  color: #fff;
+  background-color: #3c4049;
+  border-radius: 1.6em;
+  line-height: 1.5em;
+  padding: 4px 16px;
+  position: relative;
+  -webkit-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+}
+
+</style>
 
 <?php     if(!$isPost){ ?>
 <div class="cs-height_90 cs-height_lg_80"></div>
@@ -29,8 +45,11 @@
 <!-- End Page Head -->
 <div class="cs-height_10 cs-height_lg_10"></div>
 <div class="container" style="min-height:30vh; margin-bottom: 10vh;" >
-    <?php require_once "tab.php"?>
-    <?php require_once "list.php"?>
+    <?php require_once "filter.php"?>
+    <div class="cs-sidebar_frame_right">
+      <?php require_once "tab.php"?>
+      <?php require_once "list.php"?>
+    </div>
 </div>
 
 <div class="cs-height_10 cs-height_lg_10"></div>
