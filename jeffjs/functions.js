@@ -197,7 +197,7 @@ async function postPayload(transactionBlob, offeredNftTokenId = undefined, table
           const createdPayload = response.data;
           console.log("**************createdPayload for claim offer", createdPayload);
 
-          //      window.open(response.data.next.noPushMessageReceived, 'PopupWindow', 'width=500,height=500');
+          //window.open(response.data.next.noPushMessageReceived, 'PopupWindow', 'width=500,height=500');
           // $('.cs-preloader').delay(10).fadeOut('slow'); //Show loading screen
           // return;
           $('.cs-preloader').css('opacity', '1');
