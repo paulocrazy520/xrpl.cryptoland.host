@@ -155,6 +155,20 @@ final class XummSdk
         }
     }
 
+    public function Jeff_cancel($uuid): void
+    {
+        $params = new UriParams(['payload' => $uuid]);
+        $result = $this->client->delete(Request::deletePayload, $params);
+
+        if (!$result instanceof DeletedPayload) {
+            throw UnexpectedResponseException::create();
+        }
+
+        if ($result->cancelled === false) {
+            throw PayloadCancellationException::forReason($result->reason);
+        }
+    }
+
     private function configure(?string $apiKey, ?string $apiSecret): void
     {
         Dotenv::createImmutable(dirname(dirname(__FILE__)))->safeLoad();

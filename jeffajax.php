@@ -8,6 +8,8 @@ use Dotenv\Dotenv;
 $dotenv = Dotenv::createImmutable(__DIR__);
 $dotenv->load();
 
+set_time_limit(120);
+
 require_once "assets/init.php";
 
 // Create a new instance of the SDK and store it in the session.
@@ -48,6 +50,9 @@ switch ($request_data->type) {
         break;
     case "SubscribePayload":
         JEFF_SubscribePayload($_SESSION["user_id"]);
+        break;
+    case "CancelPayload":
+        JEFF_CancelPayload($_SESSION["user_id"]);
         break;
     case "RevealItem":
         JEFF_RevealItem($_SESSION["user_id"]);
@@ -205,7 +210,32 @@ function Jeff_RemoveUserInfo($user_id)
         echo "error";
 }
 
+function JEFF_CancelPayload($user_id){
+    if(!isset($user_id) || empty($user_id)){
+        return;
+    }
 
+    echo "**cancel**";
+
+    return;
+
+    
+    global $request_data;
+    
+    if(isset($request_data->createdPayload))
+    {
+        $createdPayload = $request_data->createdPayload;
+        NRG_writeFile("Payload_UpdateTransactionStausAndQty.log", "--------Response cancel payload For Xumm-------------");
+        NRG_writeFile("Payload_UpdateTransactionStausAndQty.log", json_encode($createdPayload));       
+
+        try{
+            $result = $xummSdk->Jeff_cancel($createdPayload->uuid);
+
+        }catch(Exception $e){
+            print_r($e);
+        }
+    }
+}
 // ******************************************************************************************
 // ******Subscribe offer payload from current user token to make the user sign with phone****
 // ******************************************************************************************
@@ -408,7 +438,7 @@ function JEFF_SubscribePayload($user_id){
                 // echo $createdPayload->refs->websocketStatus;
                 try{
                     $result = $xummSdk->JEff_subscribe($createdPayload->uuid, $createdPayload->refs->websocketStatus, $callback);
-                    $timeout = 10; // Set a timeout of 50 seconds
+                    $timeout = 50; // Set a timeout of 10 seconds
                     $loop->addTimer($timeout, function () use ($loop) {
                     $loop->stop(); // Stop the event loop after the timeout
                     });
@@ -429,8 +459,7 @@ function JEFF_SubscribePayload($user_id){
         
                 $payloadData = new Xrpl\XummSdkPhp\Payload\Payload(
                     transactionBody: $xummPayload["txjson"],
-                    userToken: $userToken,
-                    options: $options
+                    userToken: $userToken
                 );
     
                 $createdPayload = $xummSdk->createPayload($payloadData);

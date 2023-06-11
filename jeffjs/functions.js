@@ -3,6 +3,7 @@ const apiSecret = env.API_SECRET;
 const issuerAddress = env.DEFAULT_ISSUER_ADDRESS;
 
 var signed_xumm_address = "";
+var selCreatedPayload;
 
 const xumm = new XummPkce(apiKey, {
   implicit: true, // Implicit: allows to e.g. move from social browser to stock browser
@@ -68,7 +69,7 @@ async function createBuyOffer(
     transactionBlob.txjson.Expiration = expirationDate
   }
 
-  await postPayload(transactionBlob)
+  postPayload(transactionBlob)
 }// End of createBuyOffer()
 
 
@@ -108,7 +109,7 @@ async function createSellOffer(
     transactionBlob.txjson.Expiration = expirationDate
   }
 
-  await postPayload(transactionBlob)
+  postPayload(transactionBlob)
 }// End of createSellOffer()
 
 // *******************************************************
@@ -181,83 +182,114 @@ async function postPayload(transactionBlob, offeredNftTokenId = undefined, table
   else
     $('.cs-preloader span').html("Waiting for you to sign the request using xumm wallet");
 
-  axios.post('jeffajax.php', {
-    type: "SubscribePayload",
-    payload: transactionBlob,
-    offeredNftTokenId: offeredNftTokenId,
-    tableName: tableName
-  })
-    .then(async (response) => {
-      // console.log(response.data);
-      //location.reload();
-      console.log('*********************postPayload Response1*=', response, tableName, offeredNftTokenId);
-      if (tableName == "claim_offers") {
+  try {
+    const response = await axios.post('jeffajax.php', {
+      type: "SubscribePayload",
+      payload: transactionBlob,
+      offeredNftTokenId: offeredNftTokenId,
+      tableName: tableName
+    })
 
-        if (response.data.pushed) {
-          const createdPayload = response.data;
-          console.log("**************createdPayload for claim offer", createdPayload);
+    console.log('*********************postPayload Response1*=', response, tableName, offeredNftTokenId);
+    if (tableName == "claim_offers") {
 
-          //window.open(response.data.next.noPushMessageReceived, 'PopupWindow', 'width=500,height=500');
-          // $('.cs-preloader').delay(10).fadeOut('slow'); //Show loading screen
-          // return;
-          $('.cs-preloader').css('opacity', '1');
+      if (response.data.pushed) {
+        const createdPayload = response.data;
+        console.log("**************createdPayload for claim offer", createdPayload);
 
-          const secondResponse = await axios.post('jeffajax.php', {
-            type: "SubscribePayload",
-            payload: transactionBlob,
-            offeredNftTokenId: offeredNftTokenId,
-            tableName: tableName,
-            createdPayload: createdPayload
-          });
+        selCreatedPayload = createdPayload;
+        $('.cs-preloader_qr').attr("src", response.data.refs.qrPng);
+        $('.cs-preloader_qr').css("display", "flex");
+        // $('.cs-preloader .cs-modal_close').css("display", "flex");
+        $('.cs-preloader .cs-modal_close').attr("offerId", offeredNftTokenId);
+        $('.cs-preloader').css('opacity', '0.9');
 
-          console.log('*********************postPayload Response2*=', secondResponse, tableName, offeredNftTokenId);
+        const secondResponse = await axios.post('jeffajax.php', {
+          type: "SubscribePayload",
+          payload: transactionBlob,
+          offeredNftTokenId: offeredNftTokenId,
+          tableName: tableName,
+          createdPayload: createdPayload,
+        }, {
+          timeout: 100000 // 100s in milliseconds
+        });
 
-          if (secondResponse.data == true) {
-            $('.cs-isotop_item[nft-id="' + offeredNftTokenId + '"]').removeClass('unclaimed').addClass('unrevealed');
+        console.log('*********************postPayload Response2*=', secondResponse, tableName, offeredNftTokenId);
 
-            $('.cs-action_item[nft-id="' + offeredNftTokenId + '"]').removeClass('cs-card_btn_disabled').addClass('cs-card_btn_2');
-            $('.cs-action_item[nft-id="' + offeredNftTokenId + '"]').attr('data-modal', '#revealItem');
-            $('.cs-action_item[nft-id="' + offeredNftTokenId + '"] span').text('Reveal');
+        if (secondResponse.data == true) {
+          $('.cs-isotop_item[nft-id="' + offeredNftTokenId + '"]').removeClass('unclaimed').addClass('unrevealed');
+
+          $('.cs-action_item[nft-id="' + offeredNftTokenId + '"]').removeClass('cs-card_btn_disabled').addClass('cs-card_btn_2');
+          $('.cs-action_item[nft-id="' + offeredNftTokenId + '"]').attr('data-modal', '#revealItem');
+          $('.cs-action_item[nft-id="' + offeredNftTokenId + '"] span').text('Reveal');
 
 
-            if ($('#unclaimedCount').val() > 0) {
-              $('#unclaimedCount').val(parseInt($('#unclaimedCount').val()) - 1);
-              $('#unrevealedCount').val(parseInt($('#unrevealedCount').val()) + 1);
-            }
-
-            $('.cs-isotop').isotope('reloadItems').isotope('layout');
-
-            setTimeout(function () {
-              isotopInit();
-            }, 1000);
+          if ($('#unclaimedCount').val() > 0) {
+            $('#unclaimedCount').val(parseInt($('#unclaimedCount').val()) - 1);
+            $('#unrevealedCount').val(parseInt($('#unrevealedCount').val()) + 1);
           }
-          else { //undo claimed
-            const secondResponse = await axios.post('jeffajax.php', {
-              type: "UnclaimItem",
-              nftId: offeredNftTokenId
-            })
 
-            console.log('*********************unclaimItem Response=', secondResponse.data);
-            if (secondResponse.data.offerId)
-              $('.cs-action_item[nft-id="' + offeredNftTokenId + '"]').removeClass('cs-card_btn_disabled').addClass('cs-card_btn_4');
-          }
+          $('.cs-isotop').isotope('reloadItems').isotope('layout');
+
+          setTimeout(function () {
+            isotopInit();
+          }, 1000);
         }
-        else {
-          console.log("*******************creating payload failed");
+        else { //undo claimed
+          await cancelClaimOffer(offeredNftTokenId);
         }
       }
       else {
-        location.reload();
+        console.log("*******************creating payload failed");
       }
-      $('.cs-preloader').delay(10).fadeOut('slow'); //End loading screen
-    })
-    .catch(error => {
-      console.error(error);
-      $('.cs-preloader').delay(10).fadeOut('slow'); //End loading screen
-    });
+    }
+    else {
+      location.reload();
+    }
+  }
+  catch (e) {
+    console.log("********************postPayload failed ", e);
+    if (tableName == "claim_offers") {
+      await cancelClaimOffer(offeredNftTokenId);
+    }
+
+    $('.cs-preloader').delay(10).fadeOut('slow'); //End loading screen
+    $('.cs-preloader_qr').css("display", "none");
+    $('.cs-preloader .cs-modal_close').css("display", "none");
+  }
 }
 
+$(document).on('click', '.cs-modal_close', async () => {
+  if (confirm("Are you sure want to cancel this claiming?")) {
+    const offeredNftTokenId = $('.cs-preloader .cs-modal_close').attr("offerId");
+    console.log("*********cancel xumm sign", offeredNftTokenId);
+    const cancelResponse = await axios.post('jeffajax.php', {
+      type: "CancelPayload",
+      createdPayload: selCreatedPayload
+    })
 
+    console.log("************cancel offer response", cancelResponse.data);
+    
+    if (cancelResponse.data.result)
+      await cancelClaimOffer(offeredNftTokenId);
+  }
+});
+
+
+async function cancelClaimOffer(offeredNftTokenId) {
+  const secondResponse = await axios.post('jeffajax.php', {
+    type: "UnclaimItem",
+    nftId: offeredNftTokenId
+  })
+
+  console.log('*********************unclaimItem Rsponse=', secondResponse.data);
+  if (secondResponse.data.offerId)
+    $('.cs-action_item[nft-id="' + offeredNftTokenId + '"]').removeClass('cs-card_btn_disabled').addClass('cs-card_btn_4');
+
+  $('.cs-preloader').delay(10).fadeOut('slow'); //End loading screen
+  $('.cs-preloader_qr').css("display", "none");
+  $('.cs-preloader .cs-modal_close').css("display", "none");
+}
 /*=============================================================================*/
 /*------------------------------Login and Logout-------------------------------*/
 /*=============================================================================*/
