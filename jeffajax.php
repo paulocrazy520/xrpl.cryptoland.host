@@ -10,7 +10,10 @@ $dotenv->load();
 
 require_once "assets/init.php";
 
+// Create a new instance of the SDK and store it in the session.
 $xummSdk = new \Xrpl\XummSdkPhp\XummSdk($apiKey, $apiSecret);
+
+
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
@@ -211,7 +214,7 @@ function JEFF_SubscribePayload($user_id){
         return;
     }
 
-    global $xummSdk, $issued_user_token, $request_data, $sqlConnect;
+    global $xummSdk, $issued_user_token, $request_data, $sqlConnect, $apiKey, $apiSecret;
 
     $xummPayload = json_decode(json_encode($request_data->payload), true);
 
@@ -248,21 +251,8 @@ function JEFF_SubscribePayload($user_id){
     $verifyInfo = $xummSdk->verifyUserToken($userToken);
 
     if($verifyInfo){
-        $options=  new Xrpl\XummSdkPhp\Payload\Options(
-            submit: true,
-            returnUrl: new Xrpl\XummSdkPhp\Payload\ReturnUrl(
-                $_ENV["REDIRECT_URL"],
-                $_ENV["REDIRECT_URL"]
-            )
-            );
+         try {
 
-        $payloadData = new Xrpl\XummSdkPhp\Payload\Payload(
-            transactionBody: $xummPayload["txjson"],
-            userToken: $userToken
-        );
-
-       
-        try {
             $loop = \React\EventLoop\Factory::create();
 
             $callback = function(Xrpl\XummSdkPhp\Subscription\CallbackParams $event) use ( $loop, $owner_wallet, $request_data, $user_id, $user_info, $xummPayload, $sqlConnect): ?array
@@ -374,7 +364,7 @@ function JEFF_SubscribePayload($user_id){
     
                         if($table_name == "claim_offers")
                         {
-                      
+                    
                             NRG_updateNFTAsTransferred($nft_token_id, $tx);
                             //echo $table_name;
                         }
@@ -407,25 +397,51 @@ function JEFF_SubscribePayload($user_id){
                 return [];
                 //NRG_updateNFTAsClaimed($$request_data->offeredNftTokenId);
             };
+
+            if(isset($request_data->createdPayload))
+            {
+                $createdPayload = $request_data->createdPayload;
+                NRG_writeFile("Payload_UpdateTransactionStausAndQty.log", "--------Response payload For Xumm-------------");
+                NRG_writeFile("Payload_UpdateTransactionStausAndQty.log", json_encode($createdPayload));       
+
+                // echo $createdPayload->uuid;
+                // echo $createdPayload->refs->websocketStatus;
+                try{
+                    $result = $xummSdk->JEff_subscribe($createdPayload->uuid, $createdPayload->refs->websocketStatus, $callback);
+                    $timeout = 10; // Set a timeout of 50 seconds
+                    $loop->addTimer($timeout, function () use ($loop) {
+                    $loop->stop(); // Stop the event loop after the timeout
+                    });
+                    $loop->run();
+                }catch(Exception $e){
+                    print_r($e);
+                }
+            }
+            else
+            {
+                $options=  new Xrpl\XummSdkPhp\Payload\Options(
+                    submit: true,
+                    returnUrl: new Xrpl\XummSdkPhp\Payload\ReturnUrl(
+                        $_ENV["REDIRECT_URL"],
+                        $_ENV["REDIRECT_URL"]
+                    )
+                    );
         
-            
-            $createdPayload = $xummSdk->createPayload($payloadData);
-            $result = $xummSdk->subscribe($createdPayload, $callback);
-            $timeout = 50; // Set a timeout of 10 seconds
-            $loop->addTimer($timeout, function () use ($loop) {
+                $payloadData = new Xrpl\XummSdkPhp\Payload\Payload(
+                    transactionBody: $xummPayload["txjson"],
+                    userToken: $userToken,
+                    options: $options
+                );
+    
+                $createdPayload = $xummSdk->createPayload($payloadData);
+ 
+                NRG_writeFile("Payload_UpdateTransactionStausAndQty.log", "--------Send claim payload to Xumm-------------");
+                NRG_writeFile("Payload_UpdateTransactionStausAndQty.log", json_encode($payloadData));
+                NRG_writeFile("Payload_UpdateTransactionStausAndQty.log", json_encode($createdPayload));
 
-                $loop->stop(); // Stop the event loop after the timeout
-            });
-
-            // $loop->addPeriodicTimer(1, function () use ($loop, &$callbackExecuted, $timeout) {
-            //     if ($callbackExecuted) { // Exit when flag is true
-            //         $loop->stop();
-            //     } elseif ($timeout-- === 0) { // Timeout reached
-            //         $loop->stop();
-            //     }
-            // });
-
-            $loop->run();
+                echo json_encode($createdPayload);
+                
+            }
         } catch(Exception $e) {
             print_r($e);
             return;

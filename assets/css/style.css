@@ -208,7 +208,7 @@ kbd {
   width: 100%;
   height: 100vh;
   background: #080326;
-  opacity: 0.8;
+  opacity: 1;
   -webkit-box-orient: vertical;
   -webkit-box-direction: normal;
       -ms-flex-direction: column;

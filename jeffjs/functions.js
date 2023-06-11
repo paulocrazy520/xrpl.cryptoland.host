@@ -185,60 +185,75 @@ async function postPayload(transactionBlob, offeredNftTokenId = undefined, table
     type: "SubscribePayload",
     payload: transactionBlob,
     offeredNftTokenId: offeredNftTokenId,
-    tableName: tableName,
-    timeout: 50000 // Set a timeout of 50 seconds
+    tableName: tableName
   })
-    .then(response => {
+    .then(async (response) => {
       // console.log(response.data);
       //location.reload();
-      console.log('*********************postPayload Response*=', response, tableName, offeredNftTokenId);
+      console.log('*********************postPayload Response1*=', response, tableName, offeredNftTokenId);
       if (tableName == "claim_offers") {
-        if (response.data == true) {
-          $('.cs-isotop_item[nft-id="' + offeredNftTokenId + '"]').removeClass('unclaimed').addClass('unrevealed');
 
-          $('.cs-action_item[nft-id="' + offeredNftTokenId + '"]').removeClass('cs-card_btn_disabled').addClass('cs-card_btn_2');
-          $('.cs-action_item[nft-id="' + offeredNftTokenId + '"]').attr('data-modal', '#revealItem');
-          $('.cs-action_item[nft-id="' + offeredNftTokenId + '"] span').text('Reveal');
+        if (response.data.pushed) {
+          const createdPayload = response.data;
+          console.log("**************createdPayload for claim offer", createdPayload);
+
+          //      window.open(response.data.next.noPushMessageReceived, 'PopupWindow', 'width=500,height=500');
+          // $('.cs-preloader').delay(10).fadeOut('slow'); //Show loading screen
+          // return;
+          $('.cs-preloader').css('opacity', '1');
+
+          const secondResponse = await axios.post('jeffajax.php', {
+            type: "SubscribePayload",
+            payload: transactionBlob,
+            offeredNftTokenId: offeredNftTokenId,
+            tableName: tableName,
+            createdPayload: createdPayload
+          });
+
+          console.log('*********************postPayload Response2*=', secondResponse, tableName, offeredNftTokenId);
+
+          if (secondResponse.data == true) {
+            $('.cs-isotop_item[nft-id="' + offeredNftTokenId + '"]').removeClass('unclaimed').addClass('unrevealed');
+
+            $('.cs-action_item[nft-id="' + offeredNftTokenId + '"]').removeClass('cs-card_btn_disabled').addClass('cs-card_btn_2');
+            $('.cs-action_item[nft-id="' + offeredNftTokenId + '"]').attr('data-modal', '#revealItem');
+            $('.cs-action_item[nft-id="' + offeredNftTokenId + '"] span').text('Reveal');
 
 
-          if ($('#unclaimedCount').val() > 0) {
-            $('#unclaimedCount').val(parseInt($('#unclaimedCount').val()) - 1);
-            $('#unrevealedCount').val(parseInt($('#unrevealedCount').val()) + 1);
+            if ($('#unclaimedCount').val() > 0) {
+              $('#unclaimedCount').val(parseInt($('#unclaimedCount').val()) - 1);
+              $('#unrevealedCount').val(parseInt($('#unrevealedCount').val()) + 1);
+            }
+
+            $('.cs-isotop').isotope('reloadItems').isotope('layout');
+
+            setTimeout(function () {
+              isotopInit();
+            }, 1000);
           }
-
-          $('.cs-isotop').isotope('reloadItems').isotope('layout');
-
-          setTimeout(function () {
-            isotopInit();
-          }, 1000);
-        }
-        else { //undo claimed
-          axios.post('jeffajax.php', {
-            type: "UnclaimItem",
-            nftId: offeredNftTokenId
-          })
-            .then(response => {
-              //const offerId = transactionBlob.txjson.NFTokenSellOffer;
-              console.log('*********************unclaimItem Response=', response.data);
-              //alert(offerId);
-              if (response.data.offerId)
-                $('.cs-action_item[nft-id="' + offeredNftTokenId + '"]').removeClass('cs-card_btn_disabled').addClass('cs-card_btn_4');
-
-              //Cancel Offer
+          else { //undo claimed
+            const secondResponse = await axios.post('jeffajax.php', {
+              type: "UnclaimItem",
+              nftId: offeredNftTokenId
             })
-            .catch(error => {
-              console.error(error);        
-            });
+
+            console.log('*********************unclaimItem Response=', secondResponse.data);
+            if (secondResponse.data.offerId)
+              $('.cs-action_item[nft-id="' + offeredNftTokenId + '"]').removeClass('cs-card_btn_disabled').addClass('cs-card_btn_4');
+          }
+        }
+        else {
+          console.log("*******************creating payload failed");
         }
       }
       else {
         location.reload();
       }
-      $('.cs-preloader').delay(10).fadeOut('slow'); //Show loading screen
+      $('.cs-preloader').delay(10).fadeOut('slow'); //End loading screen
     })
     .catch(error => {
       console.error(error);
-      $('.cs-preloader').delay(10).fadeOut('slow'); //Show loading screen
+      $('.cs-preloader').delay(10).fadeOut('slow'); //End loading screen
     });
 }
 

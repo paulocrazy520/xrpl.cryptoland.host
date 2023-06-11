@@ -126,6 +126,12 @@ final class XummSdk
      * End the Subscription by returning non-void in your callback function,
      * or by calling Subscription::end manually on the Subscription returned by this method.
      */
+    public function Jeff_subscribe(string $uuid, string $status, ?callable $callback = null): Subscription
+    {
+        $payload = $this->getPayload($uuid);
+        return $this->subscriber->subscribe($payload, $status, $callback);
+    }
+
     public function subscribe(CreatedPayload $createdPayload, ?callable $callback = null): Subscription
     {
         $payload = $this->getPayload($createdPayload->uuid);
