@@ -89,6 +89,7 @@ if($isPost)
     <script src="assets/js/main.js"></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.min.js"></script>
+    <script src="https://xumm.app/assets/cdn/xumm-sdk.min.js"></script>
     <script src="https://xumm.app/assets/cdn/xumm-oauth2-pkce.min.js?v=2.7.1"></script>
     <script src="https://unpkg.com/xrpl@2.2.3"></script>
     

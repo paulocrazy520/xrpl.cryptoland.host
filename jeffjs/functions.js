@@ -5,6 +5,7 @@ const issuerAddress = env.DEFAULT_ISSUER_ADDRESS;
 var signed_xumm_address = "";
 var selCreatedPayload;
 
+
 const xumm = new XummPkce(apiKey, {
   implicit: true, // Implicit: allows to e.g. move from social browser to stock browser
   redirectUrl: env.REDIRECT_URL,
@@ -27,10 +28,10 @@ async function getUserInfo() {
 /*============================================================*/
 /*-----------------------Xumm wallet sign in-------------------*/
 /*============================================================*/
-function signIn() {
-  xumm.authorize().catch((e) => {
-    console.log("e", e);
-  });
+async function signIn() {
+  const authorization = await xumm.authorize();
+  const authString = JSON.stringify(authorization);
+  localStorage.setItem('xummAuth', authString);
 }
 
 // *******************************************************
@@ -198,42 +199,64 @@ async function postPayload(transactionBlob, offeredNftTokenId = undefined, table
         console.log("**************createdPayload for claim offer", createdPayload);
 
         selCreatedPayload = createdPayload;
-        $('.cs-preloader_qr').attr("src", response.data.refs.qrPng);
-        $('.cs-preloader_qr').css("display", "flex");
-        // $('.cs-preloader .cs-modal_close').css("display", "flex");
-        $('.cs-preloader .cs-modal_close').attr("offerId", offeredNftTokenId);
-        $('.cs-preloader').css('opacity', '0.9');
-
-        const secondResponse = await axios.post('jeffajax.php', {
-          type: "SubscribePayload",
-          payload: transactionBlob,
-          offeredNftTokenId: offeredNftTokenId,
-          tableName: tableName,
-          createdPayload: createdPayload,
-        }, {
-          timeout: 100000 // 100s in milliseconds
-        });
-
-        console.log('*********************postPayload Response2*=', secondResponse, tableName, offeredNftTokenId);
-
-        if (secondResponse.data == true) {
-          $('.cs-isotop_item[nft-id="' + offeredNftTokenId + '"]').removeClass('unclaimed').addClass('unrevealed');
-
-          $('.cs-action_item[nft-id="' + offeredNftTokenId + '"]').removeClass('cs-card_btn_disabled').addClass('cs-card_btn_2');
-          $('.cs-action_item[nft-id="' + offeredNftTokenId + '"]').attr('data-modal', '#revealItem');
-          $('.cs-action_item[nft-id="' + offeredNftTokenId + '"] span').text('Reveal');
 
 
-          if ($('#unclaimedCount').val() > 0) {
-            $('#unclaimedCount').val(parseInt($('#unclaimedCount').val()) - 1);
-            $('#unrevealedCount').val(parseInt($('#unrevealedCount').val()) + 1);
-          }
+        // const secondResponse = await axios.post('jeffajax.php', {
+        //   type: "SubscribePayload",
+        //   payload: transactionBlob,
+        //   offeredNftTokenId: offeredNftTokenId,
+        //   tableName: tableName,
+        //   createdPayload: createdPayload,
+        // }, {
+        //   timeout: 100000 // 100s in milliseconds
+        // });
 
-          $('.cs-isotop').isotope('reloadItems').isotope('layout');
 
-          setTimeout(function () {
-            isotopInit();
-          }, 1000);
+        if (createdPayload) {
+
+          const { XummSdk } = require("xumm-sdk");
+          const Sdk = new XummSdk(apiKey, apiSecret)
+          console.log("******************XummSdk",  Sdk);
+        
+          if (!Sdk)
+            return;
+
+          await Sdk.payload.subscribe(createdPayload, event => {
+            log('Subscription Event data', event.data)
+
+            $('.cs-preloader_qr').attr("src", createdPayload.refs.qrPng);
+            $('.cs-preloader_qr').css("display", "flex");
+            // $('.cs-preloader .cs-modal_close').css("display", "flex");
+            $('.cs-preloader .cs-modal_close').attr("offerId", offeredNftTokenId);
+            $('.cs-preloader').css('opacity', '0.9');
+
+            if (typeof event.data.expired !== 'undefined' || typeof event.data.signed !== 'undefined') {
+              console.log('*********************postPayload Response2*=', event.data);
+
+              // if (secondResponse.data == true) {
+              //   $('.cs-isotop_item[nft-id="' + offeredNftTokenId + '"]').removeClass('unclaimed').addClass('unrevealed');
+
+              //   $('.cs-action_item[nft-id="' + offeredNftTokenId + '"]').removeClass('cs-card_btn_disabled').addClass('cs-card_btn_2');
+              //   $('.cs-action_item[nft-id="' + offeredNftTokenId + '"]').attr('data-modal', '#revealItem');
+              //   $('.cs-action_item[nft-id="' + offeredNftTokenId + '"] span').text('Reveal');
+
+
+              //   if ($('#unclaimedCount').val() > 0) {
+              //     $('#unclaimedCount').val(parseInt($('#unclaimedCount').val()) - 1);
+              //     $('#unrevealedCount').val(parseInt($('#unrevealedCount').val()) + 1);
+              //   }
+
+              //   $('.cs-isotop').isotope('reloadItems').isotope('layout');
+
+              //   setTimeout(function () {
+              //     isotopInit();
+              //   }, 1000);
+
+              return event.data
+            }
+          })
+
+
         }
         else { //undo claimed
           await cancelClaimOffer(offeredNftTokenId);
@@ -269,7 +292,7 @@ $(document).on('click', '.cs-modal_close', async () => {
     })
 
     console.log("************cancel offer response", cancelResponse.data);
-    
+
     if (cancelResponse.data.result)
       await cancelClaimOffer(offeredNftTokenId);
   }
