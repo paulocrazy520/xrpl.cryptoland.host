@@ -42,21 +42,23 @@
 
 	if($tabType == "*" || $tabType == ".unclaimed")
 	{
-		$tempUnclaimedArrayFromServer = GetOwnedNftsByIssuersFromServer($query_params);
-		$unclaimedArray = GetOwnedNftArrayByIssuersFromDatabase($tempUnclaimedArrayFromServer);
+		$issuedNfts = GetOwnedNftsByIssuersFromServer($query_params);
+		$unclaimedArray = GetOwnedNftArrayByIssuersFromDatabase($issuedNfts);
 
 		if($unclaimedArray)
 			$unclaimedCount = count($unclaimedArray);
 	}
 
+
+
 	if($tabType == "*" || $tabType == ".unrevealed" || $tabType == ".revealed" )
 	{
-		$claimedArray = GetOwnedNftsFromServer($query_params);
+		$ownedNfts = GetOwnedNftsFromServer($query_params);
 		
-		if(!$claimedArray)
+		if(!$ownedNfts)
 			return;
 
-		$claimedWithRevealedArray = GetRevealNftArraysFromDatabase($claimedArray);
+		$claimedWithRevealedArray = GetRevealNftArraysFromDatabase($ownedNfts);
 		$revealedArray = isset($claimedWithRevealedArray["revealedArray"]) ? $claimedWithRevealedArray["revealedArray"] : array();
 		$unrevealedArray = isset($claimedWithRevealedArray["unrevealedArray"]) ? $claimedWithRevealedArray["unrevealedArray"] : array();
 
@@ -66,6 +68,7 @@
 		if($revealedArray)
 			$revealedCount = count($revealedArray);
 	}
+
 
 	$totalCount = $unclaimedCount + $unrevealedCount + $revealedCount;
 
@@ -105,7 +108,16 @@
 				$url = $info["base_uri"];
 
 				$viewType =  str_replace(".", "", $subTabType);
-				$jsonString = file_get_contents($url);
+
+
+				$jsonString = GetContentsFromValuableUrl($url);
+				if(!$jsonString)
+				{
+					$_SESSION['user_id'] = "";
+					header("Refresh:0");
+					return;
+				}
+
 				$json = json_decode($jsonString, true);
 			
 				$name = $json['name']; // Pull Name data from URI

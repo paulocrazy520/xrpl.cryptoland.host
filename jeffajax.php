@@ -8,13 +8,13 @@ use Dotenv\Dotenv;
 $dotenv = Dotenv::createImmutable(__DIR__);
 $dotenv->load();
 
-set_time_limit(120);
 
 require_once "assets/init.php";
 
+
+
 // Create a new instance of the SDK and store it in the session.
 $xummSdk = new \Xrpl\XummSdkPhp\XummSdk($apiKey, $apiSecret);
-
 
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -27,6 +27,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         return;
     }
 }
+
+
 
 // *********************ToMarcus**************************
 // *****************Switch by type***********************
@@ -66,6 +68,7 @@ switch ($request_data->type) {
     default:
         break;
 }
+
 
 function Jeff_Login(){
     global $request_data;
@@ -288,6 +291,7 @@ function JEFF_SubscribePayload($user_id){
             $callback = function(Xrpl\XummSdkPhp\Subscription\CallbackParams $event) use ( $loop, $owner_wallet, $request_data, $user_id, $user_info, $xummPayload, $sqlConnect): ?array
             {
 
+       
                 //global $user_id, $user_info, $xummPayload, $sqlConnect;
                 if (!isset($event->data['signed'])) {
                     return null; // Don't do anything, wait for the next message.
@@ -298,7 +302,6 @@ function JEFF_SubscribePayload($user_id){
                 if ($event->data['signed'] === true) {
                     
                     //echo "🎉 Payment request accepted!\n";
-    
                     NRG_writeFile("Payload_UpdateTransactionStausAndQty.log", "--------After sign, return response data-------------");
                     NRG_writeFile("Payload_UpdateTransactionStausAndQty.log", json_encode($event->data));
                                     
@@ -387,6 +390,17 @@ function JEFF_SubscribePayload($user_id){
                         $tx = $payload_data["txid"];
                         $offer_status = "accepted";
                         $nft_token_id =  $request_data->offeredNftTokenId;
+
+
+                        NRG_writeFile("Payload_UpdateTransactionStausAndQty.log", "***********nft user info");
+
+                        $nft = GetNftInfoFromApi($nft_token_id);
+
+                        NRG_writeFile("Payload_UpdateTransactionStausAndQty.log", json_encode($nft));
+
+                        if($nft->nft->Owner != $user_wallet)
+                            return null;
+
                         /**************Insert Data to table ***************/
                         $table_name = $request_data->tableName;
                         if(!isset($table_name) || empty($table_name))
@@ -438,7 +452,7 @@ function JEFF_SubscribePayload($user_id){
                 // echo $createdPayload->refs->websocketStatus;
                 try{
                     $result = $xummSdk->JEff_subscribe($createdPayload->uuid, $createdPayload->refs->websocketStatus, $callback);
-                    $timeout = 50; // Set a timeout of 10 seconds
+                    $timeout = 55; 
                     $loop->addTimer($timeout, function () use ($loop) {
                     $loop->stop(); // Stop the event loop after the timeout
                     });

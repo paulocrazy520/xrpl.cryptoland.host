@@ -3,7 +3,7 @@
         <div class="container-fluid">
           <div class="cs-main_header_in">
             <div class="cs-main_header_left">
-            <a class="cs-site_branding" href="/"><img src="https://cryptoland.io/wp-content/uploads/2022/11/logo_t2.png" alt="Logo"></a>
+            <!-- <a class="cs-site_branding" href="/"><img src="https://cryptoland.io/wp-content/uploads/2022/11/logo_t2.png" alt="Logo"></a> -->
             </div>
             <div class="cs-main_header_right">
               <div class="cs-search_wrap">

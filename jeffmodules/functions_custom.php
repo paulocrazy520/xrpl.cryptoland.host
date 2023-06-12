@@ -275,11 +275,11 @@ function GetNftInfoFromDatabase($nft_id)
 
 
 /*****************Get revealed and unrevealed items from Database and claim items from Node server*****************/
-function GetOwnedNftArrayByIssuersFromDatabase($unclaimedArray)
+function GetOwnedNftArrayByIssuersFromDatabase($issuedNfts)
 {
     global $sqlConnect, $current_user, $default_issuer_address;
 
-    if(!$unclaimedArray ||  !count($unclaimedArray) || !isset($_SESSION["user_id"]))
+    if(!$issuedNfts ||  !count($issuedNfts) || !isset($_SESSION["user_id"]))
         return;
 
     if(!$current_user)
@@ -326,7 +326,7 @@ function GetOwnedNftArrayByIssuersFromDatabase($unclaimedArray)
         $finalArray = array();
 
         foreach($jsonArray as $nft){
-            if (in_array( $nft["nft_id"], $unclaimedArray)) {
+            if (in_array( $nft["nft_id"], $issuedNfts)) {
                     array_push($finalArray, $nft);
             }
         }
@@ -683,4 +683,16 @@ function GetLogFilePath($fileName)
     $historyFilePath = $rootFolder . $calFolder . $fileName;
     
     return $historyFilePath;
+}
+
+
+function GetContentsFromValuableUrl($url){
+    $options = [
+        'http' => [
+            'timeout' => 2, // Set a timeout value of 10 seconds
+        ],
+    ];
+    $context = stream_context_create($options);
+    $contents = file_get_contents($url, false, $context);
+    return $contents;
 }

@@ -4,7 +4,7 @@ use Dotenv\Dotenv;
 $dotenv = Dotenv::createImmutable(__DIR__);
 $dotenv->load();
 
-set_time_limit(120);
+
 
 $forceDebug = true;
 if ($forceDebug == true) {
@@ -89,9 +89,9 @@ if($isPost)
     <script src="assets/js/main.js"></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.min.js"></script>
-    <script src="https://xumm.app/assets/cdn/xumm-sdk.min.js"></script>
     <script src="https://xumm.app/assets/cdn/xumm-oauth2-pkce.min.js?v=2.7.1"></script>
     <script src="https://unpkg.com/xrpl@2.2.3"></script>
+    <script src="https://cdn.socket.io/3.1.3/socket.io.min.js" integrity="sha384-cPwlPLvBTa3sKAgddT6krw0cJat7egBga3DJepJyrLl4Q9/5WLra3rrnMcyTyOnh" crossorigin="anonymous"></script>
     
     <!-- ToMarcus -->
     <script src="./jeffjs/functions.js"></script>
