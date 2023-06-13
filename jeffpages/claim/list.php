@@ -13,9 +13,24 @@
 }
 
 
-	//*****************Test for updating database from xrpl server by issuer address***************** */
-	// updateDatabaseFromServerbyIssuer();
+	if(!isset($current_user) || !$current_user)
+	{
+		$account = $default_issuer_address;
+	}
+	else
+		$account = $current_user;
+		
+	//*********************Only when page loading first, update db for owner*********************
+	if(!$isPost){
+		UpdateDBForOwner($account);	
+		CreateAssetFolder();
+		// return;
+	}
+
+	//*****************Test for updating database from xrpl server by issuer addresses***************** */
+	// UpdateDatabaseByIssuersFromServer();
 	// return;
+
 	//*********************************************************************************************** */
 	//******************Filter Menu Begin*****************
 	$cardsCount = isset($_POST['cardsCount']) && is_numeric($_POST['cardsCount']) ? $_POST['cardsCount'] : 0;
@@ -26,15 +41,6 @@
 	$revealedCount = 0;
 
 	$menuCollection = isset($_POST['menuCollection']) ? $_POST['menuCollection'] : "";
-
-	if(!isset($current_user) || !$current_user)
-	{
-		$account = $default_issuer_address;
-	}
-	else
-		$account = $current_user;
-
-
 	$query_params = [
         'menuCollection' => $menuCollection,
 		'account' => $account
@@ -48,8 +54,6 @@
 		if($unclaimedArray)
 			$unclaimedCount = count($unclaimedArray);
 	}
-
-
 
 	if($tabType == "*" || $tabType == ".unrevealed" || $tabType == ".revealed" )
 	{
@@ -68,7 +72,6 @@
 		if($revealedArray)
 			$revealedCount = count($revealedArray);
 	}
-
 
 	$totalCount = $unclaimedCount + $unrevealedCount + $revealedCount;
 

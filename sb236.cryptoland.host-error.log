@@ -152,3 +152,13 @@
 [Mon Jun 12 12:57:14.654082 2023] [proxy_fcgi:error] [pid 1253961:tid 139863982593792] [client 132.145.39.16:7692] AH01071: Got error 'Primary script unknown'
 [Mon Jun 12 12:57:17.709388 2023] [proxy_fcgi:error] [pid 1253963:tid 139865031157504] [client 132.145.39.16:10366] AH01071: Got error 'Primary script unknown'
 [Mon Jun 12 12:57:21.612723 2023] [proxy_fcgi:error] [pid 1254475:tid 139864091633408] [client 132.145.39.16:10943] AH01071: Got error 'Primary script unknown'
+[Mon Jun 12 18:50:49.676299 2023] [proxy_fcgi:error] [pid 1254475:tid 139865156982528] (70007)The timeout specified has expired: [client 167.94.146.60:37780] AH01075: Error dispatching request to : (polling)
+[Mon Jun 12 18:55:47.782608 2023] [proxy_fcgi:error] [pid 1253963:tid 139865605961472] (70007)The timeout specified has expired: [client 144.217.207.28:57305] AH01075: Error dispatching request to : (polling), referer: https://sb236.cryptoland.host/
+[Mon Jun 12 20:35:46.670949 2023] [core:error] [pid 1253962:tid 139865031157504] [client 83.97.73.89:43904] AH00126: Invalid URI in request POST /cgi-bin/.%2e/.%2e/.%2e/.%2e/bin/sh HTTP/1.1
+[Mon Jun 12 23:19:18.151647 2023] [proxy_fcgi:error] [pid 1440014:tid 139865006012160] [client 3.235.31.29:33964] AH01071: Got error 'Primary script unknown'
+[Tue Jun 13 03:00:36.614901 2023] [proxy_fcgi:error] [pid 1451173:tid 139865173767936] [client 170.64.132.210:47278] AH01071: Got error 'Primary script unknown'
+[Tue Jun 13 03:25:30.943651 2023] [core:error] [pid 1451173:tid 139864100026112] [client 193.32.162.190:51722] AH00126: Invalid URI in request GET /../../mnt/mtd/Config/Account1 HTTP/1.1
+[Tue Jun 13 04:15:45.705090 2023] [core:error] [pid 1451173:tid 139864670467840] [client 193.32.162.190:45912] AH00126: Invalid URI in request GET /../../mnt/mtd/Config/Account2 HTTP/1.1
+[Tue Jun 13 06:37:08.631353 2023] [proxy_fcgi:error] [pid 1451172:tid 139864628504320] [client 83.110.79.197:57486] AH01071: Got error 'Primary script unknown'
+[Tue Jun 13 08:52:36.817648 2023] [proxy_fcgi:error] [pid 1451662:tid 139865207338752] [client 45.55.67.126:35630] AH01071: Got error 'Primary script unknown'
+[Tue Jun 13 08:52:38.073598 2023] [proxy_fcgi:error] [pid 1451172:tid 139864636897024] [client 45.55.67.126:35670] AH01071: Got error 'Primary script unknown'
