@@ -52,14 +52,16 @@ function CreateAssetFolder(){
     $remotePath = "https://ingameassets.cryptoland.host";
     $localPath = "/var/www/htdocs/ingameassets.cryptoland.host";
     
-    for($i = 0 ; $i < count($patternArray) ; $i++)
+    foreach($patternArray as $pattern)
     {
-        $type = $typeArray[$i];
-        $convertedFolder =  str_replace("vials", $type, str_replace($remotePath, $localPath, $pattern));
-        if (!file_exists($convertedFolder)) {
-            $oldmask = umask(0);
-            @mkdir($convertedFolder, 0777, true);
-            @umask($oldmask);
+        foreach($typeArray as $type)
+        {
+            $convertedFolder =  str_replace("vials", $type, str_replace($remotePath, $localPath, $pattern));
+            if (!file_exists($convertedFolder)) {
+                $oldmask = umask(0);
+                @mkdir($convertedFolder, 0777, true);
+                @umask($oldmask);
+            }
         }
     }
 
@@ -75,11 +77,11 @@ function CreateAssetFolder(){
     // fwrite($handle, $q . "\n\n");
     // fclose($handle);
 }
+
 /*****************Update db with nfts owned by the owner from XRPL Server******************* */
 //Update infos with xrpl data from server
 //1)owner_address and user_id of nft_user table
 //2)owner_address and transferred_status of vials_nft or lbk_nft, etc…
-
 function UpdateDBForOwner($account){
     global $server_url, $sqlConnect;
 
@@ -126,10 +128,9 @@ function UpdateDBForOwner($account){
     }
 }
 
-/******************Update user_nft, lbk_nft and vials_nft tables for specific issuer address using infos from xrpl server************************ */
-/******************This function will be used when add new nfts to database*******************/
+/*****Update user_nft, lbk_nft and vials_nft tables for specific issuer address using infos from xrpl server****** */
+//This function will be used when add new nfts to database
 function UpdateDatabaseByIssuersFromServer($issuer = null){
-
     global $sqlConnect, $current_user, $default_issuer_address;
 
     if(!$issuer)
@@ -363,10 +364,8 @@ function GetOwnedNftArrayByIssuersFromDatabase($issuedNfts)
     LEFT JOIN vials_nft ON user_nft.nft_id = vials_nft.nft_id WHERE  user_nft.user_id='".$_SESSION["user_id"]."' AND (
     (user_nft.assetType = 1 AND lbk_nft.transferred_status = '0') OR 
     (user_nft.assetType = 2 AND vials_nft.transferred_status = '0'))";
-//    WHERE  user_nft.user_id='".$_SESSION["user_id"]."' ";
 
     $result = mysqli_query($sqlConnect, $sql) or die("Error in Selecting " . mysqli_error($sqlConnect));
-
     $jsonArray = array();
     while ($row = mysqli_fetch_assoc($result)) {
         $jsonArray[] = $row;
@@ -381,7 +380,6 @@ function GetOwnedNftArrayByIssuersFromDatabase($issuedNfts)
                     array_push($finalArray, $nft);
             }
         }
-
         return $finalArray;
     }
 }
@@ -439,9 +437,7 @@ function GetIssuedNftsFromServer($account = null){
 function GetOwnedNftsFromServer($query_params){
     global $current_user, $server_url, $default_issuer_address;
     
-            
     $client = new \GuzzleHttp\Client();
-    
     $client = new Client([
         'base_uri' => $server_url 
     ]);
@@ -459,7 +455,7 @@ function GetOwnedNftsFromServer($query_params){
 function GetNftArrayForMarketplaceFromServer($menuCollection, $menuRarity, $menuColor, $menuSale, $menuBid, $cardsCount){
     global $current_user, $server_url, $default_issuer_address;
 
-     if(!$current_user)
+    if(!$current_user)
     {
         $account = $default_issuer_address;
     }
@@ -491,11 +487,9 @@ function GetNftArrayForMarketplaceFromServer($menuCollection, $menuRarity, $menu
 
 /******************Get full deatiled nft info from bithomp server************************ */
 function GetDetailNftInfoFromBithomp($filter, $nftTokenId){
-    
     global $apiKey, $apiSecret;
 
     $client = new \GuzzleHttp\Client();
-    
     $client = new Client([
         'base_uri' => $_ENV['XRPL_BITHOMP_URL'].'/api/cors/v2/nft/'
     ]);
@@ -654,11 +648,9 @@ function GetNftArrayForMarketplacFromApi()
     }
 }
 
-
 /*********Write log file with mode*********** */
 function JEFF_writeFileByMode($fn, $q, $mode = 'a')
 {
-
     $year = date("Y");
     $month = date("m");
     $day = date("d");
@@ -716,7 +708,7 @@ function GetAsciiStringFromHex($hexString) {
     $asciiString = pack('H*', bin2hex($binaryString));
     
     return $asciiString;
-  }
+}
 
 /********************************************** */
 function GetLogFilePath($fileName)
@@ -730,7 +722,6 @@ function GetLogFilePath($fileName)
     
     return $historyFilePath;
 }
-
 
 function GetContentsFromValuableUrl($url){
     $options = [
