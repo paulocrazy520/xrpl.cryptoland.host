@@ -15814,3 +15814,6 @@
 83.234.227.2 - - [13/Jun/2023:23:09:02 -0400] "GET / HTTP/2.0" 200 161115 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36"
 83.234.227.2 - - [13/Jun/2023:23:09:08 -0400] "POST /jeffajax.php HTTP/2.0" 200 4117 "https://sb236.cryptoland.host/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36"
 83.234.227.2 - - [13/Jun/2023:23:09:11 -0400] "POST /index.php HTTP/2.0" 200 41410 "https://sb236.cryptoland.host/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36"
+144.217.207.28 - - [13/Jun/2023:23:09:47 -0400] "GET / HTTP/2.0" 200 68311 "https://sb236.cryptoland.host/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36"
+144.217.207.28 - - [13/Jun/2023:23:09:48 -0400] "GET /assets/css/plugins/bootstrap.min.css.map HTTP/2.0" 404 196 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36"
+144.217.207.28 - - [13/Jun/2023:23:09:50 -0400] "POST /jeffajax.php HTTP/2.0" 200 - "https://sb236.cryptoland.host/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36"
