@@ -49,6 +49,9 @@
 	if($tabType == "*" || $tabType == ".unclaimed")
 	{
 		$issuedNfts = GetOwnedNftsByIssuersFromServer($query_params);
+		if(!$issuedNfts)
+			return;
+
 		$unclaimedArray = GetOwnedNftArrayByIssuersFromDatabase($issuedNfts);
 
 		if($unclaimedArray)
@@ -109,9 +112,7 @@
 				$nfTokenID = $info["nft_id"];
 		
 				$url = $info["base_uri"];
-
 				$viewType =  str_replace(".", "", $subTabType);
-
 
 				$jsonString = GetContentsFromValuableUrl($url);
 				if(!$jsonString)
@@ -126,6 +127,30 @@
 				$name = $json['name']; // Pull Name data from URI
 				$imgPath = $json['image']; //Pull  Image data from URI
 				$videoPath = $json['video']; //Pull Video data from URI
+
+				//For test 
+				///var/www/htdocs/ingameassets.cryptoland.host/testNet/lbk/live-metadata/test.json
+				if($subTabType == ".unrevealed")
+				{
+					//For test, use fixed json instead $info["base_uri"] of each nft
+					$test_url = "/var/www/htdocs/ingameassets.cryptoland.host/testNet/lbk/live-metadata/test.json";
+					$revealed_url = str_replace("/live-metadata/", "/revealed-metadata/", $test_url);
+					$jsonString = GetContentsFromValuableUrl($revealed_url);
+
+					if(!$jsonString)
+						continue;
+
+					$json = json_decode($jsonString, true);
+					$revealedImgPath = $json['image']; //Pull  Image data from Revealed URI
+					$revealedVideoPath = $json['video']; //Pull Video data from Revealed URI
+				//////////////////////////////////////////////////////////////////////////////////////////
+				}
+				else
+				{
+					$revealedImgPath  = "";
+					$revealedVideoPath = "";
+				}
+
 				$collectionName = $json['collection']['name']; //Pull Collection data from URI[name]
 				$collectionFamily = $json['collection']['family']; //Pull Collection data from URI[family]
 				$attributes = $json['attributes']; // Pull all Filter Data from URI
@@ -176,6 +201,30 @@
 				$name = $json['name']; // Pull Name data from URI
 				$imgPath = $json['image']; //Pull  Image data from URI
 				$videoPath = $json['video']; //Pull Video data from URI
+
+				//For test 
+				///var/www/htdocs/ingameassets.cryptoland.host/testNet/lbk/live-metadata/test.json
+				if($tabType == ".unrevealed")
+				{
+					//For test, use fixed json instead $info["base_uri"] of each nft
+					$test_url = "/var/www/htdocs/ingameassets.cryptoland.host/testNet/lbk/live-metadata/test.json";
+					$revealed_url = str_replace("/live-metadata/", "/revealed-metadata/", $test_url);
+					$jsonString = GetContentsFromValuableUrl($revealed_url);
+
+					if(!$jsonString)
+						continue;
+
+					$json = json_decode($jsonString, true);
+					$revealedImgPath = $json['image']; //Pull  Image data from Revealed URI
+					$revealedVideoPath = $json['video']; //Pull Video data from Revealed URI
+				//////////////////////////////////////////////////////////////////////////////////////////
+				}
+				else
+				{
+					$revealedImgPath  = "";
+					$revealedVideoPath = "";
+				}
+
 				$collectionName = $json['collection']['name']; //Pull Collection data from URI[name]
 				$collectionFamily = $json['collection']['family']; //Pull Collection data from URI[family]
 				$attributes = $json['attributes']; // Pull all Filter Data from URI

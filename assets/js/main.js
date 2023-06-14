@@ -1,37 +1,63 @@
 
-  /*--------------------------------------------------------------
-    ***************9. Isotop Initialize ***********
-    ***************    updated by Jeff  ***********
-  --------------------------------------------------------------*/
-  function isotopInit() {
-    if ($.exists('.cs-isotop')) {
-      $('.cs-isotop').isotope({
-        itemSelector: '.cs-isotop_item',
-        transitionDuration: '0.60s',
-        percentPosition: true,
-        masonry: {
-          columnWidth: '.cs-grid_sizer',
-        },
-      });
-      /* Active Class of Portfolio*/
-      $('.cs-isotop_filter ul li').on('click', function (event) {
-        $(this).siblings('.active').removeClass('active');
-        $(this).addClass('active');
-        event.preventDefault();
-      });
-      /*=== Portfolio filtering ===*/
-      $('.cs-isotop_filter ul').on('click', 'a', function () {
-        var filterElement = $(this).attr('data-filter');
+/*--------------------------------------------------------------
+  ***************9. Isotop Initialize ***********
+  ***************    updated by Jeff  ***********
+--------------------------------------------------------------*/
+function isotopInit() {
+  if ($.exists('.cs-isotop')) {
+    $('.cs-isotop').isotope({
+      itemSelector: '.cs-isotop_item',
+      transitionDuration: '0.60s',
+      percentPosition: true,
+      masonry: {
+        columnWidth: '.cs-grid_sizer',
+      },
+    });
+    /* Active Class of Portfolio*/
+    $('.cs-isotop_filter ul li').on('click', function (event) {
+      $(this).siblings('.active').removeClass('active');
+      $(this).addClass('active');
+      event.preventDefault();
+    });
+    /*=== Portfolio filtering ===*/
+    $('.cs-isotop_filter ul').on('click', 'a', function () {
+      var filterElement = $(this).attr('data-filter');
 
-        $('#tabType').val(filterElement);
-        
-        $(this).parents('.cs-isotop_filter').siblings('.cs-isotop').isotope({
-          filter: filterElement,
-        });
+      $('#tabType').val(filterElement);
+
+      $(this).parents('.cs-isotop_filter').siblings('.cs-isotop').isotope({
+        filter: filterElement,
       });
-    }
+    });
   }
-  
+}
+
+
+/*--------------------------------------------------------------
+  10. Modal Video
+--------------------------------------------------------------*/
+function modalVideo() {
+  $(document).on('click', '.cs-video_open', function (e) {
+    e.preventDefault();
+    var video = $(this).attr('href');
+    // $('.cs-video_popup_container iframe').attr('src', video);
+    $('.cs-video_popup_container video').attr('src', video);
+    $('.cs-video_popup_container video').attr('autoplay', true);
+    $('.cs-video_popup_container video').attr('muted', true);
+    $('.cs-video_popup_container img').css('display', 'none');
+    $('.cs-video_popup').addClass('active');
+  });
+  $('.cs-video_popup_close, .cs-video_popup_layer').on('click', function (e) {
+    $('.cs-video_popup').removeClass('active');
+    $('html').removeClass('overflow-hidden');
+    // $('.cs-video_popup_container iframe').attr('src', 'about:blank');
+    $('.cs-video_popup_container video').attr('src', 'about:blank');
+    // $('.cs-video_popup_container video').attr('autoplay', true);
+    // $('.cs-video_popup_container video').attr('muted', true);
+    e.preventDefault();
+  });
+}
+
 (function ($) {
   'use strict';
 
@@ -409,24 +435,6 @@
 
   }
 
-
-  /*--------------------------------------------------------------
-    10. Modal Video
-  --------------------------------------------------------------*/
-  function modalVideo() {
-    $(document).on('click', '.cs-video_open', function (e) {
-      e.preventDefault();
-      var video = $(this).attr('href');
-      $('.cs-video_popup_container iframe').attr('src', video);
-      $('.cs-video_popup').addClass('active');
-    });
-    $('.cs-video_popup_close, .cs-video_popup_layer').on('click', function (e) {
-      $('.cs-video_popup').removeClass('active');
-      $('html').removeClass('overflow-hidden');
-      $('.cs-video_popup_container iframe').attr('src', 'about:blank');
-      e.preventDefault();
-    });
-  }
 
   /*--------------------------------------------------------------
     11. Tabs

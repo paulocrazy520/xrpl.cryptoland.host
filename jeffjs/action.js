@@ -1,7 +1,7 @@
 function handleClick() {
     var a = "Button Clicked";
     alert(a);
-  }
+}
 
 (function ($) {
     'use strict';
@@ -184,7 +184,7 @@ function handleClick() {
 
     //When click Cancel Listing button on the main explorer page
     $(document).on('click', '.cs-action_item', function () {
-    
+
         var modalId = $(this).attr('data-modal');
 
         switch (modalId) {
@@ -206,8 +206,10 @@ function handleClick() {
                 break;
             case "#revealItem": //When click Buy Item button
                 var nftId = $(this).attr('nft-id');
-                console.log("***********RevealItem selected by nft token:***********", modalId, nftId);
-                handleRevealItemClick(nftId);
+                var video = $(this).attr('video-href');
+                var image = $(this).attr('image-href');
+                console.log("***********RevealItem selected by nft token:***********", modalId, nftId, video);
+                handleRevealItemClick(nftId, video, image);
                 break;
             case "#claimItem": //When click Buy Item button
                 var nftId = $(this).attr('nft-id');
@@ -247,46 +249,84 @@ function handleClick() {
     // *********************ToMarcus**************************
     // ***********Handle List Item(Create Sell Offer)********
     // *******************************************************
-    async function handleRevealItemClick(nftId) {
+    async function handleRevealItemClick(nftId, video, image) {
 
         if (confirm("Are you sure want to reveal this nft?")) {
+
+            // $('.cs-preloader').delay(10).fadeIn('slow'); //Show loading screen
+            // $('.cs-preloader span').html("Processing...");
+
             console.log("*************hhandleRevealItemClick ", nftId);
 
-            $('.cs-preloader').delay(10).fadeIn('slow'); //Show loading screen
-            $('.cs-preloader span').html("Processing...");
-
-            axios.post('jeffajax.php', {
-                type: "RevealItem",
-                nftId: nftId
-            })
-                .then(response => {
-                    console.log('*********************handleRevealItemClick Response=', response);
-                    $('.cs-preloader').delay(10).fadeOut('slow'); //Show loading screen
-
-                    if (response.data == true) {
-                        $('.cs-isotop_item[nft-id="' + nftId + '"]').removeClass('unrevealed').addClass('revealed');
-                        $('.cs-action_item[nft-id="' + nftId + '"]').removeClass('cs-card_btn_2').addClass('cs-card_btn_1');
-                        $('.cs-action_item[nft-id="' + nftId + '"]').attr('data-modal', '#');
-                        $('.cs-action_item[nft-id="' + nftId + '"] span').text('Revealed');
+            $('.cs-video_popup_container').css('background', 'transparent');
+            $('.cs-video_popup_container').find('.cs-video_popup_close').css('display', 'none');
+            $('.cs-video_popup_container video').attr('src', video);
+            $('.cs-video_popup_container video').attr('autoplay', true);
+            $('.cs-video_popup_container video').attr('muted', true);
+            $('.cs-video_popup').addClass('active');
 
 
-                        if ($('#unrevealedCount').val() > 0) {
-                            $('#unrevealedCount').val(parseInt($('#unrevealedCount').val()) - 1);
-                            $('#revealedCount').val(parseInt($('#revealedCount').val()) + 1);
-                        }
+            $('.cs-action_item[nft-id="' + nftId + '"]').removeClass('cs-card_btn_2').addClass('cs-card_btn_disabled');
+            $('.cs-action_item[nft-id="' + nftId + '"] span').text('Revealing...');
 
-                        $('.cs-isotop').isotope('reloadItems').isotope('layout');
+            $('.cs-video_popup_container img').css('display', 'none');
 
-                        setTimeout(function () {
-                            isotopInit();
-                        }, 1000);
-                    }
+            $('.cs-video_popup_container video').on('play', function () {
+                // Video has started playing, do something here
+                console.log('Video has started playing');
+            });
+
+
+            const endShowingImage = () => {
+                console.log('Image has ended');
+                $('.cs-video_popup').removeClass('active');
+                $('html').removeClass('overflow-hidden');
+
+                axios.post('jeffajax.php', {
+                    type: "RevealItem",
+                    nftId: nftId
                 })
-                .catch(error => {
-                    console.error(error);
-                    $('.cs-preloader').delay(10).fadeOut('slow'); //Show loading screen
-                });
+                    .then(response => {
+                        console.log('*********************handleRevealItemClick Response=', response);
+                        // $('.cs-preloader').delay(10).fadeOut('slow'); //Show loading screen
+                        if (response.data == true) {
 
+                            $('.cs-isotop_item[nft-id="' + nftId + '"] img').attr('src', image);
+                            
+                            $('.cs-isotop_item[nft-id="' + nftId + '"]').removeClass('unrevealed').addClass('revealed');
+                            $('.cs-action_item[nft-id="' + nftId + '"]').removeClass('cs-card_btn_disabled').addClass('cs-card_btn_1');
+                            $('.cs-action_item[nft-id="' + nftId + '"]').attr('data-modal', '#');
+                            $('.cs-action_item[nft-id="' + nftId + '"] span').text('My Revealed Assets');
+
+
+                            if ($('#unrevealedCount').val() > 0) {
+                                $('#unrevealedCount').val(parseInt($('#unrevealedCount').val()) - 1);
+                                $('#revealedCount').val(parseInt($('#revealedCount').val()) + 1);
+                            }
+
+                            $('.cs-isotop').isotope('reloadItems').isotope('layout');
+
+                            setTimeout(function () {
+                                isotopInit();
+                            }, 1000);
+                        }
+                    })
+                    .catch(error => {
+                        console.error(error);
+                        // $('.cs-preloader').delay(10).fadeOut('slow'); //Show loading screen
+                    });
+            }
+            $('.cs-video_popup_container video').on('ended', (evt) => {
+                // Video has ended, do something here
+                evt.preventDefault();
+                console.log('Video has ended', image);
+
+                // Show revealed image for 5 seconds
+                $('.cs-video_popup_container video').css('display', 'none');
+                $('.cs-video_popup_container img').css('display', 'block');
+                $('.cs-video_popup_container img').attr('src', image);
+                setTimeout(endShowingImage, 5000);
+            });
         }
     }
 
@@ -306,9 +346,9 @@ function handleClick() {
             })
                 .then(async (response) => {
                     console.log('*********************handleClaimItemClick Response=', response.data);
-         
+
                     $('.cs-preloader').delay(10).fadeOut('slow'); //Show loading screen
-                    let  offerId = response.data.offerId;
+                    let offerId = response.data.offerId;
                     if (offerId) {
                         console.log("*************handleClaimItemClick offerId ", nftId, offerId);
                         $('.cs-action_item[nft-id="' + nftId + '"]').removeClass('cs-card_btn_4').addClass('cs-card_btn_disabled');

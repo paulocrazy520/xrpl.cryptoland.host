@@ -162,3 +162,6 @@
 [Tue Jun 13 06:37:08.631353 2023] [proxy_fcgi:error] [pid 1451172:tid 139864628504320] [client 83.110.79.197:57486] AH01071: Got error 'Primary script unknown'
 [Tue Jun 13 08:52:36.817648 2023] [proxy_fcgi:error] [pid 1451662:tid 139865207338752] [client 45.55.67.126:35630] AH01071: Got error 'Primary script unknown'
 [Tue Jun 13 08:52:38.073598 2023] [proxy_fcgi:error] [pid 1451172:tid 139864636897024] [client 45.55.67.126:35670] AH01071: Got error 'Primary script unknown'
+[Tue Jun 13 13:33:24.210426 2023] [core:error] [pid 1451172:tid 139864620111616] [client 83.97.73.89:56862] AH00126: Invalid URI in request POST /cgi-bin/.%2e/.%2e/.%2e/.%2e/bin/sh HTTP/1.1
+[Tue Jun 13 15:16:54.099078 2023] [proxy_fcgi:error] [pid 1451662:tid 139864662075136] (70008)Partial results are valid but processing is incomplete: [client 195.170.172.128:52122] AH01075: Error dispatching request to : (reading input brigade)
+[Tue Jun 13 20:35:54.460172 2023] [autoindex:error] [pid 1451173:tid 139864636897024] [client 20.69.58.195:51136] AH01276: Cannot serve directory /var/www/htdocs/sb236.cryptoland.host/.git/: No matching DirectoryIndex (index.php,index.html) found, and server-generated directory index forbidden by Options directive

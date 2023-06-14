@@ -203,7 +203,7 @@
     <!-- End Modal -->
 
       <!-- Start Modal -->
-      <div class="cs-modal_wrap" id="placeBid">
+    <div class="cs-modal_wrap" id="placeBid">
       <div class="cs-modal_overlay"></div>
       <div class="cs-modal_container">
         <div class="cs-modal_container_in">
@@ -256,6 +256,27 @@
         </div>
       </div>
     </div>
+
+    <!-- Start Video Popup -->
+    <div class="cs-video_popup">
+        <div class="cs-video_popup_overlay"></div>
+        <div class="cs-video_popup_content">
+            <div class="cs-video_popup_layer"></div>
+            <div class="cs-video_popup_container">
+                <div class="cs-video_popup_align">
+                    <div class="embed-responsive embed-responsive-16by9">
+                            <video class="embed-responsive-item">
+                                <!-- <source class="embed-video" type="video/mp4"> -->
+                            </video>
+                            <img class="embed-responsive-item h-100"/>
+                    </div>
+                </div>
+                <div class="cs-video_popup_close"></div>
+            </div>
+        </div>
+    </div>
+
+
     <!-- End Modal -->
 
 

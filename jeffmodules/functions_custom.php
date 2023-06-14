@@ -85,7 +85,7 @@ function CreateAssetFolder(){
 function UpdateDBForOwner($account){
     global $server_url, $sqlConnect;
 
-    if(!$account)
+    if(!$account || !isset($_SESSION["user_id"]))
         return;
 
     $query_params = [
@@ -724,12 +724,17 @@ function GetLogFilePath($fileName)
 }
 
 function GetContentsFromValuableUrl($url){
-    $options = [
-        'http' => [
-            'timeout' => 2, // Set a timeout value of 10 seconds
-        ],
-    ];
-    $context = stream_context_create($options);
-    $contents = file_get_contents($url, false, $context);
-    return $contents;
+    try{
+        $options = [
+            'http' => [
+                'timeout' => 2, // Set a timeout value of 10 seconds
+            ],
+        ];
+        $context = stream_context_create($options);
+        $contents = file_get_contents($url, false, $context);
+        return $contents;
+    }
+    catch(Exception $e){
+        return;
+    }
 }

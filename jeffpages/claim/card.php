@@ -16,7 +16,7 @@
       $modalId= "#revealItem";
       break;
     case "revealed":
-      $btnStr = "Revealed";
+      $btnStr = "My Revealed Assets";
       $btnStyle = "cs-card_btn_1";
       $modalId= "#";
       break;
@@ -57,8 +57,7 @@
             <div class="cs-card_footer" style="padding:5px 10% 5px 10%;">
             <?php              
                   echo '
-                  <span class="cs-action_item '.$btnStyle.' w-100" data-modal="'.(($viewType!="unclaimed" || ($viewType=="unclaimed" && !$info["claimed"]))? $modalId : "").'" nft-id="'.$nfTokenID.'"
-                    ><span>'.$btnStr.'</span></span
+                  <span class="cs-action_item '.$btnStyle.' w-100" data-modal="'.(($viewType!="unclaimed" || ($viewType=="unclaimed" && !$info["claimed"]))? $modalId : "").'" nft-id="'.$nfTokenID.'" video-href="'.$revealedVideoPath.'" image-href="'.$revealedImgPath.'"><span>'.$btnStr.'</span></span
                   >';
                ?>
             </div>

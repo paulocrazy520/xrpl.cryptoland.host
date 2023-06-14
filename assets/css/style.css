@@ -3930,7 +3930,8 @@ kbd {
   text-align: left;
   background: #fff;
   max-width: 1380px;
-  width: 100%;
+  width: 50%;
+  height: 50%;
   vertical-align: middle;
 }
 
@@ -3948,7 +3949,7 @@ kbd {
 }
 
 .embed-responsive-16by9::before {
-  display: block;
+  /* display: block; */
   content: "";
   padding-top: 56.25%;
 }

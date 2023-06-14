@@ -2377,6 +2377,7 @@ function NRG_UpdateLBKNFT($claimed, $claimed_user_id, $claimed_date, $revealed, 
         //if (($claimed == '1' && $revealed == '1') && ($claimed_user_id == $revealed_user_id && $revealed_user_id == $nrg["user"]["user_id"])){
         if ($revealed == '1' && $revealed_user_id == $nrg["user"]["user_id"]) {
     //        NRG_UpdateLBKNFT_Metadata_File($nft_id, $userWallet);
+    //Jeffrey_UpdateNFT_Metadata_File("vials", $nft_id, $userWallet);
         }
     } else {
         return "failed";
@@ -2414,11 +2415,61 @@ function NRG_UpdateVialsNFT($claimed, $claimed_user_id, $claimed_date, $revealed
         //if (($claimed == '1' && $revealed == '1') && ($claimed_user_id == $revealed_user_id && $revealed_user_id == $nrg["user"]["user_id"])){
         if ($revealed == '1' && $revealed_user_id == $nrg["user"]["user_id"]) {
          //   NRG_UpdateVialsNFT_Metadata_File($nft_id, $userWallet);
+         //Jeffrey_UpdateNFT_Metadata_File("vials", $nft_id, $userWallet);
         }
     } else {
         return "failed";
     }
     return "true";
+}
+
+//************Added newly by Jeffery ***************/
+function Jeffrey_UpdateNFT_Metadata_File($nft_type, $nft_id, $userWallet)
+{
+    //$nft_type can be one of "vials", "lbk", "box", "land", "cryptobian"
+    global $nrg, $sqlConnect, $cache;
+    $table = $nft_type."_nft";
+
+    $sql = "SELECT nft_serial FROM $table WHERE nft_id = '$nft_id' AND owner_wallet = '$userWallet'";
+
+    $query = mysqli_query($sqlConnect, $sql);
+    NRG_writeFile("NRG_UpdateLBKNFT_Metadata_File.log", "L" . __LINE__ . " | " . $sql);
+
+    if (mysqli_num_rows($query)) {
+        $fetched_data = mysqli_fetch_assoc($query);
+        $nft_serial = $fetched_data['nft_serial'];
+        $final_nft_serial = $nft_serial + 1;
+    }
+
+    $assetPath = '/var/www/htdocs/ingameassets.cryptoland.host/testNet/';
+    $liveRenameFrom = $assetPath.$nft_type.'/live-metadata/' . $final_nft_serial . '.json';
+    $archiveRenameTo = $assetPath.$nft_type.'/archived-metadata/' . $final_nft_serial . '_UNREVEALED_' . time() . '_bak.json';
+    $revealedMoveFrom = $assetPath.$nft_type.'/revealed-metadata/' . $final_nft_serial . '.json';
+    
+    if (rename($liveRenameFrom, $archiveRenameTo)) {
+        if (copy($revealedMoveFrom, $liveRenameFrom)) {
+            NRG_writeFile("NRG_UpdateLBKNFT_Metadata_File.log", "L" . __LINE__ . " | " . "[Success] $file2MoveFrom -> $file2MoveTo");
+            //return "success";
+
+        } else {
+            $where = "WHERE nft_id = '$nft_id'";
+            $query_one = "UPDATE $table SET owner_wallet='$userWallet', claimed=claimed, claimed_user_id=claimed_user_id, claimed_date=claimed_date, revealed='0', revealed_user_id=0, revealed_date=0 $where";
+            $query = mysqli_query($sqlConnect, $query_one);
+            NRG_writeFile("NRG_UpdateLBKNFT_Metadata_File.log", "L" . __LINE__ . " | " . $query_one);
+            NRG_writeFile("NRG_UpdateLBKNFT_Metadata_File.log", "L" . __LINE__ . " | " . "[Failed] $file2MoveFrom -> $file2MoveTo");
+            return "failed";
+        }
+        NRG_writeFile("NRG_UpdateLBKNFT_Metadata_File.log", "L" . __LINE__ . " | " . "[Success] $file1RenameFrom -> $file1RenameTo ");
+        return "success";
+    } else {
+        $where = "WHERE nft_id = '$nft_id'";
+        $query_one = "UPDATE $table SET owner_wallet='$userWallet', claimed=claimed, claimed_user_id=claimed_user_id, claimed_date=claimed_date, revealed='0', revealed_user_id=0, revealed_date=0 $where";
+        $query = mysqli_query($sqlConnect, $query_one);
+        NRG_writeFile("NRG_UpdateLBKNFT_Metadata_File.log", "L" . __LINE__ . " | " . $query_one);
+        NRG_writeFile("NRG_UpdateLBKNFT_Metadata_File.log", "L" . __LINE__ . " | " . "[Failed] $file1RenameFrom -> $file1RenameTo ");
+        return "failed";
+    }
+    //echo $message;
 }
 
 function NRG_UpdateLBKNFT_Metadata_File($nft_id, $userWallet)
@@ -2435,19 +2486,17 @@ function NRG_UpdateLBKNFT_Metadata_File($nft_id, $userWallet)
         $final_nft_serial = $nft_serial + 1;
     }
 
-    $file1RenameFrom = '/var/www/htdocs/ingameassets.cryptoland.host/lbk/metadata/' . $final_nft_serial . '.json';
-    $file1RenameTo = '/var/www/htdocs/ingameassets.cryptoland.host/lbk/metadata/unrevealed_bak/' . $final_nft_serial . '_UNREVEALED_' . time() . '_bak.json';
-    $file2MoveFrom = '/var/www/htdocs/ingameassets.cryptoland.host/lbk/metadata/revealed/' . $final_nft_serial . '.json';
-    $file2MoveTo = '/var/www/htdocs/ingameassets.cryptoland.host/lbk/metadata/' . $final_nft_serial . '.json';
-
+    // $file1RenameFrom = '/var/www/htdocs/ingameassets.cryptoland.host/lbk/metadata/' . $final_nft_serial . '.json';
+    // $file1RenameTo = '/var/www/htdocs/ingameassets.cryptoland.host/lbk/metadata/unrevealed_bak/' . $final_nft_serial . '_UNREVEALED_' . time() . '_bak.json';
+    // $file2MoveFrom = '/var/www/htdocs/ingameassets.cryptoland.host/lbk/metadata/revealed/' . $final_nft_serial . '.json';
+    // $file2MoveTo = '/var/www/htdocs/ingameassets.cryptoland.host/lbk/metadata/' . $final_nft_serial . '.json';
+    
     if (rename($file1RenameFrom, $file1RenameTo)) {
         if (copy($file2MoveFrom, $file2MoveTo)) {
             NRG_writeFile("NRG_UpdateLBKNFT_Metadata_File.log", "L" . __LINE__ . " | " . "[Success] $file2MoveFrom -> $file2MoveTo");
             //return "success";
 
         } else {
-
-
             $where = "WHERE nft_id = '$nft_id'";
             $query_one = "UPDATE lbk_nft SET owner_wallet='$userWallet', claimed=claimed, claimed_user_id=claimed_user_id, claimed_date=claimed_date, revealed='0', revealed_user_id=0, revealed_date=0 $where";
             $query = mysqli_query($sqlConnect, $query_one);
@@ -2458,8 +2507,6 @@ function NRG_UpdateLBKNFT_Metadata_File($nft_id, $userWallet)
         NRG_writeFile("NRG_UpdateLBKNFT_Metadata_File.log", "L" . __LINE__ . " | " . "[Success] $file1RenameFrom -> $file1RenameTo ");
         return "success";
     } else {
-
-
         $where = "WHERE nft_id = '$nft_id'";
         $query_one = "UPDATE lbk_nft SET owner_wallet='$userWallet', claimed=claimed, claimed_user_id=claimed_user_id, claimed_date=claimed_date, revealed='0', revealed_user_id=0, revealed_date=0 $where";
         $query = mysqli_query($sqlConnect, $query_one);
