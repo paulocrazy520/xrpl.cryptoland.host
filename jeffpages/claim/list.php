@@ -21,9 +21,19 @@
 		
 	//*********************Only when page loading first, update db for owner*********************
 	if(!$isPost){
-		UpdateDBForOwner($account);	
-		// CreateAssetFolder();
-		 //return;
+		try{
+			UpdateDBForOwner($account);	
+			// CreateAssetFolder();
+			//return;
+		}
+		catch(Exception $e)
+		{
+			echo '<h1 class="cs-hero_title cs-white_color cs-center" id="empty_result">
+			The server is not connecting or is taking longer than expected...
+			If it still appears after refreshing again, contact the team.
+			</h1>';
+			return;
+		}
 	}
 
 	//*****************Test for updating database from xrpl server by issuer addresses***************** */
@@ -45,34 +55,43 @@
 		'account' => $account
     ];
 
-	if($tabType == "*" || $tabType == ".unclaimed")
-	{
-		$issuedNfts = GetOwnedNftsByIssuersFromServer($query_params);
-		if(!$issuedNfts)
-			return;
+	try{
+		if($tabType == "*" || $tabType == ".unclaimed")
+		{
+			$issuedNfts = GetOwnedNftsByIssuersFromServer($query_params);
+			if(!$issuedNfts)
+				return;
 
-		$unclaimedArray = GetOwnedNftArrayByIssuersFromDatabase($issuedNfts);
+			$unclaimedArray = GetOwnedNftArrayByIssuersFromDatabase($issuedNfts);
 
-		if($unclaimedArray)
-			$unclaimedCount = count($unclaimedArray);
+			if($unclaimedArray)
+				$unclaimedCount = count($unclaimedArray);
+		}
+
+		if($tabType == "*" || $tabType == ".unrevealed" || $tabType == ".revealed" )
+		{
+			$ownedNfts = GetOwnedNftsFromServer($query_params);
+			
+			if(!$ownedNfts)
+				return;
+
+			$claimedWithRevealedArray = GetRevealNftArraysFromDatabase($ownedNfts);
+			$revealedArray = isset($claimedWithRevealedArray["revealedArray"]) ? $claimedWithRevealedArray["revealedArray"] : array();
+			$unrevealedArray = isset($claimedWithRevealedArray["unrevealedArray"]) ? $claimedWithRevealedArray["unrevealedArray"] : array();
+
+			if($unrevealedArray)
+				$unrevealedCount = count($unrevealedArray);
+
+			if($revealedArray)
+				$revealedCount = count($revealedArray);
+		}
 	}
-
-	if($tabType == "*" || $tabType == ".unrevealed" || $tabType == ".revealed" )
-	{
-		$ownedNfts = GetOwnedNftsFromServer($query_params);
-		
-		if(!$ownedNfts)
-			return;
-
-		$claimedWithRevealedArray = GetRevealNftArraysFromDatabase($ownedNfts);
-		$revealedArray = isset($claimedWithRevealedArray["revealedArray"]) ? $claimedWithRevealedArray["revealedArray"] : array();
-		$unrevealedArray = isset($claimedWithRevealedArray["unrevealedArray"]) ? $claimedWithRevealedArray["unrevealedArray"] : array();
-
-		if($unrevealedArray)
-			$unrevealedCount = count($unrevealedArray);
-
-		if($revealedArray)
-			$revealedCount = count($revealedArray);
+	catch(Exception $e){
+		echo '<h1 class="cs-hero_title cs-white_color cs-center" id="empty_result">
+		The server is not connecting or is taking longer than expected...
+		If it still appears after refreshing again, contact the team.
+		</h1>';
+		return;
 	}
 
 	$totalCount = $unclaimedCount + $unrevealedCount + $revealedCount;

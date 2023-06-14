@@ -449,15 +449,14 @@ function GetIssuedNftsFromServer($account = null){
         'base_uri' =>$server_url 
     ]);
 
-
-    $filter = "account=$account";
-    $request = $client->getAsync("issued_nfts?$filter");
-    $response = $request->wait();
+    
+    $query_params = ['account' => $account];
+    $response = $client->request('GET', '/issued_nfts', ['query' => $query_params]);
 
     // Convert the JSON response to an array for easier processing
-    $transfer_history = json_decode($response->getBody());
+    $response_array = json_decode($response->getBody());
 
-    return $transfer_history;    
+    return $response_array;    
 }
 
 /*****************Get Owned Nft Infos by account from Node Server******************* */
@@ -472,9 +471,9 @@ function GetOwnedNftsFromServer($query_params){
     $response = $client->request('GET', '/owned_nfts', ['query' => $query_params]);
 
     // Convert the JSON response to an array for easier processing
-    $transfer_history = json_decode($response->getBody());
+    $response_array = json_decode($response->getBody());
 
-    return $transfer_history;    
+    return $response_array;    
 }
 
 /*****************Get Marketplace Nft Infos by account from Node Server******************* */
@@ -507,9 +506,9 @@ function GetNftArrayForMarketplaceFromServer($menuCollection, $menuRarity, $menu
 
     $response = $client->request('GET', '/marketplace_infos', ['query' => $query_params]);
     // Convert the JSON response to an array for easier processing
-    $transfer_history = json_decode($response->getBody());
+    $response_array = json_decode($response->getBody());
 
-    return $transfer_history;    
+    return $response_array;    
 }
 
 /******************Get full deatiled nft info from bithomp server************************ */
@@ -528,8 +527,8 @@ function GetDetailNftInfoFromBithomp($filter, $nftTokenId){
     $response = $request->wait();
 
     // Convert the JSON response to an array for easier processing
-    $transfer_history = json_decode($response->getBody());
-    return $transfer_history;    
+    $response_array = json_decode($response->getBody());
+    return $response_array;    
 }
 
 /******************Get offer info from bithomp server************************ */
