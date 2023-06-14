@@ -264,7 +264,7 @@
             <div class="cs-video_popup_layer"></div>
             <div class="cs-video_popup_container">
                 <div class="cs-video_popup_align">
-                    <div class="embed-responsive embed-responsive-16by9">
+                    <div class="embed-responsive embed-responsive-16by9" style="display: flex; justify-content: space-between;">
                             <video class="embed-responsive-item">
                                 <!-- <source class="embed-video" type="video/mp4"> -->
                             </video>

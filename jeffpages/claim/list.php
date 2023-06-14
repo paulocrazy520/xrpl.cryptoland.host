@@ -21,7 +21,7 @@
 		
 	//*********************Only when page loading first, update db for owner*********************
 	if(!$isPost){
-		//UpdateDBForOwner($account);	
+		UpdateDBForOwner($account);	
 		// CreateAssetFolder();
 		 //return;
 	}

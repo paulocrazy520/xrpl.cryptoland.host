@@ -45,6 +45,7 @@ function modalVideo() {
     $('.cs-video_popup_container video').attr('autoplay', true);
     $('.cs-video_popup_container video').attr('muted', true);
     $('.cs-video_popup_container img').css('display', 'none');
+    $('.cs-video_popup_container video').css('display', 'block');
     $('.cs-video_popup').addClass('active');
   });
   $('.cs-video_popup_close, .cs-video_popup_layer').on('click', function (e) {

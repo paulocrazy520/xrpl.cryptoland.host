@@ -123,7 +123,7 @@ function UpdateDBForOwner($account){
     
                 vials_nft.claimed_date=CASE WHEN TIMESTAMPDIFF(HOUR, FROM_UNIXTIME(vials_nft.claimed_date), NOW()) >= 1 AND user_nft.assetType=1 THEN 0 ELSE vials_nft.claimed_date END, 
                 vials_nft.claimed=CASE WHEN TIMESTAMPDIFF(HOUR, FROM_UNIXTIME(vials_nft.claimed_date), NOW()) >= 1 AND user_nft.assetType=2 THEN 0 ELSE vials_nft.claimed END, 
-                
+
                 lbk_nft.revealed_user_id=CASE WHEN user_nft.assetType=1 THEN 0 ELSE lbk_nft.revealed_user_id END,
                 vials_nft.revealed_user_id=CASE WHEN user_nft.assetType=2 THEN 0 ELSE vials_nft.revealed_user_id END         
 
@@ -292,8 +292,8 @@ function GetRevealNftArraysFromDatabase($claimedArray)
     LEFT JOIN lbk_nft ON user_nft.nft_id = lbk_nft.nft_id
     LEFT JOIN vials_nft ON user_nft.nft_id = vials_nft.nft_id 
     WHERE 
-    (lbk_nft.owner_wallet= '$account' AND user_nft.assetType = 1 AND lbk_nft.transferred_status = '1') OR 
-    (vials_nft.owner_wallet= '$account' AND user_nft.assetType = 2 AND vials_nft.transferred_status = '1')";
+    (lbk_nft.owner_wallet= '$account' AND user_nft.assetType = 1 ) OR 
+    (vials_nft.owner_wallet= '$account' AND user_nft.assetType = 2)";
 
     $result = mysqli_query($sqlConnect, $sql) or die("Error in Selecting " . mysqli_error($sqlConnect));
 

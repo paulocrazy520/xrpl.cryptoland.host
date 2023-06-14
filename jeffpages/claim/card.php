@@ -2,11 +2,11 @@
   switch($viewType){
     case "unclaimed":
       $btnStr =  "Claim";
-
-      if(!$info["claimed"])
-        $btnStyle = "cs-card_btn_4";
-      else
+      
+      if($info["claimed"] && !$info["transferred_status"])
         $btnStyle = "cs-card_btn_disabled";
+      else
+        $btnStyle = "cs-card_btn_4";
 
       $modalId= "#claimItem";
       break;
