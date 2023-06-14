@@ -12,7 +12,6 @@
 	<?php
 }
 
-
 	if(!isset($current_user) || !$current_user)
 	{
 		$account = $default_issuer_address;
@@ -22,9 +21,9 @@
 		
 	//*********************Only when page loading first, update db for owner*********************
 	if(!$isPost){
-		UpdateDBForOwner($account);	
-		CreateAssetFolder();
-		// return;
+		//UpdateDBForOwner($account);	
+		// CreateAssetFolder();
+		 //return;
 	}
 
 	//*****************Test for updating database from xrpl server by issuer addresses***************** */

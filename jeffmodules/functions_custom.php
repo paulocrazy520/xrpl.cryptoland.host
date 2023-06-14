@@ -83,7 +83,7 @@ function CreateAssetFolder(){
 //1)owner_address and user_id of nft_user table
 //2)owner_address and transferred_status of vials_nft or lbk_nft, etc…
 function UpdateDBForOwner($account){
-    global $server_url, $sqlConnect;
+    global $server_url, $sqlConnect,  $default_issuer_address;;
 
     if(!$account || !isset($_SESSION["user_id"]))
         return;
@@ -93,38 +93,65 @@ function UpdateDBForOwner($account){
 		'account' => $account
     ]; 
             
-    $client = new \GuzzleHttp\Client();
-    
-    $client = new Client([
-        'base_uri' => $server_url 
-    ]);
-
-    $response = $client->request('GET', '/owned_nfts', ['query' => $query_params]);
-
-    // Convert the JSON response to an array for easier processing
-    $nft_array = json_decode($response->getBody());
+    $nft_array =  GetOwnedNftsFromServer($query_params);
 
     try{
         foreach($nft_array as $nft_id)
         {
-            $sql =  "UPDATE user_nft 
-            LEFT JOIN lbk_nft ON user_nft.nft_id = lbk_nft.nft_id
-            LEFT JOIN vials_nft ON user_nft.nft_id = vials_nft.nft_id 
-            SET 
-            user_nft.owner_wallet='".$account."', 
-            user_nft.user_id='".$_SESSION["user_id"]."',
-            lbk_nft.owner_wallet=CASE WHEN user_nft.assetType=1 THEN '".$account."' ELSE lbk_nft.owner_wallet END,
-            vials_nft.owner_wallet=CASE WHEN user_nft.assetType=2 THEN '".$account."' ELSE vials_nft.owner_wallet END,
-            lbk_nft.transferred_status=CASE WHEN user_nft.assetType=1 THEN 1 ELSE lbk_nft.transferred_status END,
-            vials_nft.transferred_status=CASE WHEN user_nft.assetType=2 THEN 1 ELSE vials_nft.transferred_status END
-            WHERE user_nft.nft_id ='".$nft_id."' AND (
-            (user_nft.assetType = 1 AND lbk_nft.transferred_status = '0') OR 
-            (user_nft.assetType = 2 AND vials_nft.transferred_status = '0'))";
-            $result = mysqli_query($sqlConnect, $sql) ;   
+
+            if($account == $default_issuer_address){
+                $sql =  "UPDATE user_nft 
+                LEFT JOIN lbk_nft ON user_nft.nft_id = lbk_nft.nft_id
+                LEFT JOIN vials_nft ON user_nft.nft_id = vials_nft.nft_id 
+                SET 
+                user_nft.owner_wallet='".$account."',
+                lbk_nft.owner_wallet=CASE WHEN user_nft.assetType=1 THEN '".$account."' ELSE lbk_nft.owner_wallet END,
+                vials_nft.owner_wallet=CASE WHEN user_nft.assetType=2 THEN '".$account."' ELSE vials_nft.owner_wallet END,
+
+                lbk_nft.transferred_status=CASE WHEN user_nft.assetType=1 THEN 0 ELSE lbk_nft.transferred_status END,
+                vials_nft.transferred_status=CASE WHEN user_nft.assetType=2 THEN 0 ELSE vials_nft.transferred_status END,
+                lbk_nft.transferred_date=CASE WHEN user_nft.assetType=1 THEN 0 ELSE lbk_nft.transferred_date END,
+                vials_nft.transferred_date=CASE WHEN user_nft.assetType=2 THEN 0 ELSE vials_nft.transferred_date END,
+
+                lbk_nft.revealed=CASE WHEN user_nft.assetType=1 THEN 0 ELSE lbk_nft.revealed END,
+                vials_nft.revealed=CASE WHEN user_nft.assetType=2 THEN 0 ELSE vials_nft.revealed END,
+                lbk_nft.revealed_date=CASE WHEN user_nft.assetType=1 THEN 0 ELSE lbk_nft.revealed_date END,
+                vials_nft.revealed_date=CASE WHEN user_nft.assetType=2 THEN 0 ELSE vials_nft.revealed_date END,
+                
+                lbk_nft.claimed_date=CASE WHEN TIMESTAMPDIFF(HOUR, FROM_UNIXTIME(lbk_nft.claimed_date), NOW()) >= 1 AND user_nft.assetType=1 THEN 0 ELSE lbk_nft.claimed_date END, 
+                lbk_nft.claimed=CASE WHEN TIMESTAMPDIFF(HOUR, FROM_UNIXTIME(lbk_nft.claimed_date), NOW()) >= 1 AND user_nft.assetType=2 THEN 0 ELSE lbk_nft.claimed END, 
+    
+                vials_nft.claimed_date=CASE WHEN TIMESTAMPDIFF(HOUR, FROM_UNIXTIME(vials_nft.claimed_date), NOW()) >= 1 AND user_nft.assetType=1 THEN 0 ELSE vials_nft.claimed_date END, 
+                vials_nft.claimed=CASE WHEN TIMESTAMPDIFF(HOUR, FROM_UNIXTIME(vials_nft.claimed_date), NOW()) >= 1 AND user_nft.assetType=2 THEN 0 ELSE vials_nft.claimed END, 
+                
+                lbk_nft.revealed_user_id=CASE WHEN user_nft.assetType=1 THEN 0 ELSE lbk_nft.revealed_user_id END,
+                vials_nft.revealed_user_id=CASE WHEN user_nft.assetType=2 THEN 0 ELSE vials_nft.revealed_user_id END         
+
+                WHERE user_nft.nft_id ='".$nft_id."'";
+                $result = mysqli_query($sqlConnect, $sql) ;   
+            }
+            else
+            {
+                $sql =  "UPDATE user_nft 
+                LEFT JOIN lbk_nft ON user_nft.nft_id = lbk_nft.nft_id
+                LEFT JOIN vials_nft ON user_nft.nft_id = vials_nft.nft_id 
+                SET 
+                user_nft.owner_wallet='".$account."', 
+
+                lbk_nft.owner_wallet=CASE WHEN user_nft.assetType=1 THEN '".$account."' ELSE lbk_nft.owner_wallet END,
+                vials_nft.owner_wallet=CASE WHEN user_nft.assetType=2 THEN '".$account."' ELSE vials_nft.owner_wallet END,
+
+                lbk_nft.transferred_status=CASE WHEN user_nft.assetType=1 THEN 1 ELSE lbk_nft.transferred_status END,
+                vials_nft.transferred_status=CASE WHEN user_nft.assetType=2 THEN 1 ELSE vials_nft.transferred_status END
+
+                WHERE user_nft.nft_id ='".$nft_id."' AND user_nft.user_id ='".$_SESSION["user_id"]."'";
+                $result = mysqli_query($sqlConnect, $sql) ;   
+            }
         }
     }
     catch(Exception $e){
-
+        //print_r($e);
+        echo $sql;
     }
 }
 
