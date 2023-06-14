@@ -27,10 +27,10 @@
     }
 
     async function updatePage(key = "*", isReplace = false) {
-        if (key == "*" && $('#pageType').val() == "claim" && !isReplace) {
-            updateShowingResult(key);
-            return;
-        }
+        // if (key == "*" && $('#pageType').val() == "claim" && !isReplace) {
+        //     updateShowingResult(key);
+        //     return;
+        // }
 
         const formData = new FormData();
         formData.append('pageType', $('#pageType').val());
@@ -103,8 +103,8 @@
         var filterElement = $('#tabType').val();
 
         console.log("*******uuuu******tabType:", filterElement);
-        if (filterElement == "*" && $('#pageType').val() == "claim")
-            return;
+        // if (filterElement == "*" && $('#pageType').val() == "claim")
+        //     return;
 
             console.log("*******scroll info******tabType:", $(window).scrollTop() + window.innerHeight, $(document).height() - 1);
         if ($(window).scrollTop() + window.innerHeight >= $(document).height() -1) {
