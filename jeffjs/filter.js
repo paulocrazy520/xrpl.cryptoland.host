@@ -35,7 +35,7 @@
         const formData = new FormData();
         formData.append('pageType', $('#pageType').val());
 
-        if(isReplace)
+        if (isReplace)
             formData.append('cardsCount', 0)
         else
             formData.append('cardsCount', $('#cardsCount').val())
@@ -65,9 +65,9 @@
 
             if ($('#pageType').val() == "claim") {
                 //console.log(html);
-                if(!isReplace)
+                if (!isReplace)
                     $('.cs-isotop').append(html);
-                else{
+                else {
                     $('.cs-isotop').html('<div class="cs-grid_sizer"></div>');
                     $('.cs-isotop').append(html);
                 }
@@ -80,8 +80,7 @@
             else if ($('#pageType').val() == "main") {
                 if (!isReplace)
                     $('#nft-list').append(html);
-                else
-                {
+                else {
                     $('#nft-list').html(html);
                 }
             }
@@ -102,12 +101,9 @@
 
         var filterElement = $('#tabType').val();
 
-        console.log("*******uuuu******tabType:", filterElement);
-        // if (filterElement == "*" && $('#pageType').val() == "claim")
-        //     return;
-
-            console.log("*******scroll info******tabType:", $(window).scrollTop() + window.innerHeight, $(document).height() - 1);
-        if ($(window).scrollTop() + window.innerHeight >= $(document).height() -1) {
+        //console.log("*******uuuu******tabType:", filterElement);
+        //console.log("*******scroll info******tabType:", $(window).scrollTop() + window.innerHeight, $(document).height() - 1);
+        if ($(window).scrollTop() + window.innerHeight >= $(document).height() - 1) {
             var cardsCount = $('#nft-list').find(filterElement == "*" ? ".nft-card" : filterElement).toArray().length;
             $('#cardsCount').val(cardsCount);
 
@@ -149,7 +145,7 @@
 
     $('.form-check').on('click', function () {
         var id = $(this).attr("type");
-        var tab = $('#tabType' ).val();
+        var tab = $('#tabType').val();
         var key = tab ? tab : "*";
 
         if (id == "collection") {

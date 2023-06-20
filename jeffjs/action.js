@@ -14,7 +14,7 @@ function handleClick() {
             .then(response => {
                 let json = response.data;
                 if (json && json.xumm_address) {
-                    console.log('*************When page loading, GetUnserInfo Response=', json);
+                    console.log('*************When page loading, GetUserInfo Response=', json);
                     $(".auth").text(json.xumm_address);
                     signed_xumm_address = json.xumm_address;
                 }
