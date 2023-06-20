@@ -36,7 +36,7 @@
                 if ($asset_owner == $current_user && $asset_has_sell_offer){
                     /* Display DeList Button */
                     echo '
-                    <span class="cs-card_btn_3" data-modal="#cancelList" nft-id="'.$nft->NFTokenID.'"
+                    <span class="cs-action_item cs-card_btn_3" data-modal="#cancelList" nft-id="'.$nft->NFTokenID.'"
                       ><span>Cancel Listing</span></span
                     >
                   ';
@@ -47,7 +47,7 @@
                     
                     /* Display List Button */
                     echo '
-                    <span class="cs-card_btn_2" data-modal="#listItem" nft-id="'.$nft->NFTokenID.'"
+                    <span class="cs-action_item cs-card_btn_2" data-modal="#listItem" nft-id="'.$nft->NFTokenID.'"
                       ><span>List Item</span></span
                     >
                   ';
@@ -56,10 +56,10 @@
                     if ($asset_owner != $current_user && $asset_has_sell_offer && $current_user_has_bid ){
                       /* Display Buy Now Button from sell offer*/
                       /* Display Cancel Bid Button from current user's bid*/
-                      echo '<span class="cs-card_btn_2" data-modal="#buyItem" nft-id="'.$nft->NFTokenID.'" 
+                      echo '<span class="cs-action_item cs-card_btn_2" data-modal="#buyItem" nft-id="'.$nft->NFTokenID.'" 
                         ><span>Buy Now</span></span
                       >
-                      <span class="cs-card_btn_5" data-modal="#cancelBid" nft-id="'.$nft->NFTokenID.'"
+                      <span class="cs-action_item cs-card_btn_5" data-modal="#cancelBid" nft-id="'.$nft->NFTokenID.'"
                         ><span>Cancel Bid</span></span
                       >
                     ';
@@ -68,7 +68,7 @@
                       if ($asset_owner != $current_user && $asset_has_sell_offer && !$current_user_has_bid){
                       /* Display Buy Now Button from sell offer*/
                       echo '
-                      <span class="cs-card_btn_2" data-modal="#buyItem" nft-id="'.$nft->NFTokenID.'" 
+                      <span class="cs-action_item cs-card_btn_2" data-modal="#buyItem" nft-id="'.$nft->NFTokenID.'" 
                         ><span>Buy Now</span> </span
                       >
                     ';
@@ -78,7 +78,7 @@
                       if ($asset_owner != $current_user && !$asset_has_sell_offer && $current_user_has_bid){
                       /* Display Cancel Bid Button from current user's bid*/
                       echo '
-                      <span class="cs-card_btn_5" data-modal="#cancelBid" nft-id="'.$nft->NFTokenID.'"
+                      <span class="cs-action_item cs-card_btn_5" data-modal="#cancelBid" nft-id="'.$nft->NFTokenID.'"
                         ><span>Cancel Bid</span></span
                       >
                     ';
@@ -88,7 +88,7 @@
                       
                       /* Display Place Bid Button */
                       echo '
-                      <span class="cs-card_btn_4" data-modal="#placeBid" nft-id="'.$nft->NFTokenID.'" owner="'.$nft->Owner.'"
+                      <span class="cs-action_item cs-card_btn_4" data-modal="#placeBid" nft-id="'.$nft->NFTokenID.'" owner="'.$nft->Owner.'"
                         ><span>Place Bid</span></span
                       >
                     ';
