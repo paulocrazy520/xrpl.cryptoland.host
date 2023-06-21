@@ -261,6 +261,24 @@ function UpdateDBeByIssuersFromServer($issuer = null){
                 }else
                 $user_id = 0;
             }
+            else if(strpos($name, "Crystal #") !== false )
+            {
+                $assetType = 6;
+
+                if($countArray1[5] < 15){
+                    $countArray1[5]++;
+                    $user_id = 3;
+                }
+                else if($countArray2[5] < 15){
+                    $countArray2[5]++;
+                    $user_id = 4;
+                }
+                else if($countArray3[5] < 15){
+                    $countArray3[5]++;
+                    $user_id = 5;
+                }else
+                $user_id = 0;
+            }
 
             $timeNow = time();
 

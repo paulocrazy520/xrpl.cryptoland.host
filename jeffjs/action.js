@@ -249,6 +249,8 @@ function handleClick() {
     // *********************ToMarcus**************************
     // ***********Handle List Item(Create Sell Offer)********
     // *******************************************************
+
+    let isVideoPlaying = false;
     async function handleRevealItemClick(nftId, video, image) {
 
         if (confirm("Are you sure want to reveal this nft?")) {
@@ -256,7 +258,7 @@ function handleClick() {
             // $('.cs-preloader').delay(10).fadeIn('slow'); //Show loading screen
             // $('.cs-preloader span').html("Processing...");
 
-            console.log("*************hhandleRevealItemClick ", nftId);
+            console.log("*************handleRevealItemClick ", nftId);
 
             $('.cs-video_popup_container').css('background', 'transparent');
             $('.cs-video_popup_container').find('.cs-video_popup_close').css('display', 'none');
@@ -265,15 +267,36 @@ function handleClick() {
             $('.cs-video_popup_container video').attr('muted', true);
             $('.cs-video_popup').addClass('active');
 
-
-            $('.cs-action_item[nft-id="' + nftId + '"]').removeClass('cs-card_btn_2').addClass('cs-card_btn_disabled');
-            $('.cs-action_item[nft-id="' + nftId + '"] span').text('Revealing...');
-
             $('.cs-video_popup_container img').css('display', 'none');
+            $('.cs-video_popup_container video').css('display', 'block');
+            isVideoPlaying = false;
 
-            $('.cs-video_popup_container video').on('play', function () {
+            $('.cs-video_popup_container video').one('error', function () {
+                $('.cs-video_popup').removeClass('active');
+                isVideoPlaying = false;
+                //alert("An error has occurred while playing the video.");
+            });
+
+            $('.cs-video_popup_container video').one('ended', (evt) => {
+                evt.preventDefault();
+                console.log('Video has ended', image);
+
+                // Show revealed image for 5 seconds
+                $('.cs-video_popup_container video').css('display', 'none');
+                $('.cs-video_popup_container img').css('display', 'block');
+                $('.cs-video_popup_container img').attr('src', image);
+                setTimeout(endShowingImage, 5000);
+            });
+
+            $('.cs-video_popup_container video').one('play', function () {
                 // Video has started playing, do something here
-                console.log('Video has started playing');
+                if (!isVideoPlaying) {
+                    console.log("video playing...", nftId);
+                    $('.cs-action_item[nft-id="' + nftId + '"]').removeClass('cs-card_btn_2').addClass('cs-card_btn_disabled');
+                    $('.cs-action_item[nft-id="' + nftId + '"] span').text('Revealing...');
+                    console.log('Video has started playing');
+                    isVideoPlaying = true;
+                }
             });
 
 
@@ -293,7 +316,7 @@ function handleClick() {
 
                             $('.cs-isotop_item[nft-id="' + nftId + '"] img').attr('src', image);
 
-                            var revealedRarity =  $('.cs-action_item[nft-id="' + nftId + '"]').attr("rarity-str");
+                            var revealedRarity = $('.cs-action_item[nft-id="' + nftId + '"]').attr("rarity-str");
                             $('.cs-isotop_item[nft-id="' + nftId + '"] .cs-rarity_item').html(revealedRarity);
 
                             $('.cs-isotop_item[nft-id="' + nftId + '"]').removeClass('unrevealed').addClass('revealed');
@@ -319,18 +342,6 @@ function handleClick() {
                         // $('.cs-preloader').delay(10).fadeOut('slow'); //Show loading screen
                     });
             }
-
-            $('.cs-video_popup_container video').on('ended', (evt) => {
-                // Video has ended, do something here
-                evt.preventDefault();
-                console.log('Video has ended', image);
-
-                // Show revealed image for 5 seconds
-                $('.cs-video_popup_container video').css('display', 'none');
-                $('.cs-video_popup_container img').css('display', 'block');
-                $('.cs-video_popup_container img').attr('src', image);
-                setTimeout(endShowingImage, 5000);
-            });
         }
     }
 
@@ -351,8 +362,7 @@ function handleClick() {
                 .then(async (response) => {
 
                     console.log('*********************handleClaimItemClick Response=', response.data);
-                    if(response.data == "claimed")
-                    {
+                    if (response.data == "claimed") {
                         alert("Sorry, this item was already claimed! After refreshing page, you can see it!");
                         $('.cs-preloader').delay(10).fadeOut('slow'); //Show loading screen
                         return;

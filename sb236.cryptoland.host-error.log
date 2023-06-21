@@ -272,3 +272,4 @@
 [Wed Jun 21 12:25:29.518229 2023] [autoindex:error] [pid 3181737:tid 139864536250112] [client 23.92.219.236:34938] AH01276: Cannot serve directory /var/www/htdocs/sb236.cryptoland.host/testNet/vials/live-metadata/: No matching DirectoryIndex (index.php,index.html) found, and server-generated directory index forbidden by Options directive
 [Wed Jun 21 17:10:39.174681 2023] [proxy_fcgi:error] [pid 3214934:tid 139864125204224] [client 170.64.173.5:45760] AH01071: Got error 'Primary script unknown'
 [Wed Jun 21 17:10:44.625127 2023] [proxy_fcgi:error] [pid 3214934:tid 139865190553344] [client 170.64.173.5:45804] AH01071: Got error 'Primary script unknown'
+[Wed Jun 21 17:57:24.541570 2023] [core:error] [pid 3214636:tid 139865555605248] [client 83.97.73.89:33182] AH00126: Invalid URI in request POST /cgi-bin/.%2e/.%2e/.%2e/.%2e/bin/sh HTTP/1.1

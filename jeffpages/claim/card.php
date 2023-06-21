@@ -57,7 +57,7 @@
             <div class="cs-card_footer" style="padding:5px 10% 5px 10%;">
             <?php              
                   echo '
-                  <span class="cs-action_item '.$btnStyle.' w-100" data-modal="'.(($viewType!="unclaimed" || ($viewType=="unclaimed" && !$info["claimed"]))? $modalId : "").'" nft-id="'.$nfTokenID.'" video-href="'.$revealedVideoPath.'" image-href="'.$revealedImgPath.'" rarity-str="'.$revealedRarity.'"><span>'.$btnStr.'</span></span
+                  <span class="cs-action_item '.$btnStyle.' w-100" data-modal="'.(($viewType!="unclaimed" || ($viewType=="unclaimed" && !$info["claimed"]))? $modalId : "").'" nft-id="'.$nfTokenID.'" video-href="'.$revealedVideoPath.'" image-href="'.$revealedImgPath.'" rarity-str="'.($revealedRarity ? $revealedRarity : "").'"><span>'.$btnStr.'</span></span
                   >';
                ?>
             </div>

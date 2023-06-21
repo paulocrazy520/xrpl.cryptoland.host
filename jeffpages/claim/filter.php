@@ -44,9 +44,20 @@
                         class="form-check-input"
                         type="radio"
                         name="collection"
-                        id="consumable"
+                        id="vial"
                       />
-                      <label class="form-check-label" for="consumable">Consumable</label>
+                      <label class="form-check-label" for="vial"">Vial</label>
+                    </div>
+                  </li>
+                  <li>
+                    <div class="form-check" type="collection">
+                      <input
+                        class="form-check-input"
+                        type="radio"
+                        name="collection"
+                        id="crystal"
+                      />
+                      <label class="form-check-label" for="crystal">Crystal</label>
                     </div>
                   </li>
                   <li>

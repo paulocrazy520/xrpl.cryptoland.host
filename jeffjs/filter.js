@@ -128,7 +128,7 @@
         $('#cardsCount').val(cardsCount);
 
         console.log(cardsCount, getTotalCount(filterElement))
-        if ((getTotalCount(filterElement) > 0 && cardsCount == 0) || (cardsCount < getTotalCount(filterElement) && cardsCount % $('#numCardsPerPage').val() != 0)) {
+        if (filterElement != "*" && ((getTotalCount(filterElement) > 0 && cardsCount == 0) || (cardsCount < getTotalCount(filterElement) && cardsCount % $('#numCardsPerPage').val() != 0))) {            
             updatePage(filterElement);
         }
         else

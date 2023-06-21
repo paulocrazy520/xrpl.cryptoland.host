@@ -167,6 +167,7 @@
 				$attributes = $json['attributes']; // Pull all Filter Data from URI
 				$color = GetTestHexColorFromColorString();
 				$rarity = "";
+				$revealedRarity  = "";
 				$subclass = "";
 				
 				foreach ($attributes as $attribute) {
@@ -265,6 +266,7 @@
 				$color = GetTestHexColorFromColorString();
 				$rarity = "";
 				$subclass = "";
+				$revealedRarity  = "";
 				foreach ($attributes as $attribute) {
 					switch ($attribute["trait_type"]) {
 						case 'Consumable Class':
