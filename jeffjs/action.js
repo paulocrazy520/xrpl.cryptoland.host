@@ -250,7 +250,6 @@ function handleClick() {
     // ***********Handle List Item(Create Sell Offer)********
     // *******************************************************
 
-    let isVideoPlaying = false;
     async function handleRevealItemClick(nftId, video, image) {
 
         if (confirm("Are you sure want to reveal this nft?")) {
@@ -269,12 +268,12 @@ function handleClick() {
 
             $('.cs-video_popup_container img').css('display', 'none');
             $('.cs-video_popup_container video').css('display', 'block');
-            isVideoPlaying = false;
 
             $('.cs-video_popup_container video').one('error', function () {
                 $('.cs-video_popup').removeClass('active');
-                isVideoPlaying = false;
-                //alert("An error has occurred while playing the video.");
+                $('.cs-video_popup_container video').off('play');
+                $('.cs-video_popup_container video').off('ended'); 
+                alert("An error has occurred while playing the video.");
             });
 
             $('.cs-video_popup_container video').one('ended', (evt) => {
@@ -290,13 +289,10 @@ function handleClick() {
 
             $('.cs-video_popup_container video').one('play', function () {
                 // Video has started playing, do something here
-                if (!isVideoPlaying) {
                     console.log("video playing...", nftId);
                     $('.cs-action_item[nft-id="' + nftId + '"]').removeClass('cs-card_btn_2').addClass('cs-card_btn_disabled');
                     $('.cs-action_item[nft-id="' + nftId + '"] span').text('Revealing...');
                     console.log('Video has started playing');
-                    isVideoPlaying = true;
-                }
             });
 
 
