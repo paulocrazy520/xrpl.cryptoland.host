@@ -157,8 +157,10 @@
 				$json = json_decode($jsonString, true);
 			
 				$name = $json['name']; // Pull Name data from URI
-				$imgPath = $json['image']; //Pull  Image data from URI
-				$videoPath = $json['video']; //Pull Video data from URI
+				$imgPath =   str_replace("https://sb236.cryptoland.host/testNet", "/testNet", $json
+				['image']); //Pull  Image data from URI
+
+				$videoPath = str_replace("https://sb236.cryptoland.host/testNet", "/testNet", $json['video']); //Pull Video data from URI
 
 				$collectionName = $json['collection']['name']; //Pull Collection data from URI[name]
 				$collectionFamily = $json['collection']['family']; //Pull Collection data from URI[family]
@@ -202,8 +204,8 @@
 						continue;
 
 					$json = json_decode($jsonString, true);
-					$revealedImgPath = $json['image']; //Pull  Image data from Revealed URI
-					$revealedVideoPath = $json['video']; //Pull Video data from Revealed URI
+					$revealedImgPath =   str_replace("https://sb236.cryptoland.host/testNet", "/testNet", $json['image']); //Pull  Image data from Revealed URI
+					$revealedVideoPath =str_replace("https://sb236.cryptoland.host/testNet", "/testNet", $json['video']); //Pull Video data from Revealed URI
 
 					$attributes = $json['attributes']; // Pull all Filter Data from URI
 
@@ -253,8 +255,9 @@
 				$json = json_decode($jsonString, true);
 			
 				$name = $json['name']; // Pull Name data from URI
-				$imgPath = $json['image']; //Pull  Image data from URI
-				$videoPath = $json['video']; //Pull Video data from URI
+
+				$imgPath =   str_replace("https://sb236.cryptoland.host/testNet", "/testNet", $json['image']); //Pull  Image data from URI
+				$videoPath =str_replace("https://sb236.cryptoland.host/testNet", "/testNet", $json['video']); //Pull Video data from URI
 
 				$collectionName = $json['collection']['name']; //Pull Collection data from URI[name]
 				$collectionFamily = $json['collection']['family']; //Pull Collection data from URI[family]
@@ -297,8 +300,10 @@
 						continue;
 
 					$json = json_decode($jsonString, true);
-					$revealedImgPath = $json['image']; //Pull  Image data from Revealed URI
-					$revealedVideoPath = $json['video']; //Pull Video data from Revealed URI
+
+					$revealedImgPath =   str_replace("https://sb236.cryptoland.host/testNet", "/testNet", $json['image']); //Pull  Image data from Revealed URI
+					$revealedVideoPath =str_replace("https://sb236.cryptoland.host/testNet", "/testNet", $json['video']); //Pull Video data from Revealed URI
+
 				//////////////////////////////////////////////////////////////////////////////////////////
 				}
 				else
