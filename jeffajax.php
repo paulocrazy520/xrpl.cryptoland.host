@@ -146,13 +146,26 @@ function JEFF_UpdateUserInfo($user_id)
     $txid = $payload_json["response"]["txid"];
     $address = $payload_json["response"]["account"];
 
+    //*************Only for test*************/
+    //rff8Vm4iHRZ9xJgzDzGLJ6ME74ugByUKvE is for user_id 3
+    //rwfvmEP2yGy3vxhqvsSBkZcPFpHxfuNv5v is for user_id 4
+    //rez9qjAodo6NnX8Rm14RJiagt5JZ3d76a is for user_id 5
+    
+    if( ($user_id == 3 && $address == "rff8Vm4iHRZ9xJgzDzGLJ6ME74ugByUKvE") || ($user_id == 4 && $address == "rwfvmEP2yGy3vxhqvsSBkZcPFpHxfuNv5v") || ($user_id == 5 && $address == "rez9qjAodo6NnX8Rm14RJiagt5JZ3d76a")){
+        //It is okay
+    }
+    else{
+        echo "user_mismatch";
+        return;
+    }
+    //***************************************/
+    
     $user_info  = GetUserInfoByUserId($user_id);
 
     if(!$user_info) //Check user exist
         return;
     
-    if ($user_info["xumm_address"] && $user_info["xumm_txid"]) {
-        
+    if ($user_info["xumm_address"] && $user_info["xumm_txid"]) {       
         if($user_info["xumm_user_token"])
         {
             if($result = $xummSdk->verifyUserToken($user_info["xumm_user_token"]))
@@ -161,7 +174,7 @@ function JEFF_UpdateUserInfo($user_id)
                 $twenty_four_hours_ago = time() - (24 * 60 * 60);
     
                 if ($timestamp < $twenty_four_hours_ago) { // The timestamp is older than 24 hours
-                    //
+                    //It is okay
                 }
                 else
                 {

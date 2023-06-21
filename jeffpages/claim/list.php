@@ -22,7 +22,7 @@
 	//*********************Only when page loading first, update db for owner*********************
 
 	try{
-		 //UpdateDatabaseByIssuersFromServer();
+		//  UpdateDatabaseByIssuersFromServer();
 	}
 	catch(Exception $e){
 		print_r($e);

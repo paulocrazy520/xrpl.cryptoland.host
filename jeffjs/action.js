@@ -116,7 +116,7 @@ function handleClick() {
                             alert('You have successfully xumm signed in!');
                             location.reload();
                         } else if (response.data.indexOf('user_mismatch') >= 0) {
-                            alert('In this test product, you should login with Test User');
+                            alert('In this test product, you should sign with correct wallet');
                             xumm.logout();
                         } else if (response.data.indexOf('user_exist') >= 0) {
                             console.log('*************User already exist!');
@@ -154,7 +154,7 @@ function handleClick() {
                             $(".auth").text(state?.me?.sub);
                             alert('You have successfully logged in!');
                         } else if (response.data.indexOf('user_mismatch') >= 0) {
-                            alert('In this test product, you should login with Test User');
+                            alert('In this test product,  you should sign with correct wallet');
                             xumm.logout();
                         } else if (response.data.indexOf('user_exist') >= 0) {
                             console.log('*************User already exist!');

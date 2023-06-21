@@ -167,7 +167,9 @@ function UpdateDatabaseByIssuersFromServer($issuer = null){
 
     $index = 0;
     $user_id = 0;
-    $countArray = [0,0,0,0,0];
+    $countArray1 = [0,0,0,0,0];
+    $countArray2 = [0,0,0,0,0];
+    $countArray3 = [0,0,0,0,0];
 
     foreach($ownedNfts as $nft){
         // if(!GetNftInfoFromDatabase($nft->NFTokenID))
@@ -199,52 +201,89 @@ function UpdateDatabaseByIssuersFromServer($issuer = null){
             if(strpos($name, "Key #") !== false) 
             {
                 $assetType = 1;
-                $countArray[0]++;
-                if($countArray[0] <= 15){
+
+                if($countArray1[0] < 15){
+                    $countArray1[0]++;
                     $user_id = 3;
                 }
-                else
-                    $user_id = 0;
+                else if($countArray2[0] < 15){
+                    $countArray2[0]++;
+                    $user_id = 4;
+                }
+                else if($countArray3[0] < 15){
+                    $countArray3[0]++;
+                    $user_id = 5;
+                }
 
             }
             else if(strpos($name, "Vial #") !== false)
             {
                 $assetType = 2;
-                $countArray[1]++;
-                if($countArray[1] <= 15){
+
+                if($countArray1[1] < 15){
+                    $countArray1[1]++;
                     $user_id = 3;
                 }
-                else
-                    $user_id = 0;
+                else if($countArray2[1] < 15){
+                    $countArray2[1]++;
+                    $user_id = 4;
+                }
+                else if($countArray3[1] < 15){
+                    $countArray3[1]++;
+                    $user_id = 5;
+                }
+
             }
             else if(strpos($name, "Box #") !== false){
                 $assetType = 3;
-                $countArray[2]++;
-                if($countArray[2] <= 15){
+
+                if($countArray1[2] < 15){
+                    $countArray1[2]++;
                     $user_id = 3;
                 }
-                else
-                    $user_id = 0;
+                else if($countArray2[2] < 15){
+                    $countArray2[2]++;
+                    $user_id = 4;
+                }
+                else if($countArray3[2] < 15){
+                    $countArray3[2]++;
+                    $user_id = 5;
+                }
+
             }
             else if(strpos($name, "Land #") !== false)
             {
                 $assetType = 4;
-                $countArray[3]++;
-                if($countArray[3] <= 15){
+
+                if($countArray1[3] < 15){
+                    $countArray1[3]++;
                     $user_id = 3;
                 }
-                else
-                    $user_id = 0;
+                else if($countArray2[3] < 15){
+                    $countArray2[3]++;
+                    $user_id = 4;
+                }
+                else if($countArray3[3] < 15){
+                    $countArray3[3]++;
+                    $user_id = 5;
+                }
             }
             else if(strpos($name, "Avatar #") !== false || strpos($name, "Cryptopian #") !== false)
             {
                 $assetType = 5;
-                $countArray[4]++;
-                if($countArray[4] <= 15){
+
+                if($countArray1[4] < 15){
+                    $countArray1[4]++;
                     $user_id = 3;
                 }
-                else
-                    $user_id = 0;
+                else if($countArray2[4] < 15){
+                    $countArray2[4]++;
+                    $user_id = 4;
+                }
+                else if($countArray3[4] < 15){
+                    $countArray3[4]++;
+                    $user_id = 5;
+                }
             }
 
             $timeNow = time();

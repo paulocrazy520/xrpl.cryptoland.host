@@ -246,3 +246,5 @@
 [Wed Jun 21 02:01:47.457269 2023] [core:error] [pid 3079707:tid 139864511072000] [client 83.97.73.89:36704] AH00126: Invalid URI in request POST /cgi-bin/.%2e/.%2e/.%2e/.%2e/bin/sh HTTP/1.1
 [Wed Jun 21 06:02:07.506768 2023] [proxy_fcgi:error] [pid 3030522:tid 139865555605248] [client 99.79.162.139:48342] AH01071: Got error 'Primary script unknown'
 [Wed Jun 21 06:02:07.507572 2023] [proxy_fcgi:error] [pid 3079707:tid 139865198946048] [client 99.79.162.139:48344] AH01071: Got error 'Primary script unknown'
+[Wed Jun 21 11:17:51.793117 2023] [proxy_fcgi:error] [pid 3182632:tid 139864620111616] [client 64.227.153.21:48192] AH01071: Got error 'Primary script unknown'
+[Wed Jun 21 11:17:54.898447 2023] [proxy_fcgi:error] [pid 3181743:tid 139864670467840] [client 64.227.153.21:48242] AH01071: Got error 'Primary script unknown'
