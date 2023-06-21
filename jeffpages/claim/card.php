@@ -44,13 +44,13 @@
         <div>
           <div class="cs-height_10 cs-height_lg_10"></div>
             <h3 class="cs-card_title">
-              <a href="?page=<?php echo $nfTokenID?>" ><?php echo $collectionName . ' And ' . $collectionFamily ?></a>
+              <a href="?page=<?php echo $nfTokenID?>" ><?php echo $collectionName?></a>
             </h3>
             <div class="cs-card_price" style="display: flex; justify-content: space-between;">
               Name: <b><?php echo $name ?></b>
             </div>
             <div class="cs-card_price" style="display: flex; justify-content: space-between;">
-              Rarity: <b style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis;"><?php echo $rarity ?></b>
+              Rarity: <b style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis;"><?php echo $rarity ? $rarity : "" ?></b>
             </div>
             <hr />
             <?php if($current_user){ ?>

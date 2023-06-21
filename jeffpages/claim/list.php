@@ -28,12 +28,10 @@
 		print_r($e);
 	}
 
-	return;
-
 
 	if(!$isPost){
 		try{
-			UpdateDBForOwner($account);	
+			//UpdateDBForOwner($account);	
 			// CreateAssetFolder();
 			//return;
 		}
@@ -75,29 +73,40 @@
 
 			$unclaimedArray = GetOwnedNftArrayByIssuersFromDatabase($issuedNfts);
 
+			$unclaimedCount = 0;
 			if($unclaimedArray)
 				$unclaimedCount = count($unclaimedArray);
 		}
 
+
 		if($tabType == "*" || $tabType == ".unrevealed" || $tabType == ".revealed" )
 		{
 			$ownedNfts = GetOwnedNftsFromServer($query_params);
-			
-			if(!$ownedNfts)
-				return;
 
-			$claimedWithRevealedArray = GetRevealNftArraysFromDatabase($ownedNfts);
-			$revealedArray = isset($claimedWithRevealedArray["revealedArray"]) ? $claimedWithRevealedArray["revealedArray"] : array();
-			$unrevealedArray = isset($claimedWithRevealedArray["unrevealedArray"]) ? $claimedWithRevealedArray["unrevealedArray"] : array();
+			if($ownedNfts)
+			{
+				$claimedWithRevealedArray = GetRevealNftArraysFromDatabase($ownedNfts);
+				$revealedArray = isset($claimedWithRevealedArray["revealedArray"]) ? $claimedWithRevealedArray["revealedArray"] : array();
+				$unrevealedArray = isset($claimedWithRevealedArray["unrevealedArray"]) ? $claimedWithRevealedArray["unrevealedArray"] : array();
 
-			if($unrevealedArray)
-				$unrevealedCount = count($unrevealedArray);
+				if($unrevealedArray)
+					$unrevealedCount = count($unrevealedArray);
 
-			if($revealedArray)
-				$revealedCount = count($revealedArray);
+				if($revealedArray)
+					$revealedCount = count($revealedArray);
+			}
+			else
+			{
+				$revealedCount = 0;
+				$unrevealedCount = 0;
+
+				$revealedArray = array();
+				$unrevealedArray = array();
+			}
 		}
 	}
 	catch(Exception $e){
+		print_r($e);
 		echo '<h1 class="cs-hero_title cs-white_color cs-center" id="empty_result">
 		The server is not connecting or is taking longer than expected...
 		If it still appears after refreshing again, contact the team.
@@ -140,7 +149,7 @@
 				$info = $totalArray[$index];
 				$nfTokenID = $info["nft_id"];
 		
-				$url = $info["base_uri"];
+				$url = $info["base_uri"]."/".$info["file"];
 				$viewType =  str_replace(".", "", $subTabType);
 
 				$jsonString = GetContentsFromValuableUrl($url);
@@ -163,7 +172,7 @@
 				{
 					//For test, use fixed json instead $info["base_uri"] of each nft
 					// $test_url = "/var/www/htdocs/ingameassets.cryptoland.host/testNet/lbk/live-metadata/test.json";
-					// $revealed_url = str_replace("/live-metadata/", "/revealed-metadata/", $test_url);
+					$revealed_url = str_replace("/live-metadata/", "/revealed-metadata/", $url);
 					$jsonString = GetContentsFromValuableUrl($revealed_url);
 
 					if(!$jsonString)
@@ -198,6 +207,9 @@
 							if (isset($attribute['value'])) {
 								$color = GetTestHexColorFromColorString($attribute['value']);
 							}
+							break;
+						case 'Subclass':
+							$rarity = $attribute['value']; // Pull Rarity data from URI
 							break;
 						default:
 							break;
@@ -221,7 +233,7 @@
 				$info = $totalArray[$index];
 				$nfTokenID = $info["nft_id"];
 
-				$url = $info["base_uri"];
+				$url = $info["base_uri"]."/".$info["file"];
 				$viewType =  str_replace(".", "", $tabType);
 
 				$jsonString = file_get_contents($url);
@@ -237,7 +249,7 @@
 				{
 					//For test, use fixed json instead $info["base_uri"] of each nft
 					// $test_url = "/var/www/htdocs/ingameassets.cryptoland.host/testNet/lbk/live-metadata/test.json";
-					// $revealed_url = str_replace("/live-metadata/", "/revealed-metadata/", $test_url);
+					$revealed_url = str_replace("/live-metadata/", "/revealed-metadata/", $url);
 					$jsonString = GetContentsFromValuableUrl($revealed_url);
 
 					if(!$jsonString)
@@ -272,6 +284,9 @@
 							if (isset($attribute['value'])) {
 								$color = GetTestHexColorFromColorString($attribute['value']);
 							}
+							break;
+						case 'Subclass':
+							$rarity = $attribute['value']; // Pull Rarity data from URI
 							break;
 						default:
 							break;

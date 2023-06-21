@@ -101,8 +101,7 @@ function UpdateDBForOwner($account){
 
             if($account == $default_issuer_address){
                 $sql =  "UPDATE user_nft 
-                LEFT JOIN lbk_nft ON user_nft.nft_id = lbk_nft.nft_id
-                LEFT JOIN vials_nft ON user_nft.nft_id = vials_nft.nft_id 
+               
                 SET 
                 user_nft.owner_wallet='".$account."',
                 lbk_nft.owner_wallet=CASE WHEN user_nft.assetType=1 THEN '".$account."' ELSE lbk_nft.owner_wallet END,
@@ -214,6 +213,8 @@ function UpdateDatabaseByIssuersFromServer($issuer = null){
                     $countArray3[0]++;
                     $user_id = 5;
                 }
+                else
+                    $user_id = 0;
 
             }
             else if(strpos($name, "Vial #") !== false)
@@ -232,6 +233,8 @@ function UpdateDatabaseByIssuersFromServer($issuer = null){
                     $countArray3[1]++;
                     $user_id = 5;
                 }
+                else
+                    $user_id = 0;
 
             }
             else if(strpos($name, "Box #") !== false){
@@ -249,6 +252,8 @@ function UpdateDatabaseByIssuersFromServer($issuer = null){
                     $countArray3[2]++;
                     $user_id = 5;
                 }
+                else
+                    $user_id = 0;
 
             }
             else if(strpos($name, "Land #") !== false)
@@ -267,6 +272,8 @@ function UpdateDatabaseByIssuersFromServer($issuer = null){
                     $countArray3[3]++;
                     $user_id = 5;
                 }
+                else
+                    $user_id = 0;
             }
             else if(strpos($name, "Avatar #") !== false || strpos($name, "Cryptopian #") !== false)
             {
@@ -283,7 +290,8 @@ function UpdateDatabaseByIssuersFromServer($issuer = null){
                 else if($countArray3[4] < 15){
                     $countArray3[4]++;
                     $user_id = 5;
-                }
+                }else
+                $user_id = 0;
             }
 
             $timeNow = time();
@@ -370,24 +378,8 @@ function GetRevealNftArraysFromDatabase($claimedArray)
     else
         $account = $current_user;
 
-    $sql =  "SELECT user_nft.nft_id as nft_id, 
-    CASE
-        WHEN user_nft.assetType = 1 THEN lbk_nft.base_uri
-        WHEN user_nft.assetType = 2 THEN vials_nft.base_uri
-        ELSE NULL
-    END AS base_uri,
-    CASE
-        WHEN user_nft.assetType = 1 THEN lbk_nft.revealed
-        WHEN user_nft.assetType = 2 THEN vials_nft.revealed
-        ELSE NULL
-    END AS revealed
-
-    FROM user_nft
-    LEFT JOIN lbk_nft ON user_nft.nft_id = lbk_nft.nft_id
-    LEFT JOIN vials_nft ON user_nft.nft_id = vials_nft.nft_id 
-    WHERE 
-    (lbk_nft.owner_wallet= '$account' AND user_nft.assetType = 1 ) OR 
-    (vials_nft.owner_wallet= '$account' AND user_nft.assetType = 2)";
+    $sql =  "SELECT nft_id, base_uri, file, revealed FROM CryptoLand_NFTs
+    WHERE owner_wallet= '$account'";
 
     $result = mysqli_query($sqlConnect, $sql) or die("Error in Selecting " . mysqli_error($sqlConnect));
 
@@ -396,7 +388,6 @@ function GetRevealNftArraysFromDatabase($claimedArray)
         $jsonArray[] = $row;
     }
 
-    
     if($jsonArray && count($jsonArray) >= 1)
     {
         $revealedArray = array();
@@ -464,33 +455,15 @@ function GetOwnedNftArrayByIssuersFromDatabase($issuedNfts)
 
 
     //Get un transferred nft array from datbase
-    $sql =  "SELECT user_nft.nft_id as nft_id, 
-    CASE
-        WHEN user_nft.assetType = 1 THEN lbk_nft.base_uri
-        WHEN user_nft.assetType = 2 THEN vials_nft.base_uri
-        ELSE NULL
-    END AS base_uri,
-    CASE
-        WHEN user_nft.assetType = 1 THEN lbk_nft.transferred_status
-        WHEN user_nft.assetType = 2 THEN vials_nft.transferred_status
-        ELSE NULL
-    END AS transferred_status,
-    CASE
-        WHEN user_nft.assetType = 1 THEN lbk_nft.claimed
-        WHEN user_nft.assetType = 2 THEN vials_nft.claimed
-        ELSE NULL
-    END AS claimed
-    FROM user_nft
-    LEFT JOIN lbk_nft ON user_nft.nft_id = lbk_nft.nft_id
-    LEFT JOIN vials_nft ON user_nft.nft_id = vials_nft.nft_id WHERE  user_nft.user_id='".$_SESSION["user_id"]."' AND (
-    (user_nft.assetType = 1 AND lbk_nft.transferred_status = '0') OR 
-    (user_nft.assetType = 2 AND vials_nft.transferred_status = '0'))";
+    $sql =  "SELECT nft_id, base_uri, file, transferred, claimed FROM CryptoLand_NFTs
+    WHERE  user_id='".$_SESSION["user_id"]."' AND transferred = '0'";
 
     $result = mysqli_query($sqlConnect, $sql) or die("Error in Selecting " . mysqli_error($sqlConnect));
     $jsonArray = array();
     while ($row = mysqli_fetch_assoc($result)) {
         $jsonArray[] = $row;
     }
+
 
     if($jsonArray && count($jsonArray) >= 1)
     {
@@ -501,6 +474,7 @@ function GetOwnedNftArrayByIssuersFromDatabase($issuedNfts)
                     array_push($finalArray, $nft);
             }
         }
+
         return $finalArray;
     }
 }
