@@ -292,7 +292,10 @@ function handleClick() {
                         if (response.data == true) {
 
                             $('.cs-isotop_item[nft-id="' + nftId + '"] img').attr('src', image);
-                            
+
+                            var revealedRarity =  $('.cs-action_item[nft-id="' + nftId + '"]').attr("rarity-str");
+                            $('.cs-isotop_item[nft-id="' + nftId + '"] .cs-rarity_item').html(revealedRarity);
+
                             $('.cs-isotop_item[nft-id="' + nftId + '"]').removeClass('unrevealed').addClass('revealed');
                             $('.cs-action_item[nft-id="' + nftId + '"]').removeClass('cs-card_btn_disabled').addClass('cs-card_btn_1');
                             $('.cs-action_item[nft-id="' + nftId + '"]').attr('data-modal', '#');
@@ -316,6 +319,7 @@ function handleClick() {
                         // $('.cs-preloader').delay(10).fadeOut('slow'); //Show loading screen
                     });
             }
+
             $('.cs-video_popup_container video').on('ended', (evt) => {
                 // Video has ended, do something here
                 evt.preventDefault();
@@ -350,6 +354,7 @@ function handleClick() {
                     if(response.data == "claimed")
                     {
                         alert("Sorry, this item was already claimed! After refreshing page, you can see it!");
+                        $('.cs-preloader').delay(10).fadeOut('slow'); //Show loading screen
                         return;
                     }
 

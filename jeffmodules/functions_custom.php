@@ -883,19 +883,19 @@ function JEFF_UpdateNFT($claimed, $claimed_user_id, $claimed_date, $revealed, $r
 
     if ($claimed == '1' && $claimed_user_id == $nrg["user"]["user_id"]) {
         $query_one = "UPDATE CryptoLand_NFTs SET issuer_wallet=issuer_wallet, owner_wallet='$userWallet', claimed='$claimed', claimed_user_id=$claimed_user_id, claimed_date=$claimed_date, revealed=revealed, revealed_user_id=revealed_user_id, revealed_date=revealed_date, transferred=transferred, transferred_user_id=transferred_user_id, transferred_date=transferred_date  $where";
-        NRG_writeFile("NRG_UpdateLBKNFT.log", "L" . __LINE__ . " | " . $query_one);
+        NRG_writeFile("NRG_UpdateCryptoLand_NFTs.log", "L" . __LINE__ . " | " . $query_one);
     }  
     else if ($revealed == '1' && $revealed_user_id == $nrg["user"]["user_id"]) {
         $query_one = "UPDATE CryptoLand_NFTs SET issuer_wallet=issuer_wallet, owner_wallet='$userWallet', claimed=claimed, claimed_user_id=claimed_user_id, claimed_date=claimed_date, revealed='$revealed', revealed_user_id=$revealed_user_id, revealed_date=$revealed_date, transferred=transferred, transferred_user_id=transferred_user_id, transferred_date=transferred_date $where";
-        NRG_writeFile("NRG_UpdateLBKNFT.log", "L" . __LINE__ . " | " . $query_one);
+        NRG_writeFile("NRG_UpdateCryptoLand_NFTs.log", "L" . __LINE__ . " | " . $query_one);
     }
     else if ($transferred == '1') {
         $query_one = "UPDATE CryptoLand_NFTs SET issuer_wallet=issuer_wallet, owner_wallet='$userWallet', claimed=claimed, claimed_user_id=claimed_user_id, claimed_date=claimed_date, revealed=revealed, revealed_user_id=revealed_user_id, revealed_date=revealed_date, transferred='$transferred',transferred_user_id='$transferred_user_id', transferred_date='$transferred_date', tx_id='$tx_id' $where";
-        NRG_writeFile("NRG_UpdateLBKNFT.log", "L" . __LINE__ . " | " . $query_one);
+        NRG_writeFile("NRG_UpdateCryptoLand_NFTs.log", "L" . __LINE__ . " | " . $query_one);
     }
     else{ //set unclaim data
         $query_one = "UPDATE CryptoLand_NFTs SET issuer_wallet=issuer_wallet, owner_wallet=owner_wallet, claimed='$claimed', claimed_user_id='0', claimed_date='0', revealed=revealed, revealed_user_id=revealed_user_id, revealed_date=revealed_date, transferred=transferred,  transferred_user_id=transferred_user_id,transferred_date=transferred_date  $where";
-        NRG_writeFile("NRG_UpdateLBKNFT.log", "L" . __LINE__ . " | " . $query_one);   
+        NRG_writeFile("NRG_UpdateCryptoLand_NFTs.log", "L" . __LINE__ . " | " . $query_one);   
     }
 
 
@@ -948,35 +948,38 @@ function Jeffrey_UpdateNFT_Metadata_File($nft_id, $userWallet)
     $sql = "SELECT base_uri, file FROM CryptoLand_NFTs WHERE nft_id = '$nft_id' AND owner_wallet = '$userWallet'";
 
     $query = mysqli_query($sqlConnect, $sql);
-    NRG_writeFile("NRG_UpdateLBKNFT_Metadata_File.log", "L" . __LINE__ . " | " . $sql);
+    NRG_writeFile("NRG_UpdateCryptoLand_NFTs_Metadata_File.log", "L" . __LINE__ . " | " . $sql);
 
     if (mysqli_num_rows($query)) {
         $fetched_data = mysqli_fetch_assoc($query);
         $assetPath = $fetched_data['base_uri']."/".$fetched_data['file'];
 
     }
-    $liveRenameFrom = $assetPath;
-    $archiveRenameTo =     str_replace("/live-metadata/", "/archived-metadata/", $assetPath);
-    $revealedMoveFrom =     str_replace("/live-metadata/", "/revealed-metadata/", $assetPath);
+    $liveRenameFrom =   str_replace("https://sb236.cryptoland.host/testNet", "/var/www/htdocs/sb236.cryptoland.host/testNet", $assetPath);
+    $archiveRenameTo =     str_replace("/live-metadata/", "/archived-metadata/", $liveRenameFrom);
+    $revealedMoveFrom =     str_replace("/live-metadata/", "/revealed-metadata/", $liveRenameFrom);
+
     
+    NRG_writeFile("NRG_UpdateCryptoLand_NFTs_Metadata_File.log", "L" . __LINE__ . " | " . $liveRenameFrom. " | ". $archiveRenameTo . " | ". $revealedMoveFrom);
+
     if (rename($liveRenameFrom, $archiveRenameTo)) {
         if (copy($revealedMoveFrom, $liveRenameFrom)) {
-            NRG_writeFile("NRG_UpdateLBKNFT_Metadata_File.log", "L" . __LINE__ . " | " . "[Success] $revealedMoveFrom -> $liveRenameFrom");
+            NRG_writeFile("NRG_UpdateCryptoLand_NFTs_Metadata_File.log", "L" . __LINE__ . " | " . "[Success] $revealedMoveFrom -> $liveRenameFrom");
             return "success";
         } else {
             $where = "WHERE nft_id = '$nft_id'";
             $query_one = "UPDATE CryptoLand_NFTs SET owner_wallet='$userWallet', claimed=claimed, claimed_user_id=claimed_user_id, claimed_date=claimed_date, revealed='0', revealed_user_id=0, revealed_date=0 $where";
             $query = mysqli_query($sqlConnect, $query_one);
-            NRG_writeFile("NRG_UpdateLBKNFT_Metadata_File.log", "L" . __LINE__ . " | " . $query_one);
-            NRG_writeFile("NRG_UpdateLBKNFT_Metadata_File.log", "L" . __LINE__ . " | " . "[Failed] $revealedMoveFrom -> $liveRenameFrom");
+            NRG_writeFile("NRG_UpdateCryptoLand_NFTs_Metadata_File.log", "L" . __LINE__ . " | " . $query_one);
+            NRG_writeFile("NRG_UpdateCryptoLand_NFTs_Metadata_File.log", "L" . __LINE__ . " | " . "[Failed] $revealedMoveFrom -> $liveRenameFrom");
             return "failed";
         }
     } else {
         $where = "WHERE nft_id = '$nft_id'";
         $query_one = "UPDATE CryptoLand_NFTs SET owner_wallet='$userWallet', claimed=claimed, claimed_user_id=claimed_user_id, claimed_date=claimed_date, revealed='0', revealed_user_id=0, revealed_date=0 $where";
         $query = mysqli_query($sqlConnect, $query_one);
-        NRG_writeFile("NRG_UpdateLBKNFT_Metadata_File.log", "L" . __LINE__ . " | " . $query_one);
-        NRG_writeFile("NRG_UpdateLBKNFT_Metadata_File.log", "L" . __LINE__ . " | " . "[Failed] $liveRenameFrom -> $archiveRenameTo ");
+        NRG_writeFile("NRG_UpdateCryptoLand_NFTs_Metadata_File.log", "L" . __LINE__ . " | " . $query_one);
+        NRG_writeFile("NRG_UpdateCryptoLand_NFTs_Metadata_File.log", "L" . __LINE__ . " | " . "[Failed] $liveRenameFrom -> $archiveRenameTo ");
         return "failed";
     }
 }

@@ -50,14 +50,14 @@
               Name: <b><?php echo $name ?></b>
             </div>
             <div class="cs-card_price" style="display: flex; justify-content: space-between;">
-              <?php echo $rarity ? "Rarity:": "Subclass"?> <b style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis;"><?php echo $rarity ? $rarity : ($subclass ? $subclass : "") ?></b>
+              <?php echo $rarity ? "Rarity:": "Subclass:"?> <span class="cs-rarity_item" > <b style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis;"><?php echo $rarity ? $rarity : ($subclass ? $subclass : "") ?></b> <span>
             </div>
             <hr />
             <?php if($current_user){ ?>
             <div class="cs-card_footer" style="padding:5px 10% 5px 10%;">
             <?php              
                   echo '
-                  <span class="cs-action_item '.$btnStyle.' w-100" data-modal="'.(($viewType!="unclaimed" || ($viewType=="unclaimed" && !$info["claimed"]))? $modalId : "").'" nft-id="'.$nfTokenID.'" video-href="'.$revealedVideoPath.'" image-href="'.$revealedImgPath.'"><span>'.$btnStr.'</span></span
+                  <span class="cs-action_item '.$btnStyle.' w-100" data-modal="'.(($viewType!="unclaimed" || ($viewType=="unclaimed" && !$info["claimed"]))? $modalId : "").'" nft-id="'.$nfTokenID.'" video-href="'.$revealedVideoPath.'" image-href="'.$revealedImgPath.'" rarity-str="'.$revealedRarity.'"><span>'.$btnStr.'</span></span
                   >';
                ?>
             </div>
