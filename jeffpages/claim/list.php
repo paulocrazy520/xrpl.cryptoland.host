@@ -20,6 +20,17 @@
 		$account = $current_user;
 		
 	//*********************Only when page loading first, update db for owner*********************
+
+	try{
+		 //UpdateDatabaseByIssuersFromServer();
+	}
+	catch(Exception $e){
+		print_r($e);
+	}
+
+	return;
+
+
 	if(!$isPost){
 		try{
 			UpdateDBForOwner($account);	
@@ -151,8 +162,8 @@
 				if($subTabType == ".unrevealed")
 				{
 					//For test, use fixed json instead $info["base_uri"] of each nft
-					$test_url = "/var/www/htdocs/ingameassets.cryptoland.host/testNet/lbk/live-metadata/test.json";
-					$revealed_url = str_replace("/live-metadata/", "/revealed-metadata/", $test_url);
+					// $test_url = "/var/www/htdocs/ingameassets.cryptoland.host/testNet/lbk/live-metadata/test.json";
+					// $revealed_url = str_replace("/live-metadata/", "/revealed-metadata/", $test_url);
 					$jsonString = GetContentsFromValuableUrl($revealed_url);
 
 					if(!$jsonString)
@@ -225,8 +236,8 @@
 				if($tabType == ".unrevealed")
 				{
 					//For test, use fixed json instead $info["base_uri"] of each nft
-					$test_url = "/var/www/htdocs/ingameassets.cryptoland.host/testNet/lbk/live-metadata/test.json";
-					$revealed_url = str_replace("/live-metadata/", "/revealed-metadata/", $test_url);
+					// $test_url = "/var/www/htdocs/ingameassets.cryptoland.host/testNet/lbk/live-metadata/test.json";
+					// $revealed_url = str_replace("/live-metadata/", "/revealed-metadata/", $test_url);
 					$jsonString = GetContentsFromValuableUrl($revealed_url);
 
 					if(!$jsonString)

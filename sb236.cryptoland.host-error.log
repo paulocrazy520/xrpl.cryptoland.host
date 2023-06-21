@@ -234,3 +234,15 @@
 [Tue Jun 20 11:58:42.330007 2023] [proxy_fcgi:error] [pid 2881767:tid 139865475774208] [client 64.227.78.208:41668] AH01071: Got error 'Primary script unknown'
 [Tue Jun 20 12:41:52.115641 2023] [core:error] [pid 2883137:tid 139864100026112] [client 83.97.73.89:57224] AH00126: Invalid URI in request POST /cgi-bin/.%2e/.%2e/.%2e/.%2e/bin/sh HTTP/1.1
 [Tue Jun 20 17:06:59.279892 2023] [proxy_fcgi:error] [pid 2881766:tid 139865182160640] (70008)Partial results are valid but processing is incomplete: [client 185.213.175.62:56596] AH01075: Error dispatching request to : (reading input brigade)
+[Tue Jun 20 19:26:23.806429 2023] [autoindex:error] [pid 3033637:tid 139864628504320] [client 35.196.132.85:42468] AH01276: Cannot serve directory /var/www/htdocs/sb236.cryptoland.host/testNet/cryptopian/image/: No matching DirectoryIndex (index.php,index.html) found, and server-generated directory index forbidden by Options directive
+[Tue Jun 20 19:40:24.075703 2023] [cgid:error] [pid 3033637:tid 139864670467840] [client 94.31.83.207:50406] AH01264: script not found or unable to stat: /var/www/cgi-bin/login
+[Tue Jun 20 21:56:49.872481 2023] [proxy_fcgi:error] [pid 3030520:tid 139864980834048] [client 5.188.210.227:64396] AH01071: Got error 'Primary script unknown', referer: https://www.google.com/
+[Tue Jun 20 22:04:18.205462 2023] [proxy_fcgi:error] [pid 3030520:tid 139864594966272] [client 139.59.26.196:45086] AH01071: Got error 'Primary script unknown'
+[Tue Jun 20 23:07:18.024496 2023] [autoindex:error] [pid 3033637:tid 139864628504320] [client 157.230.235.242:57700] AH01276: Cannot serve directory /var/www/htdocs/sb236.cryptoland.host/.git/: No matching DirectoryIndex (index.php,index.html) found, and server-generated directory index forbidden by Options directive
+[Tue Jun 20 23:54:14.720226 2023] [core:error] [pid 3079707:tid 139865165375232] [client 193.32.162.190:52110] AH00126: Invalid URI in request GET /../../mnt/mtd/Config/Account1 HTTP/1.1
+[Wed Jun 21 00:00:19.143562 2023] [proxy_fcgi:error] [pid 3079707:tid 139864502679296] [client 138.197.162.199:43314] AH01071: Got error 'Primary script unknown'
+[Wed Jun 21 00:00:20.058266 2023] [proxy_fcgi:error] [pid 3030522:tid 139865555605248] [client 138.197.162.199:43362] AH01071: Got error 'Primary script unknown'
+[Wed Jun 21 00:42:05.365409 2023] [core:error] [pid 3079707:tid 139865190553344] [client 193.32.162.190:44444] AH00126: Invalid URI in request GET /../../mnt/mtd/Config/Account2 HTTP/1.1
+[Wed Jun 21 02:01:47.457269 2023] [core:error] [pid 3079707:tid 139864511072000] [client 83.97.73.89:36704] AH00126: Invalid URI in request POST /cgi-bin/.%2e/.%2e/.%2e/.%2e/bin/sh HTTP/1.1
+[Wed Jun 21 06:02:07.506768 2023] [proxy_fcgi:error] [pid 3030522:tid 139865555605248] [client 99.79.162.139:48342] AH01071: Got error 'Primary script unknown'
+[Wed Jun 21 06:02:07.507572 2023] [proxy_fcgi:error] [pid 3079707:tid 139865198946048] [client 99.79.162.139:48344] AH01071: Got error 'Primary script unknown'

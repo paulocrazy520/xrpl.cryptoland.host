@@ -166,15 +166,21 @@ function UpdateDatabaseByIssuersFromServer($issuer = null){
     $ownedNfts = GetIssuedNftsFromServer($issuer);
 
     $index = 0;
-    $user_id = 3;
-    foreach($ownedNfts as $nft){
-        if(!GetNftInfoFromDatabase($nft->NFTokenID))
-        {
+    $user_id = 0;
+    $countArray = [0,0,0,0,0];
 
+    foreach($ownedNfts as $nft){
+        // if(!GetNftInfoFromDatabase($nft->NFTokenID))
+        {
             $nft_id = $nft->NFTokenID;
             $owner_wallet = $nft->Owner;
             $issuer_wallet = $nft->Issuer;
+
             $base_uri = GetAsciiStringFromHex($nft->URI);
+            $path_parts = pathinfo($base_uri);
+            $base_uri_directory = $path_parts["dirname"];
+            $file = $path_parts["basename"];
+
             $nft_serial = $nft->Sequence;
             $taxon = $nft->Taxon;
 
@@ -182,77 +188,126 @@ function UpdateDatabaseByIssuersFromServer($issuer = null){
             $json = json_decode($jsonString, true);
             $name = $json['name']; // Pull Name data from URI
 
-            if($index >= 24)
-                $user_id = 0;
+            $reserved = 0;
 
-            if(strpos($name, "Loot Box Key") !== false) 
+            // if($index >= 10)
+            // {
+            //     $user_id = 0;
+            //     break;
+            // }
+
+            if(strpos($name, "Key #") !== false) 
+            {
                 $assetType = 1;
-            else if(strpos($name, "Consumable Vial") !== false)
-                $assetType = 2;
+                $countArray[0]++;
+                if($countArray[0] <= 15){
+                    $user_id = 3;
+                }
+                else
+                    $user_id = 0;
 
-            $tableName = $assetType == 1 ? "lbk_nft"  : "vials_nft";
+            }
+            else if(strpos($name, "Vial #") !== false)
+            {
+                $assetType = 2;
+                $countArray[1]++;
+                if($countArray[1] <= 15){
+                    $user_id = 3;
+                }
+                else
+                    $user_id = 0;
+            }
+            else if(strpos($name, "Box #") !== false){
+                $assetType = 3;
+                $countArray[2]++;
+                if($countArray[2] <= 15){
+                    $user_id = 3;
+                }
+                else
+                    $user_id = 0;
+            }
+            else if(strpos($name, "Land #") !== false)
+            {
+                $assetType = 4;
+                $countArray[3]++;
+                if($countArray[3] <= 15){
+                    $user_id = 3;
+                }
+                else
+                    $user_id = 0;
+            }
+            else if(strpos($name, "Avatar #") !== false || strpos($name, "Cryptopian #") !== false)
+            {
+                $assetType = 5;
+                $countArray[4]++;
+                if($countArray[4] <= 15){
+                    $user_id = 3;
+                }
+                else
+                    $user_id = 0;
+            }
 
             $timeNow = time();
 
-            $sql = "INSERT INTO user_nft
-                    ( nft_uuid, nft_id
-                    ,user_id, date_created
-                    ,last_update ,owner_wallet
-                    ,assetType
-                    )
-                    VALUES
-                    (UUID(), '$nft_id', '$user_id', $timeNow, $timeNow, '$owner_wallet', '$assetType');";       
+            $sql = "SELECT nft_id from CryptoLand_NFTs WHERE nft_id = '$nft_id'";
+            $result = mysqli_query($sqlConnect, $sql);
 
-            print_r($sql);
-            echo "<br/>";
-
-            $result = mysqli_query($sqlConnect, $sql) or die("Error in Selecting " . mysqli_error($sqlConnect));
+            $jsonArray = array();
+            while ($row = mysqli_fetch_assoc($result)) {
+                $jsonArray[] = $row;
+            }
 
 
-            if($result){
-                $sql = "DELETE FROM $tableName WHERE nft_id = '$nft_id'";
-                $result = mysqli_query($sqlConnect, $sql);
-
-                $sql = "INSERT INTO $tableName (
-                    nft_uuid
-                    , nft_id
-                    , issuer_wallet
-                    , owner_wallet
-                    , nft_serial
-                    , minted_date
-                    , base_uri
-                    , taxon
-                    , burnable
-                    , only_xrp
-                    , transferable
-                    , transferred_status
-                    , transferred_date
-                    , claimed
-                    , claimed_user_id
-                    , claimed_date
-                    , revealed
-                    , revealed_user_id
-                    , revealed_date
-                    , assetType
-                    )
+            if(empty($jsonArray))
+            {
+                $sql = "INSERT INTO CryptoLand_NFTs (
+                    nft_uuid, nft_id, nft_serial, minted_date, base_uri, file, taxon, burnable, only_xrp, transferable, 
+                    claimed, claimed_user_id, claimed_date, 
+                    transfered, transfered_user_id, transfered_date, tx_id,
+                    revealed,revealed_user_id, revealed_date, 
+                    user_id, date_created, last_update, issuer_wallet, owner_wallet, reserved, assetType
+                  )
                     VALUES
                     (
-                      (SELECT nft_uuid FROM user_nft WHERE nft_id = '$nft_id')
-                      , '$nft_id', '$issuer_wallet', '$owner_wallet', '$nft_serial'
-                      , $timeNow, '$base_uri' 
-                      , '0'
-                      , '1'
-                      , '0'
-                      , '1'
-                      , '0', 0
-                      , '0'
-                      , 0
-                      , 0
-                      , '0'
-                      , 0
-                      , 0
-                      , '$assetType'
+                        UUID(), '$nft_id',  '$nft_serial' , $timeNow, '$base_uri_directory', '$file', '0', '1', '0', '1',
+                        '0', '0', '0',
+                        '0', '0', '0', '',
+                        '0', '0', '0',
+                        '$user_id', $timeNow, $timeNow, '$issuer_wallet', '$owner_wallet','$reserved', '$assetType'
                       )";
+
+                echo "<br/>";
+                $result = mysqli_query($sqlConnect, $sql);
+            }
+            else
+            {
+                $sql = "UPDATE CryptoLand_NFTs SET 
+                        nft_uuid = UUID(),
+                        nft_serial = '$nft_serial',
+                        minted_date = $timeNow,
+                        base_uri = '$base_uri_directory',
+                        file = '$file',
+                        taxon = '0',
+                        burnable = '1',
+                        only_xrp = '0',
+                        transferable = '1',
+                        claimed = '0',
+                        claimed_user_id = '0',
+                        claimed_date = '0',
+                        transfered = '0',
+                        transfered_user_id = '0',
+                        transfered_date = '0',
+                        tx_id = '',
+                        revealed = '0',
+                        revealed_user_id = '0',
+                        revealed_date = '0',
+                        user_id = '$user_id',
+                        last_update = $timeNow,
+                        issuer_wallet = '$issuer_wallet',
+                        owner_wallet = '$owner_wallet',
+                        reserved = '$reserved',
+                        assetType = '$assetType'
+                WHERE nft_id = '$nft_id';";
 
                 print_r($sql);
                 echo "<br/>";
@@ -339,7 +394,7 @@ function GetNftInfoFromDatabase($nft_id)
 {
     global $sqlConnect;
 
-    $sql =  "SELECT nft_id FROM user_nft WHERE user_nft.nft_id = '$nft_id'";
+    $sql =  "SELECT nft_id FROM CryptoLand_NFTs WHERE nft_id = '$nft_id'";
     
     $result = mysqli_query($sqlConnect, $sql) or die("Error in Selecting " . mysqli_error($sqlConnect));
 

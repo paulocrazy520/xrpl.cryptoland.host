@@ -2288,15 +2288,15 @@ function NRG_updateNFTAsTransferred($nftId, $tx)
 
     if ($assetType == 1) {
         $result = NRG_UpdateLBKNFT(0, $userId, $timestamp, 0, 0, 0, $nftId, $userWallet, 1, $timestamp, $tx);
-        $result2 = NRG_UpdateNFTHistory($nft['nft_uuid'], $nft['nft_id'], $nft['nft_serial'], 0, $timestamp, 1, $timestamp, $userId, $userId, 'rDUSz5wt8ZVENp7ZJq4qrv2f9A2h56Cf3b', $userWallet, '', '', '');
+        $result2 = NRG_UpdateNFTHistory($nft['nft_uuid'], $nft['nft_id'], $nft['nft_serial'], 0, $timestamp, 1, $timestamp, $userId, $userId, $_ENV['DEFAULT_ISSUER_ADDRESS'], $userWallet, '', '', '');
     } elseif ($assetType == 2) {
         $result = NRG_UpdateVialsNFT(0, $userId, $timestamp, 0, 0, 0, $nftId, $userWallet, 1, $timestamp, $tx);
-        $result2 = NRG_UpdateNFTHistory($nft['nft_uuid'], $nft['nft_id'], $nft['nft_serial'], 0, $timestamp, 1, $timestamp, $userId, $userId, 'rDUSz5wt8ZVENp7ZJq4qrv2f9A2h56Cf3b', $userWallet, '', '', '');
+        $result2 = NRG_UpdateNFTHistory($nft['nft_uuid'], $nft['nft_id'], $nft['nft_serial'], 0, $timestamp, 1, $timestamp, $userId, $userId, $_ENV['DEFAULT_ISSUER_ADDRESS'], $userWallet, '', '', '');
     } else {
     }
     echo $result;
     //$result = NRG_UpdateLBKNFT(1, $userId, $timestamp, 0, 0, 0, $nftId, $userWallet);
-    //$result2 = NRG_UpdateNFTHistory($nft['nft_uuid'], $nft['nft_id'], $nft['nft_serial'], 0, $timestamp, 1, $timestamp, $userId, $userId, 'rDUSz5wt8ZVENp7ZJq4qrv2f9A2h56Cf3b', $userWallet, '', '', '');
+    //$result2 = NRG_UpdateNFTHistory($nft['nft_uuid'], $nft['nft_id'], $nft['nft_serial'], 0, $timestamp, 1, $timestamp, $userId, $userId, $_ENV['DEFAULT_ISSUER_ADDRESS'], $userWallet, '', '', '');
 }
 
 function NRG_updateNFTAsClaimed($nftId, $value = '1')
@@ -2311,15 +2311,15 @@ function NRG_updateNFTAsClaimed($nftId, $value = '1')
 
     if ($assetType == 1) {
         $result = NRG_UpdateLBKNFT($value, $userId, $timestamp, 0, 0, 0, $nftId, $userWallet, 0, '');
-        $result2 = NRG_UpdateNFTHistory($nft['nft_uuid'], $nft['nft_id'], $nft['nft_serial'], 0, $timestamp, 1, $timestamp, $userId, $userId, 'rDUSz5wt8ZVENp7ZJq4qrv2f9A2h56Cf3b', $userWallet, '', '', '');
+        $result2 = NRG_UpdateNFTHistory($nft['nft_uuid'], $nft['nft_id'], $nft['nft_serial'], 0, $timestamp, 1, $timestamp, $userId, $userId, $_ENV['DEFAULT_ISSUER_ADDRESS'], $userWallet, '', '', '');
     } elseif ($assetType == 2) {
         $result = NRG_UpdateVialsNFT($value, $userId, $timestamp, 0, 0, 0, $nftId, $userWallet, 0, '');
-        $result2 = NRG_UpdateNFTHistory($nft['nft_uuid'], $nft['nft_id'], $nft['nft_serial'], 0, $timestamp, 1, $timestamp, $userId, $userId, 'rDUSz5wt8ZVENp7ZJq4qrv2f9A2h56Cf3b', $userWallet, '', '', '');
+        $result2 = NRG_UpdateNFTHistory($nft['nft_uuid'], $nft['nft_id'], $nft['nft_serial'], 0, $timestamp, 1, $timestamp, $userId, $userId, $_ENV['DEFAULT_ISSUER_ADDRESS'], $userWallet, '', '', '');
     } else {
     }
 
     //$result = NRG_UpdateLBKNFT(1, $userId, $timestamp, 0, 0, 0, $nftId, $userWallet);
-    //$result2 = NRG_UpdateNFTHistory($nft['nft_uuid'], $nft['nft_id'], $nft['nft_serial'], 0, $timestamp, 1, $timestamp, $userId, $userId, 'rDUSz5wt8ZVENp7ZJq4qrv2f9A2h56Cf3b', $userWallet, '', '', '');
+    //$result2 = NRG_UpdateNFTHistory($nft['nft_uuid'], $nft['nft_id'], $nft['nft_serial'], 0, $timestamp, 1, $timestamp, $userId, $userId, $_ENV['DEFAULT_ISSUER_ADDRESS'], $userWallet, '', '', '');
 }
 
 function NRG_updateNFTAsRevealed($nftId)
@@ -2335,16 +2335,16 @@ function NRG_updateNFTAsRevealed($nftId)
 
     if ($assetType == 1) {
         $result = NRG_UpdateLBKNFT('', '', '', 1, $userId, $timestamp, $nftId, $userWallet, 0, '');
-        $result2 = NRG_UpdateNFTHistory($nft['nft_uuid'], $nft['nft_id'], $nft['nft_serial'], 1, $timestamp, 1, $timestamp, $userId, $userId, 'rDUSz5wt8ZVENp7ZJq4qrv2f9A2h56Cf3b', $userWallet, '', '', '');
+        $result2 = NRG_UpdateNFTHistory($nft['nft_uuid'], $nft['nft_id'], $nft['nft_serial'], 1, $timestamp, 1, $timestamp, $userId, $userId, $_ENV['DEFAULT_ISSUER_ADDRESS'], $userWallet, '', '', '');
     } elseif ($assetType == 2) {
         $result = NRG_UpdateVialsNFT('', '', '', 1, $userId, $timestamp, $nftId, $userWallet, 0, '');
-        $result2 = NRG_UpdateNFTHistory($nft['nft_uuid'], $nft['nft_id'], $nft['nft_serial'], 1, $timestamp, 1, $timestamp, $userId, $userId, 'rDUSz5wt8ZVENp7ZJq4qrv2f9A2h56Cf3b', $userWallet, '', '', '');
+        $result2 = NRG_UpdateNFTHistory($nft['nft_uuid'], $nft['nft_id'], $nft['nft_serial'], 1, $timestamp, 1, $timestamp, $userId, $userId, $_ENV['DEFAULT_ISSUER_ADDRESS'], $userWallet, '', '', '');
     } else {
     }
 
     echo $result;
     //$result = NRG_UpdateLBKNFT('', '', '', 1, $userId, $timestamp, $nftId, $userWallet);
-    //$result2 = NRG_UpdateNFTHistory($nft['nft_uuid'], $nft['nft_id'], $nft['nft_serial'], 1, $timestamp, 1, $timestamp, $userId, $userId, 'rDUSz5wt8ZVENp7ZJq4qrv2f9A2h56Cf3b', $userWallet, '', '', '');
+    //$result2 = NRG_UpdateNFTHistory($nft['nft_uuid'], $nft['nft_id'], $nft['nft_serial'], 1, $timestamp, 1, $timestamp, $userId, $userId, $_ENV['DEFAULT_ISSUER_ADDRESS'], $userWallet, '', '', '');
 }
 
 function NRG_UpdateLBKNFT($claimed, $claimed_user_id, $claimed_date, $revealed, $revealed_user_id, $revealed_date, $nft_id, $userWallet, $transferred_status, $transferred_date, $tx_id = '')
@@ -2583,8 +2583,8 @@ function NRG_Assign_Coinbase_LBK($uNewAvatar, $user_id)
 
             $nft_uuid = $fetched_data['nft_uuid']; //'4d6e6445-bd14-11ed-9d2d-b7f9b9b4589e', 
             $nft_id = $fetched_data['nft_id']; //'000927100F9E923BB432E9761F33B9B369E32BFF1EA71FC90000099B00000000', 
-            $issuer_wallet = $fetched_data['issuer_wallet']; //'rDUSz5wt8ZVENp7ZJq4qrv2f9A2h56Cf3b', 
-            $owner_wallet = $fetched_data['owner_wallet']; //'rDUSz5wt8ZVENp7ZJq4qrv2f9A2h56Cf3b', 
+            $issuer_wallet = $fetched_data['issuer_wallet']; //$_ENV['DEFAULT_ISSUER_ADDRESS'], 
+            $owner_wallet = $fetched_data['owner_wallet']; //$_ENV['DEFAULT_ISSUER_ADDRESS'], 
             $nft_serial = $fetched_data['nft_serial']; //0, 
             $minted_date = $fetched_data['minted_date']; //1678213042, 
             $base_uri = $fetched_data['base_uri']; //'https://ingameassets.cryptoland.host/lbk/metadata/1.json', 
@@ -2640,8 +2640,8 @@ function NRG_Assign_Coinbase_Vial($uNewAvatar, $user_id)
 
             $nft_uuid = $fetched_data['nft_uuid']; //'4d6e6445-bd14-11ed-9d2d-b7f9b9b4589e', 
             $nft_id = $fetched_data['nft_id']; //'000927100F9E923BB432E9761F33B9B369E32BFF1EA71FC90000099B00000000', 
-            $issuer_wallet = $fetched_data['issuer_wallet']; //'rDUSz5wt8ZVENp7ZJq4qrv2f9A2h56Cf3b', 
-            $owner_wallet = $fetched_data['owner_wallet']; //'rDUSz5wt8ZVENp7ZJq4qrv2f9A2h56Cf3b', 
+            $issuer_wallet = $fetched_data['issuer_wallet']; //$_ENV['DEFAULT_ISSUER_ADDRESS'], 
+            $owner_wallet = $fetched_data['owner_wallet']; //$_ENV['DEFAULT_ISSUER_ADDRESS'], 
             $nft_serial = $fetched_data['nft_serial']; //0, 
             $minted_date = $fetched_data['minted_date']; //1678213042, 
             $base_uri = $fetched_data['base_uri']; //'https://ingameassets.cryptoland.host/lbk/metadata/1.json', 
@@ -2697,8 +2697,8 @@ function NRG_Assign_XUMM_LBK($uNewAvatar, $user_id)
 
             $nft_uuid = $fetched_data['nft_uuid']; //'4d6e6445-bd14-11ed-9d2d-b7f9b9b4589e', 
             $nft_id = $fetched_data['nft_id']; //'000927100F9E923BB432E9761F33B9B369E32BFF1EA71FC90000099B00000000', 
-            $issuer_wallet = $fetched_data['issuer_wallet']; //'rDUSz5wt8ZVENp7ZJq4qrv2f9A2h56Cf3b', 
-            $owner_wallet = $fetched_data['owner_wallet']; //'rDUSz5wt8ZVENp7ZJq4qrv2f9A2h56Cf3b', 
+            $issuer_wallet = $fetched_data['issuer_wallet']; //$_ENV['DEFAULT_ISSUER_ADDRESS'], 
+            $owner_wallet = $fetched_data['owner_wallet']; //$_ENV['DEFAULT_ISSUER_ADDRESS'], 
             $nft_serial = $fetched_data['nft_serial']; //0, 
             $minted_date = $fetched_data['minted_date']; //1678213042, 
             $base_uri = $fetched_data['base_uri']; //'https://ingameassets.cryptoland.host/lbk/metadata/1.json', 
@@ -2754,8 +2754,8 @@ function NRG_Assign_XUMM_Vial($uNewAvatar, $user_id)
 
             $nft_uuid = $fetched_data['nft_uuid']; //'4d6e6445-bd14-11ed-9d2d-b7f9b9b4589e', 
             $nft_id = $fetched_data['nft_id']; //'000927100F9E923BB432E9761F33B9B369E32BFF1EA71FC90000099B00000000', 
-            $issuer_wallet = $fetched_data['issuer_wallet']; //'rDUSz5wt8ZVENp7ZJq4qrv2f9A2h56Cf3b', 
-            $owner_wallet = $fetched_data['owner_wallet']; //'rDUSz5wt8ZVENp7ZJq4qrv2f9A2h56Cf3b', 
+            $issuer_wallet = $fetched_data['issuer_wallet']; //$_ENV['DEFAULT_ISSUER_ADDRESS'], 
+            $owner_wallet = $fetched_data['owner_wallet']; //$_ENV['DEFAULT_ISSUER_ADDRESS'], 
             $nft_serial = $fetched_data['nft_serial']; //0, 
             $minted_date = $fetched_data['minted_date']; //1678213042, 
             $base_uri = $fetched_data['base_uri']; //'https://ingameassets.cryptoland.host/lbk/metadata/1.json', 
