@@ -4,8 +4,6 @@ use Dotenv\Dotenv;
 $dotenv = Dotenv::createImmutable(__DIR__);
 $dotenv->load();
 
-
-
 $forceDebug = true;
 if ($forceDebug == true) {
     ini_set('display_errors', 1);

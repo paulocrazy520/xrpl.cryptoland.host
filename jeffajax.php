@@ -110,11 +110,14 @@ function Jeff_GetUserInfo($user_id)
             $twenty_four_hours_ago = time() - (24 * 60 * 60);
 
             if ($timestamp < $twenty_four_hours_ago) { // The timestamp is older than 24 hours
+                echo "token expired for 24 hours";
                 return;
             }
 
             echo json_encode($row);
         }
+        else
+            echo "verifying token";
     }
 }
 
@@ -422,7 +425,7 @@ function JEFF_SubscribePayload($user_id){
                         if($table_name == "claim_offers")
                         {
                     
-                            NRG_updateNFTAsTransferred($nft_token_id, $tx);
+                            JEFF_updateNFTAsTransferred($nft_token_id, $tx);
                             //echo $table_name;
                         }
                         else
@@ -452,7 +455,6 @@ function JEFF_SubscribePayload($user_id){
                 echo false;
                 //echo "Payment request rejected :(\n";
                 return [];
-                //NRG_updateNFTAsClaimed($$request_data->offeredNftTokenId);
             };
 
             if(isset($request_data->createdPayload))
@@ -523,11 +525,8 @@ function Jeff_RevealItem($user_id)
         return;
     }
 
-    NRG_updateNFTAsRevealed($request_data->nftId); 
+    JEFF_updateNFTAsRevealed($request_data->nftId); 
 }
-
-
-
 
 // *********************ToMarcus**************************
 // *******************Unclaim Item data*******************
@@ -554,7 +553,7 @@ function Jeff_UnclaimItem($user_id)
         $json = json_decode($result, true);
 
         if (!empty($json['offerId'])) {
-            NRG_updateNFTAsClaimed($nft_id, '0');           
+            JEFF_updateNFTAsClaimed($nft_id, '0');           
             echo  $result;
         }
     }
@@ -574,22 +573,9 @@ function Jeff_ClaimItem($user_id)
         return;
     }
 
-    $sql =  "SELECT user_nft.nft_id as nft_id, 
-    CASE
-        WHEN user_nft.assetType = 1 THEN lbk_nft.transferred_status
-        WHEN user_nft.assetType = 2 THEN vials_nft.transferred_status
-        ELSE NULL
-    END AS transferred_status,
-    CASE
-        WHEN user_nft.assetType = 1 THEN lbk_nft.transferred_date
-        WHEN user_nft.assetType = 2 THEN vials_nft.transferred_date
-        ELSE NULL
-    END AS transferred_date
-    FROM user_nft
-    LEFT JOIN lbk_nft ON user_nft.nft_id = lbk_nft.nft_id
-    LEFT JOIN vials_nft ON user_nft.nft_id = vials_nft.nft_id WHERE  user_nft.user_id='".$user_id."' AND  user_nft.nft_id ='".$nft_id."' AND (
-    (user_nft.assetType = 1 AND lbk_nft.transferred_status = '0') OR 
-    (user_nft.assetType = 2 AND vials_nft.transferred_status = '0'))";
+    $sql =  "SELECT nft_id, transferred, transferred_date
+    FROM CryptoLand_NFTs
+    WHERE user_id='".$user_id."' AND nft_id ='".$nft_id."' AND transferred = '0' AND claimed ='0'";
 
     try{
         $result = mysqli_query($sqlConnect, $sql) or die("Error in Selecting " . mysqli_error($sqlConnect));
@@ -599,10 +585,11 @@ function Jeff_ClaimItem($user_id)
             $jsonArray[] = $row;
         }
 
-        if($jsonArray && count($jsonArray) >= 1)
+        if($jsonArray && count($jsonArray) == 1)
         {
             $json = $jsonArray[0];
-            $status = $json['transferred_status'];
+            
+            $status = $json['transferred'];
             $date = $json['transferred_date'];
 
             $user_info = GetUserInfoByUserId($user_id);
@@ -623,15 +610,16 @@ function Jeff_ClaimItem($user_id)
                 $json = json_decode($result, true);
 
                 if (!empty($json['offerId'])) {
-                    NRG_updateNFTAsClaimed($nft_id);           
+                    Jeff_updateNFTAsClaimed($nft_id, '1');           
                     echo  $result;
                 }
             }
         }
+        else
+            echo "claimed";
+            return;
     }
     catch(Exception $e){
         print_r($e);
     }
-
-    //NRG_updateNFTAsRevealed($request_data->nftId); 
 }

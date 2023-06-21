@@ -38,6 +38,7 @@ if(isset($_SESSION["user_id"]) && !empty($_SESSION["user_id"]))
 
 
 /*****************Create asset folder for test*************************/
+//This functions can be called optionally//
 function CreateAssetFolder(){
 
     $typeArray = ["vials", "lbk", "box", "land", "cryptopian"];
@@ -79,9 +80,10 @@ function CreateAssetFolder(){
 }
 
 /*****************Update db with nfts owned by the owner from XRPL Server******************* */
+//This functions can be called optionally//
 //Update infos with xrpl data from server
-//1)owner_address and user_id of nft_user table
-//2)owner_address and transferred_status of vials_nft or lbk_nft, etc…
+//owner_address and user_id of CryptoLand_NFTs table
+
 function UpdateDBForOwner($account){
     global $server_url, $sqlConnect,  $default_issuer_address;;
 
@@ -100,50 +102,22 @@ function UpdateDBForOwner($account){
         {
 
             if($account == $default_issuer_address){
-                $sql =  "UPDATE user_nft 
-               
+                $sql =  "UPDATE CryptoLand_NFTs 
                 SET 
-                user_nft.owner_wallet='".$account."',
-                lbk_nft.owner_wallet=CASE WHEN user_nft.assetType=1 THEN '".$account."' ELSE lbk_nft.owner_wallet END,
-                vials_nft.owner_wallet=CASE WHEN user_nft.assetType=2 THEN '".$account."' ELSE vials_nft.owner_wallet END,
-
-                lbk_nft.transferred_status=CASE WHEN user_nft.assetType=1 THEN 0 ELSE lbk_nft.transferred_status END,
-                vials_nft.transferred_status=CASE WHEN user_nft.assetType=2 THEN 0 ELSE vials_nft.transferred_status END,
-                lbk_nft.transferred_date=CASE WHEN user_nft.assetType=1 THEN 0 ELSE lbk_nft.transferred_date END,
-                vials_nft.transferred_date=CASE WHEN user_nft.assetType=2 THEN 0 ELSE vials_nft.transferred_date END,
-
-                lbk_nft.revealed=CASE WHEN user_nft.assetType=1 THEN 0 ELSE lbk_nft.revealed END,
-                vials_nft.revealed=CASE WHEN user_nft.assetType=2 THEN 0 ELSE vials_nft.revealed END,
-                lbk_nft.revealed_date=CASE WHEN user_nft.assetType=1 THEN 0 ELSE lbk_nft.revealed_date END,
-                vials_nft.revealed_date=CASE WHEN user_nft.assetType=2 THEN 0 ELSE vials_nft.revealed_date END,
-                
-                lbk_nft.claimed_date=CASE WHEN TIMESTAMPDIFF(HOUR, FROM_UNIXTIME(lbk_nft.claimed_date), NOW()) >= 1 AND user_nft.assetType=1 THEN 0 ELSE lbk_nft.claimed_date END, 
-                lbk_nft.claimed=CASE WHEN TIMESTAMPDIFF(HOUR, FROM_UNIXTIME(lbk_nft.claimed_date), NOW()) >= 1 AND user_nft.assetType=2 THEN 0 ELSE lbk_nft.claimed END, 
-    
-                vials_nft.claimed_date=CASE WHEN TIMESTAMPDIFF(HOUR, FROM_UNIXTIME(vials_nft.claimed_date), NOW()) >= 1 AND user_nft.assetType=1 THEN 0 ELSE vials_nft.claimed_date END, 
-                vials_nft.claimed=CASE WHEN TIMESTAMPDIFF(HOUR, FROM_UNIXTIME(vials_nft.claimed_date), NOW()) >= 1 AND user_nft.assetType=2 THEN 0 ELSE vials_nft.claimed END, 
-
-                lbk_nft.revealed_user_id=CASE WHEN user_nft.assetType=1 THEN 0 ELSE lbk_nft.revealed_user_id END,
-                vials_nft.revealed_user_id=CASE WHEN user_nft.assetType=2 THEN 0 ELSE vials_nft.revealed_user_id END         
-
-                WHERE user_nft.nft_id ='".$nft_id."'";
+                owner_wallet='".$account."',
+                transferred='0', revealed='0'
+                claimed_date=CASE WHEN TIMESTAMPDIFF(HOUR, FROM_UNIXTIME(claimed_date), NOW()) >= 1,
+                claimed=CASE WHEN TIMESTAMPDIFF(HOUR, FROM_UNIXTIME(vials_nft.claimed_date), NOW()) >= 1   
+                WHERE nft_id ='".$nft_id."'";
                 $result = mysqli_query($sqlConnect, $sql) ;   
             }
             else
             {
-                $sql =  "UPDATE user_nft 
-                LEFT JOIN lbk_nft ON user_nft.nft_id = lbk_nft.nft_id
-                LEFT JOIN vials_nft ON user_nft.nft_id = vials_nft.nft_id 
+                $sql =  "UPDATE CryptoLand_NFTs 
                 SET 
-                user_nft.owner_wallet='".$account."', 
-
-                lbk_nft.owner_wallet=CASE WHEN user_nft.assetType=1 THEN '".$account."' ELSE lbk_nft.owner_wallet END,
-                vials_nft.owner_wallet=CASE WHEN user_nft.assetType=2 THEN '".$account."' ELSE vials_nft.owner_wallet END,
-
-                lbk_nft.transferred_status=CASE WHEN user_nft.assetType=1 THEN 1 ELSE lbk_nft.transferred_status END,
-                vials_nft.transferred_status=CASE WHEN user_nft.assetType=2 THEN 1 ELSE vials_nft.transferred_status END
-
-                WHERE user_nft.nft_id ='".$nft_id."' AND user_nft.user_id ='".$_SESSION["user_id"]."'";
+                owner_wallet='".$account."',
+                transferred='1', claimed='1'
+                WHERE nft_id ='".$nft_id."' AND user_id ='".$_SESSION["user_id"]."'";
                 $result = mysqli_query($sqlConnect, $sql) ;   
             }
         }
@@ -154,9 +128,9 @@ function UpdateDBForOwner($account){
     }
 }
 
-/*****Update user_nft, lbk_nft and vials_nft tables for specific issuer address using infos from xrpl server****** */
+/*****Update CryptoLand_NFTs table for specific issuer address using infos from xrpl server****** */
 //This function will be used when add new nfts to database
-function UpdateDatabaseByIssuersFromServer($issuer = null){
+function UpdateDBeByIssuersFromServer($issuer = null){
     global $sqlConnect, $current_user, $default_issuer_address;
 
     if(!$issuer)
@@ -190,12 +164,6 @@ function UpdateDatabaseByIssuersFromServer($issuer = null){
             $name = $json['name']; // Pull Name data from URI
 
             $reserved = 0;
-
-            // if($index >= 10)
-            // {
-            //     $user_id = 0;
-            //     break;
-            // }
 
             if(strpos($name, "Key #") !== false) 
             {
@@ -830,5 +798,185 @@ function GetContentsFromValuableUrl($url){
     }
     catch(Exception $e){
         return;
+    }
+}
+
+//**********************************Functions for database ****************************/
+//*****************Cutomzied functions from functions_custom_old.php******************/
+
+//JEFF_getNFT: get nft info from CryptoLand_NFTs//
+//JEFF_updateNFTAsClaimed set claimed info to CryptoLand_NFTs//
+//JEFF_UpdateNFT set nft info to CryptoLand_NFTs//
+//JEFF_UpdateNFTHistory set nft history to CryptoLand_NFTs//
+
+function JEFF_getNFT($nft_id)
+{
+    global $sqlConnect;
+
+    $sql = "SELECT * from CryptoLand_NFTs WHERE nft_id = '$nft_id'";
+    $result = mysqli_query($sqlConnect, $sql) or die("Error in Selecting " . mysqli_error($sqlConnect));
+
+    $jsonArray = [];
+    while ($row = mysqli_fetch_assoc($result)) {
+        $jsonArray[] = $row;
+    }
+
+    if (!empty($jsonArray) && count($jsonArray) === 1) {
+        return $jsonArray[0];
+    }
+    return $jsonArray;
+}
+
+function JEFF_updateNFTAsTransferred($nftId, $tx)
+{
+    global $nrg;
+
+    $nft = JEFF_getNFT($nftId);
+    $assetType = $nft['assetType'];
+    $timestamp = time();
+    $userId = $nrg['user']['user_id'];
+    $userWallet = $nrg['user']['xumm_address'];
+
+
+    $result = JEFF_UpdateNFT('', '', '', 0, 0, 0, $nftId, $userWallet, 1, $timestamp, $userId, $tx);
+    $result2 = NRG_UpdateNFTHistory($nft['nft_uuid'], $nft['nft_id'], $nft['nft_serial'], 0, $timestamp, 1, $timestamp, $userId, $userId, $_ENV['DEFAULT_ISSUER_ADDRESS'], $userWallet, '', '', '');
+
+    echo $result;
+}
+
+function JEFF_updateNFTAsRevealed($nftId)
+{
+    global $nrg;
+
+    $nft = JEFF_getNFT($nftId);
+    $assetType = $nft['assetType'];
+
+    $timestamp = time();
+    $userId = $nrg['user']['user_id'];
+    $userWallet = $nrg['user']['xumm_address'];
+
+    $result = JEFF_UpdateNFT('', '', '', 1, $userId, $timestamp, $nftId, $userWallet, 0, 0, 0, '');
+    $result2 = NRG_UpdateNFTHistory($nft['nft_uuid'], $nft['nft_id'], $nft['nft_serial'], 1, $timestamp, 1, $timestamp, $userId, $userId, $_ENV['DEFAULT_ISSUER_ADDRESS'], $userWallet, '', '', '');
+
+    echo $result;
+}
+
+function JEFF_updateNFTAsClaimed($nftId, $value)
+{
+    global $nrg;
+
+    $nft = JEFF_getNFT($nftId);
+    $assetType = $nft['assetType'];
+    $timestamp = time();
+    $userId = $nrg['user']['user_id'];
+    $userWallet = $nrg['user']['xumm_address'];
+
+    $result = JEFF_UpdateNFT($value, $userId, $timestamp, 0, 0, 0, $nftId, $userWallet, 0, 0, 0, '');
+    $result2 = JEFF_UpdateNFTHistory($nft['nft_uuid'], $nft['nft_id'], $nft['nft_serial'], 0, $timestamp, 1, $timestamp, $userId, $userId, $_ENV['DEFAULT_ISSUER_ADDRESS'], $userWallet, '', '', '');
+}
+
+function JEFF_UpdateNFT($claimed, $claimed_user_id, $claimed_date, $revealed, $revealed_user_id, $revealed_date, $nft_id, $userWallet, $transferred, $transferred_user_id, $transferred_date, $tx_id = '')
+{
+    global $nrg, $sqlConnect, $cache;
+
+    $where = "WHERE nft_id = '$nft_id'";
+
+    if ($claimed == '1' && $claimed_user_id == $nrg["user"]["user_id"]) {
+        $query_one = "UPDATE CryptoLand_NFTs SET issuer_wallet=issuer_wallet, owner_wallet='$userWallet', claimed='$claimed', claimed_user_id=$claimed_user_id, claimed_date=$claimed_date, revealed=revealed, revealed_user_id=revealed_user_id, revealed_date=revealed_date, transferred=transferred, transferred_user_id=transferred_user_id, transferred_date=transferred_date  $where";
+        NRG_writeFile("NRG_UpdateLBKNFT.log", "L" . __LINE__ . " | " . $query_one);
+    }  
+    else if ($revealed == '1' && $revealed_user_id == $nrg["user"]["user_id"]) {
+        $query_one = "UPDATE CryptoLand_NFTs SET issuer_wallet=issuer_wallet, owner_wallet='$userWallet', claimed=claimed, claimed_user_id=claimed_user_id, claimed_date=claimed_date, revealed='$revealed', revealed_user_id=$revealed_user_id, revealed_date=$revealed_date, transferred=transferred, transferred_user_id=transferred_user_id, transferred_date=transferred_date $where";
+        NRG_writeFile("NRG_UpdateLBKNFT.log", "L" . __LINE__ . " | " . $query_one);
+    }
+    else if ($transferred == '1') {
+        $query_one = "UPDATE CryptoLand_NFTs SET issuer_wallet=issuer_wallet, owner_wallet='$userWallet', claimed=claimed, claimed_user_id=claimed_user_id, claimed_date=claimed_date, revealed=revealed, revealed_user_id=revealed_user_id, revealed_date=revealed_date, transferred='$transferred',transferred_user_id='$transferred_user_id', transferred_date='$transferred_date', tx_id='$tx_id' $where";
+        NRG_writeFile("NRG_UpdateLBKNFT.log", "L" . __LINE__ . " | " . $query_one);
+    }
+    else{ //set unclaim data
+        $query_one = "UPDATE CryptoLand_NFTs SET issuer_wallet=issuer_wallet, owner_wallet=owner_wallet, claimed='$claimed', claimed_user_id='0', claimed_date='0', revealed=revealed, revealed_user_id=revealed_user_id, revealed_date=revealed_date, transferred=transferred,  transferred_user_id=transferred_user_id,transferred_date=transferred_date  $where";
+        NRG_writeFile("NRG_UpdateLBKNFT.log", "L" . __LINE__ . " | " . $query_one);   
+    }
+
+
+    $query = mysqli_query($sqlConnect, $query_one);
+
+    if ($query) {
+        if ($revealed == '1' && $revealed_user_id == $nrg["user"]["user_id"]) {
+            $result = Jeffrey_UpdateNFT_Metadata_File($nft_id, $userWallet);
+            if($result != "success")
+            return "failed";
+        }
+    } else {
+        return "failed";
+    }
+    return "true";
+}
+
+function JEFF_UpdateNFTHistory($nft_uuid, $nft_id, $nft_serial, $action_type, $action_created_date, $action_complete, $action_complete_date, $created_by, $user_id, $issuer_wallet, $owner_wallet, $transaction_hash, $xumm_txid, $xumm_payload_uuidv4)
+{
+    global $nrg, $sqlConnect, $cache;
+
+    if (!isset($nrg['user'])) {
+        return false;
+    }
+
+    $date_now = date("d/m/Y");
+    $time_now = time();
+    $dateTime = time();
+    $userId = $nrg['user']['user_id'];
+
+
+    $browser_info = NRG_getBrowser() . "|" . NRG_getOS();
+    $user_ip = get_ip_address();
+    $owner_wallet = $nrg['user']['xumm_address'];
+
+
+    $query_one = "INSERT INTO nft_history(nft_uuid, nft_id, nft_serial, action_type, action_created_date, action_complete, action_complete_date, created_by, user_id, issuer_wallet, owner_wallet, transaction_hash, xumm_txid, xumm_payload_uuidv4) VALUES('$nft_uuid', '$nft_id', $nft_serial, $action_type, $action_created_date, $action_complete, $action_complete_date, $created_by, $user_id , '$issuer_wallet', '$owner_wallet', '$transaction_hash', '$xumm_txid', '$xumm_payload_uuidv4');";
+
+    NRG_writeFile("NRG_UpdateNFTHistory.log", "L" . __LINE__ . " | " . $query_one);
+    $query = mysqli_query($sqlConnect, $query_one);
+}
+
+
+
+//************Added newly by Jeffery ***************/
+function Jeffrey_UpdateNFT_Metadata_File($nft_id, $userWallet)
+{
+    global $nrg, $sqlConnect, $cache;
+
+    $sql = "SELECT base_uri, file FROM CryptoLand_NFTs WHERE nft_id = '$nft_id' AND owner_wallet = '$userWallet'";
+
+    $query = mysqli_query($sqlConnect, $sql);
+    NRG_writeFile("NRG_UpdateLBKNFT_Metadata_File.log", "L" . __LINE__ . " | " . $sql);
+
+    if (mysqli_num_rows($query)) {
+        $fetched_data = mysqli_fetch_assoc($query);
+        $assetPath = $fetched_data['base_uri']."/".$fetched_data['file'];
+
+    }
+    $liveRenameFrom = $assetPath;
+    $archiveRenameTo =     str_replace("/live-metadata/", "/archived-metadata/", $assetPath);
+    $revealedMoveFrom =     str_replace("/live-metadata/", "/revealed-metadata/", $assetPath);
+    
+    if (rename($liveRenameFrom, $archiveRenameTo)) {
+        if (copy($revealedMoveFrom, $liveRenameFrom)) {
+            NRG_writeFile("NRG_UpdateLBKNFT_Metadata_File.log", "L" . __LINE__ . " | " . "[Success] $revealedMoveFrom -> $liveRenameFrom");
+            return "success";
+        } else {
+            $where = "WHERE nft_id = '$nft_id'";
+            $query_one = "UPDATE CryptoLand_NFTs SET owner_wallet='$userWallet', claimed=claimed, claimed_user_id=claimed_user_id, claimed_date=claimed_date, revealed='0', revealed_user_id=0, revealed_date=0 $where";
+            $query = mysqli_query($sqlConnect, $query_one);
+            NRG_writeFile("NRG_UpdateLBKNFT_Metadata_File.log", "L" . __LINE__ . " | " . $query_one);
+            NRG_writeFile("NRG_UpdateLBKNFT_Metadata_File.log", "L" . __LINE__ . " | " . "[Failed] $revealedMoveFrom -> $liveRenameFrom");
+            return "failed";
+        }
+    } else {
+        $where = "WHERE nft_id = '$nft_id'";
+        $query_one = "UPDATE CryptoLand_NFTs SET owner_wallet='$userWallet', claimed=claimed, claimed_user_id=claimed_user_id, claimed_date=claimed_date, revealed='0', revealed_user_id=0, revealed_date=0 $where";
+        $query = mysqli_query($sqlConnect, $query_one);
+        NRG_writeFile("NRG_UpdateLBKNFT_Metadata_File.log", "L" . __LINE__ . " | " . $query_one);
+        NRG_writeFile("NRG_UpdateLBKNFT_Metadata_File.log", "L" . __LINE__ . " | " . "[Failed] $liveRenameFrom -> $archiveRenameTo ");
+        return "failed";
     }
 }

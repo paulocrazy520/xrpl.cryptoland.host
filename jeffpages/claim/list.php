@@ -19,37 +19,32 @@
 	else
 		$account = $current_user;
 		
-	//*********************Only when page loading first, update db for owner*********************
-
-	try{
-		//  UpdateDatabaseByIssuersFromServer();
-	}
-	catch(Exception $e){
-		print_r($e);
-	}
-
-
-	if(!$isPost){
+	//*********************Only when page loading first, update db for issuer or owner*********************
+	//This functions can be called optionally//
 		try{
-			//UpdateDBForOwner($account);	
-			// CreateAssetFolder();
-			//return;
+			//  UpdateDBByIssuersFromServer();
 		}
-		catch(Exception $e)
-		{
-			echo '<h1 class="cs-hero_title cs-white_color cs-center" id="empty_result">
-			The server is not connecting or is taking longer than expected...
-			If it still appears after refreshing again, contact the team.
-			</h1>';
-			return;
+		catch(Exception $e){
+			print_r($e);
 		}
-	}
 
-	//*****************Test for updating database from xrpl server by issuer addresses***************** */
-	// UpdateDatabaseByIssuersFromServer();
-	// return;
 
+		if(!$isPost){
+			try{
+				//UpdateDBForOwner($account);	
+				//return;
+			}
+			catch(Exception $e)
+			{
+				echo '<h1 class="cs-hero_title cs-white_color cs-center" id="empty_result">
+				The server is not connecting or is taking longer than expected...
+				If it still appears after refreshing again, contact the team.
+				</h1>';
+				return;
+			}
+		}
 	//*********************************************************************************************** */
+
 	//******************Filter Menu Begin*****************
 	$cardsCount = isset($_POST['cardsCount']) && is_numeric($_POST['cardsCount']) ? $_POST['cardsCount'] : 0;
 	$tabType = isset($_POST['tabType']) ? $_POST['tabType'] : "*";
@@ -106,7 +101,6 @@
 		}
 	}
 	catch(Exception $e){
-		print_r($e);
 		echo '<h1 class="cs-hero_title cs-white_color cs-center" id="empty_result">
 		The server is not connecting or is taking longer than expected...
 		If it still appears after refreshing again, contact the team.
@@ -193,7 +187,9 @@
 				$collectionFamily = $json['collection']['family']; //Pull Collection data from URI[family]
 				$attributes = $json['attributes']; // Pull all Filter Data from URI
 				$color = GetTestHexColorFromColorString();
-			
+				$rarity = "";
+				$subclass = "";
+				
 				foreach ($attributes as $attribute) {
 					switch ($attribute["trait_type"]) {
 						case 'Consumable Class':
@@ -209,7 +205,7 @@
 							}
 							break;
 						case 'Subclass':
-							$rarity = $attribute['value']; // Pull Rarity data from URI
+							$subclass = $attribute['value']; // Pull Rarity data from URI
 							break;
 						default:
 							break;
@@ -270,7 +266,8 @@
 				$collectionFamily = $json['collection']['family']; //Pull Collection data from URI[family]
 				$attributes = $json['attributes']; // Pull all Filter Data from URI
 				$color = GetTestHexColorFromColorString();
-			
+				$rarity = "";
+				$subclass = "";
 				foreach ($attributes as $attribute) {
 					switch ($attribute["trait_type"]) {
 						case 'Consumable Class':
@@ -286,7 +283,7 @@
 							}
 							break;
 						case 'Subclass':
-							$rarity = $attribute['value']; // Pull Rarity data from URI
+							$subclass = $attribute['value']; // Pull Rarity data from URI
 							break;
 						default:
 							break;

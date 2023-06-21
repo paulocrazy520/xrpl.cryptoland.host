@@ -3,7 +3,7 @@
     case "unclaimed":
       $btnStr =  "Claim";
       
-      if($info["claimed"] && !$info["transferred_status"])
+      if($info["claimed"] && !$info["transferred"])
         $btnStyle = "cs-card_btn_disabled";
       else
         $btnStyle = "cs-card_btn_4";
@@ -50,7 +50,7 @@
               Name: <b><?php echo $name ?></b>
             </div>
             <div class="cs-card_price" style="display: flex; justify-content: space-between;">
-              Rarity: <b style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis;"><?php echo $rarity ? $rarity : "" ?></b>
+              <?php echo $rarity ? "Rarity:": "Subclass"?> <b style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis;"><?php echo $rarity ? $rarity : ($subclass ? $subclass : "") ?></b>
             </div>
             <hr />
             <?php if($current_user){ ?>

@@ -345,7 +345,13 @@ function handleClick() {
                 nftId: nftId
             })
                 .then(async (response) => {
+
                     console.log('*********************handleClaimItemClick Response=', response.data);
+                    if(response.data == "claimed")
+                    {
+                        alert("Sorry, this item was already claimed! After refreshing page, you can see it!");
+                        return;
+                    }
 
                     $('.cs-preloader').delay(10).fadeOut('slow'); //Show loading screen
                     let offerId = response.data.offerId;
