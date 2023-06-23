@@ -1,14 +1,3 @@
-// const http = require('http');
-// const server = http.createServer((req, res) => {
-//     res.statusCode = 200;
-//     res.setHeader('Content-Type', 'text/plain');
-//     res.end('Hello, World!\n');
-// });
-
-// server.listen(3003, () => {
-//     console.log('Server running at http://localhost:3003/');
-// });
-
 const fs = require('fs');
 const path = require('path');
 // Recursively search the directory for files with the given extension
@@ -39,16 +28,15 @@ function modifyFiles(files, callback) {
     });
 }
 
-//Search and Modify files
-// const files = searchFiles('./testNet', '.json');
-// console.log(files);
-// modifyFiles(files, function (contents) {
-//     // Replace all occurrences of "foo" with "bar"
-//     return contents.replaceAll("https://ingameassets.cryptoland.host/testNet", "https://sb236.cryptoland.host/testNet");
-// });
+// Search and Modify files
+const files = searchFiles('./testNet', '.json');
+console.log(files);
+modifyFiles(files, function (contents) {
+    // Replace all occurrences of "foo" with "bar"
+    return contents.replaceAll("https://ingameassets.cryptoland.host/testNet", "https://sb236.cryptoland.host/testNet");
+});
 
 //Searc hfolders
-
 
 // Function to recursively search for folders and files
 function walk(dir, callback) {

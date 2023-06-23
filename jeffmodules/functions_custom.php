@@ -130,7 +130,7 @@ function UpdateDBForOwner($account){
 
 /*****Update CryptoLand_NFTs table for specific issuer address using infos from xrpl server****** */
 //This function will be used when add new nfts to database
-function UpdateDBeByIssuersFromServer($issuer = null){
+function UpdateDBByIssuersFromServer($issuer = null){
     global $sqlConnect, $current_user, $default_issuer_address;
 
     if(!$issuer)
@@ -820,7 +820,7 @@ function GetContentsFromValuableUrl($url){
 }
 
 //**********************************Functions for database ****************************/
-//*****************Cutomzied functions from functions_custom_old.php******************/
+//*****************Customized functions from functions_custom_old.php******************/
 
 //JEFF_getNFT: get nft info from CryptoLand_NFTs//
 //JEFF_updateNFTAsClaimed set claimed info to CryptoLand_NFTs//
@@ -944,11 +944,9 @@ function JEFF_UpdateNFTHistory($nft_uuid, $nft_id, $nft_serial, $action_type, $a
     $dateTime = time();
     $userId = $nrg['user']['user_id'];
 
-
     $browser_info = NRG_getBrowser() . "|" . NRG_getOS();
     $user_ip = get_ip_address();
     $owner_wallet = $nrg['user']['xumm_address'];
-
 
     $query_one = "INSERT INTO nft_history(nft_uuid, nft_id, nft_serial, action_type, action_created_date, action_complete, action_complete_date, created_by, user_id, issuer_wallet, owner_wallet, transaction_hash, xumm_txid, xumm_payload_uuidv4) VALUES('$nft_uuid', '$nft_id', $nft_serial, $action_type, $action_created_date, $action_complete, $action_complete_date, $created_by, $user_id , '$issuer_wallet', '$owner_wallet', '$transaction_hash', '$xumm_txid', '$xumm_payload_uuidv4');";
 
@@ -977,7 +975,6 @@ function Jeffrey_UpdateNFT_Metadata_File($nft_id, $userWallet)
     $archiveRenameTo =     str_replace("/live-metadata/", "/archived-metadata/", $liveRenameFrom);
     $revealedMoveFrom =     str_replace("/live-metadata/", "/revealed-metadata/", $liveRenameFrom);
 
-    
     NRG_writeFile("NRG_UpdateCryptoLand_NFTs_Metadata_File.log", "L" . __LINE__ . " | " . $liveRenameFrom. " | ". $archiveRenameTo . " | ". $revealedMoveFrom);
 
     if (rename($liveRenameFrom, $archiveRenameTo)) {

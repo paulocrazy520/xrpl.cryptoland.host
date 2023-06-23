@@ -51,6 +51,7 @@ foreach($totalArray as $nft){
 	$attributes = $json['attributes']; // Pull all Filter Data from URI
 	$color = GetTestHexColorFromColorString();
 	$colorName = "";
+	$rarity = "";
 	
 	foreach ($attributes as $attribute) {
 		switch ($attribute["trait_type"]) {
@@ -67,26 +68,21 @@ foreach($totalArray as $nft){
 					$colorName = $attribute['value'];
 				}
 				break;
+			case 'Subclass':
+				$subclass = $attribute['value']; // Pull Rarity data from URI
+				break;
 			default:
 				break;
 		}
 	}
 
-	// if(($menuCollection && ($menuCollection != $collectionFamily))  || ($menuRarity && strstr($rarity, $menuRarity) == false) ||  ($menuColor && (($menuColor != "Other" && $menuColor != $colorName) || ($menuColor == "Other" && $color != "#05002335"))))
-	// 	continue;
-		
-		$asset_owner = $nft->Owner;
-		$asset_has_sell_offer = filter_var($nft->hasSellOffer, FILTER_VALIDATE_BOOLEAN);
-		$current_user_has_sell = filter_var($nft->hasSellOfferByUser, FILTER_VALIDATE_BOOLEAN);
-		$asset_has_bid = filter_var($nft->hasBuyOffer, FILTER_VALIDATE_BOOLEAN);
-		$current_user_has_bid = filter_var($nft->hasBuyOfferByUser, FILTER_VALIDATE_BOOLEAN);
-		
-
-		// if(($menuSale == "checked" && !$asset_has_sell_offer) || ($menuBid == "checked" && !$asset_has_bid))
-		// 	continue;
-
-		// if($index >= $cardsCount &&  $index < $cardsCount + $num_results_on_page - ($cardsCount % $num_results_on_page))
-		require "card.php";
+	$asset_owner = $nft->Owner;
+	$asset_has_sell_offer = filter_var($nft->hasSellOffer, FILTER_VALIDATE_BOOLEAN);
+	$current_user_has_sell = filter_var($nft->hasSellOfferByUser, FILTER_VALIDATE_BOOLEAN);
+	$asset_has_bid = filter_var($nft->hasBuyOffer, FILTER_VALIDATE_BOOLEAN);
+	$current_user_has_bid = filter_var($nft->hasBuyOfferByUser, FILTER_VALIDATE_BOOLEAN);
+	
+	require "card.php";
 }
 
 
