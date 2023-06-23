@@ -14,7 +14,8 @@
 
 	if(!isset($current_user) || !$current_user)
 	{
-		$account = $default_issuer_address;
+		//$account = $default_issuer_address;
+		$account = "";
 	}
 	else
 		$account = $current_user;
@@ -31,8 +32,7 @@
 
 		if(!$isPost){
 			try{
-				//UpdateDBForOwner($account);	
-				//return;
+				UpdateDBForOwner($account);	
 			}
 			catch(Exception $e)
 			{

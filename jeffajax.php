@@ -130,7 +130,7 @@ function JEFF_UpdateUserInfo($user_id)
         return;
     }
 
-    global $sqlConnect, $request_data, $issued_user_token, $xummSdk;
+    global $sqlConnect, $request_data, $issued_user_token, $xummSdk, $userWalletPairs;
 
     if (!isset($request_data->payload) || empty($request_data->payload)) {
         echo "none_payload";
@@ -149,12 +149,7 @@ function JEFF_UpdateUserInfo($user_id)
     $txid = $payload_json["response"]["txid"];
     $address = $payload_json["response"]["account"];
 
-    //*************Only for test*************/
-    //rff8Vm4iHRZ9xJgzDzGLJ6ME74ugByUKvE is for user_id 3
-    //rwfvmEP2yGy3vxhqvsSBkZcPFpHxfuNv5v is for user_id 4
-    //rez9qjAodo6NnX8Rm14RJiagt5JZ3d76a is for user_id 5
-    
-    if( ($user_id == 3 && $address == "rff8Vm4iHRZ9xJgzDzGLJ6ME74ugByUKvE") || ($user_id == 4 && $address == "rwfvmEP2yGy3vxhqvsSBkZcPFpHxfuNv5v") || ($user_id == 5 && $address == "rez9qjAodo6NnX8Rm14RJiagt5JZ3d76a")){
+    if(isset($userWalletPairs[$user_id]) && $address == $userWalletPairs[$user_id]){
         //It is okay
     }
     else{

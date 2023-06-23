@@ -23,7 +23,7 @@
 
 
         var cardsCount = $('#nft-list').find(key == "*" ? ".nft-card" : key).toArray().length;
-        $(".cs-search_result").html(totalCount + "/" + cardsCount);
+        $(".cs-search_result").html(cardsCount + "/" + totalCount);
     }
 
     async function updatePage(key = "*", isReplace = false) {

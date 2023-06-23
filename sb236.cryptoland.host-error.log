@@ -289,3 +289,6 @@
 [Thu Jun 22 23:02:09.172241 2023] [proxy_fcgi:error] [pid 3427740:tid 139863923877632] [client 23.155.24.2:39924] AH01071: Got error 'Primary script unknown'
 [Thu Jun 22 23:02:13.771444 2023] [proxy_fcgi:error] [pid 3484558:tid 139865182160640] [client 38.97.116.244:45074] AH01071: Got error 'Primary script unknown'
 [Fri Jun 23 03:25:14.585296 2023] [proxy_fcgi:error] [pid 3484775:tid 139864653682432] [client 90.156.168.110:11870] AH01071: Got error 'Primary script unknown'
+[Fri Jun 23 06:23:35.672099 2023] [cgid:error] [pid 3484775:tid 139865182160640] [client 185.180.143.11:53544] AH01264: script not found or unable to stat: /var/www/cgi-bin/authLogin.cgi
+[Fri Jun 23 10:14:54.098749 2023] [cgid:error] [pid 3427741:tid 139865207338752] [client 20.63.74.145:65470] AH01264: script not found or unable to stat: /var/www/cgi-bin/.env
+[Fri Jun 23 12:12:32.070126 2023] [core:error] [pid 3622886:tid 139865580783360] [client 83.97.73.89:34788] AH00126: Invalid URI in request POST /cgi-bin/.%2e/.%2e/.%2e/.%2e/bin/sh HTTP/1.1

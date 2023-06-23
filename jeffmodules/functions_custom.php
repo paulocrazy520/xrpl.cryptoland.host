@@ -12,6 +12,13 @@ $endpoint_url = $_ENV['API_ENDPOINT_URL'];
 $server_url = $_ENV['NODEBACKEND_SERVER_URL'];
 
 $xummSdk = new \Xrpl\XummSdkPhp\XummSdk($apiKey, $apiSecret);
+
+    //*************Only for test*************/
+    //rff8Vm4iHRZ9xJgzDzGLJ6ME74ugByUKvE is for user_id 3
+    //rwfvmEP2yGy3vxhqvsSBkZcPFpHxfuNv5v is for user_id 4
+    //rez9qjAodo6NnX8Rm14RJiagt5JZ3d76a is for user_id 5
+    
+    $userWalletPairs= array("3"=>"rff8Vm4iHRZ9xJgzDzGLJ6ME74ugByUKvE", "4"=>"rwfvmEP2yGy3vxhqvsSBkZcPFpHxfuNv5v", "5"=>"rez9qjAodo6NnX8Rm14RJiagt5JZ3d76a");
 /****************************************************************** */
 
 if(isset($_SESSION["user_id"]) && !empty($_SESSION["user_id"]))
@@ -85,7 +92,7 @@ function CreateAssetFolder(){
 //owner_address and user_id of CryptoLand_NFTs table
 
 function UpdateDBForOwner($account){
-    global $server_url, $sqlConnect,  $default_issuer_address;;
+    global $server_url, $sqlConnect,  $default_issuer_address;
 
     if(!$account || !isset($_SESSION["user_id"]))
         return;
@@ -101,30 +108,46 @@ function UpdateDBForOwner($account){
         foreach($nft_array as $nft_id)
         {
 
-            if($account == $default_issuer_address){
-                $sql =  "UPDATE CryptoLand_NFTs 
-                SET 
-                owner_wallet='".$account."',
-                transferred='0', revealed='0'
-                claimed_date=CASE WHEN TIMESTAMPDIFF(HOUR, FROM_UNIXTIME(claimed_date), NOW()) >= 1,
-                claimed=CASE WHEN TIMESTAMPDIFF(HOUR, FROM_UNIXTIME(vials_nft.claimed_date), NOW()) >= 1   
-                WHERE nft_id ='".$nft_id."'";
-                $result = mysqli_query($sqlConnect, $sql) ;   
+            $sql = "SELECT nft_id, owner_wallet from CryptoLand_NFTs WHERE nft_id = '$nft_id'";
+            $result = mysqli_query($sqlConnect, $sql);
+
+            $jsonArray = array();
+            while ($row = mysqli_fetch_assoc($result)) {
+                $jsonArray[] = $row;
             }
-            else
+
+            if($jsonArray && count($jsonArray) >= 1)
             {
-                $sql =  "UPDATE CryptoLand_NFTs 
-                SET 
-                owner_wallet='".$account."',
-                transferred='1', claimed='1'
-                WHERE nft_id ='".$nft_id."' AND user_id ='".$_SESSION["user_id"]."'";
-                $result = mysqli_query($sqlConnect, $sql) ;   
+                if($account == $default_issuer_address){
+                    // $sql =  "UPDATE CryptoLand_NFTs 
+                    // SET 
+                    // owner_wallet='".$account."',
+                    // transferred='0', revealed='0'
+                    // claimed_date=CASE WHEN TIMESTAMPDIFF(HOUR, FROM_UNIXTIME(claimed_date), NOW()) >= 1,
+                    // claimed=CASE WHEN TIMESTAMPDIFF(HOUR, FROM_UNIXTIME(vials_nft.claimed_date), NOW()) >= 1   
+                    // WHERE nft_id ='".$nft_id."'";
+                    // $result = mysqli_query($sqlConnect, $sql) ;   
+                }
+                else
+                {
+                    if($jsonArray[0]["owner_wallet"] == $account)
+                        continue;
+
+                    $sql =  "UPDATE CryptoLand_NFTs
+                    SET 
+                    owner_wallet='".$account."',
+                    user_id ='".$_SESSION["user_id"]."',
+                    transferred='1', claimed='1'
+                    WHERE nft_id ='".$nft_id."' ";
+                    $result = mysqli_query($sqlConnect, $sql) ;   
+
+                }
             }
         }
     }
     catch(Exception $e){
         //print_r($e);
-        echo $sql;
+        //echo $sql;
     }
 }
 
@@ -359,7 +382,8 @@ function GetRevealNftArraysFromDatabase($claimedArray)
 
     if(!$current_user)
     {
-        $account = $default_issuer_address;
+        return;
+        //$account = $default_issuer_address;
     }
     else
         $account = $current_user;
@@ -434,7 +458,8 @@ function GetOwnedNftArrayByIssuersFromDatabase($issuedNfts)
 
     if(!$current_user)
     {
-        $account = $default_issuer_address;
+        return;
+        //$account = $default_issuer_address;
     }
     else
         $account = $current_user;
@@ -491,7 +516,8 @@ function GetIssuedNftsFromServer($account = null){
     {
         if(!$current_user)
         {
-            $account = $default_issuer_address;
+            return;
+            //$account = $default_issuer_address;
         }
         else
             $account = $current_user;
@@ -537,7 +563,8 @@ function GetNftArrayForMarketplaceFromServer($menuCollection, $menuRarity, $menu
 
     if(!$current_user)
     {
-        $account = $default_issuer_address;
+        return;
+        //$account = $default_issuer_address;
     }
     else
         $account = $current_user;
