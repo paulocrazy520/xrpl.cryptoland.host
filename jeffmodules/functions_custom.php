@@ -319,7 +319,7 @@ function UpdateDBByIssuersFromServer($issuer = null){
                 $sql = "INSERT INTO CryptoLand_NFTs (
                     nft_uuid, nft_id, nft_serial, minted_date, base_uri, file, taxon, burnable, only_xrp, transferable, 
                     claimed, claimed_user_id, claimed_date, 
-                    transfered, transfered_user_id, transfered_date, tx_id,
+                    transferred, transferred_user_id, transferred_date, tx_id,
                     revealed,revealed_user_id, revealed_date, 
                     user_id, date_created, last_update, issuer_wallet, owner_wallet, reserved, assetType
                   )
@@ -350,9 +350,9 @@ function UpdateDBByIssuersFromServer($issuer = null){
                         claimed = '0',
                         claimed_user_id = '0',
                         claimed_date = '0',
-                        transfered = '0',
-                        transfered_user_id = '0',
-                        transfered_date = '0',
+                        transferred = '0',
+                        transferred_user_id = '0',
+                        transferred_date = '0',
                         tx_id = '',
                         revealed = '0',
                         revealed_user_id = '0',

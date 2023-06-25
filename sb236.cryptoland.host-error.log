@@ -292,3 +292,12 @@
 [Fri Jun 23 06:23:35.672099 2023] [cgid:error] [pid 3484775:tid 139865182160640] [client 185.180.143.11:53544] AH01264: script not found or unable to stat: /var/www/cgi-bin/authLogin.cgi
 [Fri Jun 23 10:14:54.098749 2023] [cgid:error] [pid 3427741:tid 139865207338752] [client 20.63.74.145:65470] AH01264: script not found or unable to stat: /var/www/cgi-bin/.env
 [Fri Jun 23 12:12:32.070126 2023] [core:error] [pid 3622886:tid 139865580783360] [client 83.97.73.89:34788] AH00126: Invalid URI in request POST /cgi-bin/.%2e/.%2e/.%2e/.%2e/bin/sh HTTP/1.1
+[Fri Jun 23 15:45:33.304107 2023] [proxy_fcgi:error] [pid 3636630:tid 139864628504320] [client 172.104.4.17:39180] AH01071: Got error 'Primary script unknown'
+[Sat Jun 24 02:52:40.846153 2023] [core:error] [pid 3636265:tid 139864125204224] [client 83.97.73.89:51620] AH00126: Invalid URI in request POST /cgi-bin/.%2e/.%2e/.%2e/.%2e/bin/sh HTTP/1.1
+[Sat Jun 24 15:47:55.650214 2023] [proxy_fcgi:error] [pid 3839659:tid 139865572390656] [client 40.77.111.208:40345] AH01071: Got error 'Primary script unknown'
+[Sun Jun 25 03:51:31.026762 2023] [proxy_fcgi:error] [pid 3957710:tid 139865115051776] [client 207.154.232.167:47390] AH01071: Got error 'Primary script unknown'
+[Sun Jun 25 03:51:32.969210 2023] [proxy_fcgi:error] [pid 3957712:tid 139865555605248] [client 207.154.232.167:47598] AH01071: Got error 'Primary script unknown'
+[Sun Jun 25 06:42:03.690583 2023] [core:error] [pid 3962671:tid 139864687220480] [client 83.97.73.89:50512] AH00126: Invalid URI in request POST /cgi-bin/.%2e/.%2e/.%2e/.%2e/bin/sh HTTP/1.1
+[Sun Jun 25 06:57:47.820393 2023] [proxy_fcgi:error] [pid 3957710:tid 139864502679296] [client 202.112.51.4:39836] AH01071: Got error 'Primary script unknown'
+[Sun Jun 25 13:55:49.530545 2023] [proxy_fcgi:error] [pid 4040440:tid 139865056335616] [client 161.35.153.187:43686] AH01071: Got error 'Primary script unknown'
+[Sun Jun 25 13:55:51.930624 2023] [proxy_fcgi:error] [pid 4040440:tid 139864930510592] [client 161.35.153.187:35622] AH01071: Got error 'Primary script unknown'
